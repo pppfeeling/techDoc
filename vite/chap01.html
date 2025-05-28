@@ -1,0 +1,136 @@
+<div class="container">
+        <div class="header">
+            <h1 class="title">Chapter 1: Vite로 React 앱 빌드하기</h1>
+            <div class="date">2025.05.27 | React + Vite 완전정복</div>
+        </div>
+        
+        <div class="highlight-box">
+            <h2 style="font-family: 'Nanum Pen Script', cursive; font-size: 24px; color: #593C47; margin-bottom: 10px;">
+                🎯 Vite가 뭐길래?
+            </h2>
+            <p style="font-size: 16px; line-height: 1.6; color: #334155;">
+                <span class="keyword">Vite</span>(비트)는 프랑스어로 "빠르다"는 뜻! ⚡ 
+                개발 서버 시작이 <span class="hand-drawn">번개처럼 빠르고</span>, 
+                핫 리로드가 <span class="hand-drawn">즉시 반영</span>되는 차세대 빌드 도구입니다.
+            </p>
+        </div>
+        
+        <div class="content-grid">
+            <div class="card method-card">
+                <div class="card-title">
+                    🐌 기존 방식 (CRA)
+                </div>
+                <ul>
+                    <li>개발 서버 시작: 30-60초 😴</li>
+                    <li>번들링 기반 (Webpack)</li>
+                    <li>모든 파일을 미리 번들링</li>
+                    <li>HMR 속도 느림</li>
+                </ul>
+                <div class="code-block">
+npx create-react-app my-app
+cd my-app
+npm start  # 느린 시작...
+                </div>
+            </div>
+            
+            <div class="card method-card">
+                <div class="card-title">
+                    ⚡ Vite 방식
+                </div>
+                <ul>
+                    <li>개발 서버 시작: 1-3초 🚀</li>
+                    <li>ES 모듈 기반</li>
+                    <li>필요한 파일만 즉시 제공</li>
+                    <li>초고속 HMR</li>
+                </ul>
+                <div class="code-block">
+npm create vite@latest my-react-app -- --template react
+cd my-react-app
+npm install
+npm run dev  # 빠른 시작!
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">
+                    <span class="step-number">1</span>
+                    프로젝트 생성
+                </div>
+                <p style="margin-bottom: 15px; color: #334155; line-height: 1.4;">
+                    다양한 템플릿으로 프로젝트를 즉시 생성할 수 있어요!
+                </p>
+                <div class="code-block">
+# React 기본 템플릿
+npm create vite@latest
+
+# TypeScript 템플릿
+npm create vite@latest my-app -- --template react-ts
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <span class="step-number">2</span>
+                    개발 서버 실행
+                </div>
+                <p style="margin-bottom: 15px; color: #334155; line-height: 1.4;">
+                    설치 후 바로 개발 서버를 실행하면 끝! 
+                </p>
+                <div class="code-block">
+cd my-app
+npm install
+npm run dev
+
+# ➜ Local: http://localhost:5173/
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <span class="step-number">3</span>
+                    실제 경험해보기
+                </div>
+                <p style="margin-bottom: 15px; color: #334155; line-height: 1.4;">
+                    파일을 수정하고 저장하면 <span class="keyword">즉시 반영</span>! 🎉
+                </p>
+                <div class="code-block">
+// App.jsx 수정 후 저장
+function App() {
+  return (
+    &lt;h1&gt;안녕 Vite! 🚀&lt;/h1&gt;
+  )
+}
+                </div>
+            </div>
+        </div>
+        
+        <div class="highlight-box" style="background: linear-gradient(45deg, rgba(89, 60, 71, 0.1), rgba(89, 60, 71, 0.05)); border-color: #593C47;">
+            <h3 style="font-family: 'Nanum Pen Script', cursive; font-size: 20px; color: #593C47; margin-bottom: 15px;">
+                🔥 Vite의 핵심 비밀
+            </h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <div>
+                    <h4 style="color: #F25C05; margin-bottom: 10px;">개발 환경에서:</h4>
+                    <ul style="color: #334155;">
+                        <li>ES 모듈을 브라우저에 직접 제공</li>
+                        <li>변경된 모듈만 갱신 (HMR)</li>
+                        <li>번들링 없이 즉시 실행</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: #F25C05; margin-bottom: 10px;">프로덕션 빌드:</h4>
+                    <ul style="color: #334155;">
+                        <li>Rollup으로 최적화된 번들 생성</li>
+                        <li>트리 쉐이킹 자동 적용</li>
+                        <li>코드 스플리팅 지원</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>📚 출처: Vite 공식 문서 | React 개발자를 위한 Vite 완전정복 가이드</p>
+        </div>
+    </div>

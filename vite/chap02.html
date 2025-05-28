@@ -1,0 +1,257 @@
+<div class="container">
+        <div class="header">
+            <h1 class="title">Chapter 2: 정적 자산 다루기</h1>
+            <div class="date">2025.05.27 | Assets 완전정복</div>
+        </div>
+        
+        <div class="highlight-box">
+            <h2 style="font-family: 'Nanum Pen Script', cursive; font-size: 24px; color: #593C47; margin-bottom: 10px;">
+                🎯 정적 자산이란?
+            </h2>
+            <p style="font-size: 16px; line-height: 1.6; color: #334155;">
+                <span class="keyword">이미지</span>, <span class="keyword">폰트</span>, <span class="keyword">CSS</span>, <span class="keyword">JSON</span> 등 
+                앱에서 사용하는 모든 파일들! Vite는 이들을 <span class="hand-drawn">똑똑하게 처리</span>합니다 ✨
+            </p>
+        </div>
+        
+        <div class="content-grid">
+            <div class="card full-width">
+                <div class="card-title">
+                    📁 Vite 프로젝트 구조 이해하기
+                </div>
+                <div class="folder-structure">
+my-vite-app/
+├── public/           ← 🌍 직접 제공되는 정적 파일들
+│   ├── favicon.ico
+│   ├── logo.png
+│   └── robots.txt
+├── src/              ← 🔧 빌드 과정을 거치는 소스 파일들  
+│   ├── assets/       ← 🎨 처리되는 자산들
+│   │   ├── images/
+│   │   ├── styles/
+│   │   └── fonts/
+│   ├── components/
+│   └── App.jsx
+└── index.html        ← 📄 진입점 HTML
+                </div>
+                <div class="warning-box">
+                    <p style="margin-top: 10px; color: #334155; font-size: 14px;">
+                        <strong>핵심 차이점:</strong> <span class="keyword">public/</span>은 그대로 복사, 
+                        <span class="keyword">src/assets/</span>는 최적화 처리됩니다!
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="card method-card">
+                <div class="card-title">
+                    <span class="step-number">1</span>
+                    🌍 Public 폴더 방식
+                </div>
+                <p style="color: #334155; margin-bottom: 15px;">
+                    URL로 직접 접근 가능한 파일들
+                </p>
+                <div class="code-block">
+// public/logo.png 파일을 사용
+function Header() {
+  return (
+    &lt;img 
+      src="/logo.png" 
+      alt="로고" 
+    /&gt;
+  )
+}
+
+// ✅ 브라우저에서: /logo.png
+                </div>
+                <ul style="margin-top: 15px;">
+                    <li>빌드 시 그대로 복사됨</li>
+                    <li>URL 변경 없음</li>
+                    <li>큰 파일이나 외부 라이브러리에 적합</li>
+                </ul>
+            </div>
+            
+            <div class="card method-card">
+                <div class="card-title">
+                    <span class="step-number">2</span>
+                    🔧 Import 방식
+                </div>
+                <p style="color: #334155; margin-bottom: 15px;">
+                    모듈로 가져와서 최적화되는 파일들
+                </p>
+                <div class="code-block">
+// src/assets/hero.jpg 파일을 사용
+import heroImage from './assets/hero.jpg'
+
+function Hero() {
+  return (
+    &lt;img 
+      src={heroImage} 
+      alt="히어로 이미지" 
+    /&gt;
+  )
+}
+
+// ✅ 빌드 후: /assets/hero-a1b2c3.jpg
+                </div>
+                <ul style="margin-top: 15px;">
+                    <li>파일명에 해시 추가 (캐싱 최적화)</li>
+                    <li>이미지 압축 및 최적화</li>
+                    <li>사용하지 않는 파일 제거</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="card full-width">
+                <div class="card-title">
+                    🚀 실제 프로젝트 예제
+                </div>
+                <div class="code-block">
+// src/components/ProductCard.jsx
+import React from 'react'
+import './ProductCard.css'  // CSS 파일 import
+import placeholderImg from '../assets/images/placeholder.png'
+
+function ProductCard({ product }) {
+  return (
+    &lt;div className="product-card"&gt;
+      &lt;img 
+        src={product.image || placeholderImg} 
+        alt={product.name}
+        className="product-image"
+      /&gt;
+      &lt;h3&gt;{product.name}&lt;/h3&gt;
+      &lt;p&gt;{product.price}원&lt;/p&gt;
+    &lt;/div&gt;
+  )
+}
+
+export default ProductCard
+                </div>
+                <div class="code-block">
+/* src/components/ProductCard.css */
+.product-card {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+}
+
+.product-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+                </div>
+            </div>
+        </div>
+        
+        <div class="highlight-box" style="background: linear-gradient(45deg, rgba(6, 182, 212, 0.1), rgba(6, 182, 212, 0.05)); border-color: #06B6D4;">
+            <h3 style="font-family: 'Nanum Pen Script', cursive; font-size: 20px; color: #593C47; margin-bottom: 15px;">
+                🎨 다양한 파일 형식 지원
+            </h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>파일 타입</th>
+                        <th>지원 형식</th>
+                        <th>특별 기능</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>이미지</strong></td>
+                        <td>png, jpg, gif, svg, webp</td>
+                        <td>자동 최적화, 해시 네이밍</td>
+                    </tr>
+                    <tr>
+                        <td><strong>폰트</strong></td>
+                        <td>woff, woff2, ttf, otf</td>
+                        <td>CSS에서 직접 import 가능</td>
+                    </tr>
+                    <tr>  
+                        <td><strong>스타일</strong></td>
+                        <td>css, scss, less, stylus</td>
+                        <td>CSS 모듈, PostCSS 자동 처리</td>
+                    </tr>
+                    <tr>
+                        <td><strong>데이터</strong></td>
+                        <td>json, txt, csv</td>
+                        <td>JSON은 트리 쉐이킹 지원</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">
+                    🎯 언제 Public을 쓸까?
+                </div>
+                <ul>
+                    <li><strong>favicon.ico</strong> - 루트에 있어야 함</li>
+                    <li><strong>robots.txt</strong> - SEO 파일</li>
+                    <li><strong>외부 라이브러리</strong> - CDN 대신</li>
+                    <li><strong>큰 미디어 파일</strong> - 비디오, 대용량 이미지</li>
+                </ul>
+                <div class="warning-box">
+                    <p style="margin-top: 10px; color: #334155; font-size: 14px;">
+                        Public 파일은 절대경로 <code>/</code>로 시작해야 해요!
+                    </p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    ⚡ 언제 Import를 쓸까?
+                </div>
+                <ul>
+                    <li><strong>컴포넌트 이미지</strong> - 로고, 아이콘</li>
+                    <li><strong>CSS 파일</strong> - 스타일시트</li>
+                    <li><strong>작은 자산들</strong> - 아이콘, 썸네일</li>
+                    <li><strong>동적으로 선택되는 파일</strong></li>
+                </ul>
+                <div class="warning-box">
+                    <p style="margin-top: 10px; color: #334155; font-size: 14px;">
+                        Import된 파일은 빌드 시 최적화되어 성능이 좋아져요!
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="card full-width">
+                <div class="card-title">
+                    💡 실전 팁 & 트릭
+                </div>
+                <div class="code-block">
+// 1. 동적 import로 이미지 선택하기
+const getImageUrl = (imageName) => {
+  return new URL(`../assets/images/${imageName}`, import.meta.url).href
+}
+
+// 2. CSS에서 assets 사용하기  
+.hero {
+  background-image: url('./assets/hero-bg.jpg');
+}
+
+// 3. JSON 데이터 import하기
+import menuData from './data/menu.json'
+
+// 4. SVG를 컴포넌트로 사용하기 (vite-plugin-svgr 필요)
+import { ReactComponent as Logo } from './assets/logo.svg'
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>📚 출처: Vite 공식 문서 | Static Assets 완전 가이드</p>
+        </div>
+    </div>

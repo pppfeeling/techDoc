@@ -1,0 +1,236 @@
+<div class="container">
+        <div class="header">
+            <h1 class="title">Chapter 3: 환경 변수 활용하기</h1>
+            <div class="date">2025.05.27 | Environment Variables</div>
+        </div>
+        
+        <div class="highlight-box">
+            <h2 style="font-family: 'Nanum Pen Script', cursive; font-size: 24px; color: #593C47; margin-bottom: 10px;">
+                🎯 환경 변수가 왜 필요할까?
+            </h2>
+            <p style="font-size: 16px; line-height: 1.6; color: #334155;">
+                <span class="keyword">개발</span>, <span class="keyword">스테이징</span>, <span class="keyword">프로덕션</span> 환경마다 
+                다른 설정값들을 <span class="hand-drawn">안전하게 관리</span>하기 위해서입니다! 🔐
+            </p>
+        </div>
+        
+        <div class="content-grid">
+            <div class="card full-width">
+                <div class="card-title">
+                    📁 환경 변수 파일 구조
+                </div>
+                <div class="folder-structure">my-vite-app/
+├── .env                    # 모든 환경에서 로드
+├── .env.local              # 모든 환경에서 로드 (git 제외)
+├── .env.development        # 개발 환경에서만 로드
+├── .env.development.local  # 개발 환경에서만 로드 (git 제외)  
+├── .env.production         # 프로덕션 환경에서만 로드
+├── .env.production.local   # 프로덕션 환경에서만 로드 (git 제외)
+└── .gitignore             # .env.*.local 파일들은 여기에 추가!</div>
+                <div class="security-warning">
+                    <p style="margin-top: 10px; color: #334155; font-size: 14px;">
+                        <strong>중요:</strong> 민감한 정보(API 키, 비밀번호)는 반드시 <span class="keyword">.local</span> 파일에 저장하고 git에 커밋하지 마세요!
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="process-flow">
+            <div class="process-step">
+                <div style="font-size: 18px; margin-bottom: 5px;">📝</div>
+                <div style="font-weight: bold; color: #3B82F6;">.env 파일 생성</div>
+            </div>
+            <div class="process-arrow">→</div>
+            <div class="process-step">
+                <div style="font-size: 18px; margin-bottom: 5px;">🔧</div>
+                <div style="font-weight: bold; color: #3B82F6;">VITE_ 접두사</div>
+            </div>
+            <div class="process-arrow">→</div>
+            <div class="process-step">
+                <div style="font-size: 18px; margin-bottom: 5px;">⚡</div>
+                <div style="font-weight: bold; color: #3B82F6;">import.meta.env</div>
+            </div>
+            <div class="process-arrow">→</div>
+            <div class="process-step">
+                <div style="font-size: 18px; margin-bottom: 5px;">🚀</div>
+                <div style="font-weight: bold; color: #3B82F6;">앱에서 사용</div>
+            </div>
+        </div>
+        
+        <div class="triple-grid">
+            <div class="card env-card">
+                <div class="card-title">
+                    <span class="step-number">1</span>
+                    🔧 .env 파일 생성
+                </div>
+                <div class="code-block"># .env.development
+VITE_API_URL=http://localhost:3000/api
+VITE_APP_TITLE=My App (Dev)
+VITE_DEBUG_MODE=true
+
+# .env.production  
+VITE_API_URL=https://api.myapp.com
+VITE_APP_TITLE=My App
+VITE_DEBUG_MODE=false</div>
+            </div>
+            
+            <div class="card env-card">
+                <div class="card-title">
+                    <span class="step-number">2</span>
+                    ⚡ React에서 사용
+                </div>
+                <div class="code-block">// App.jsx
+function App() {
+  const apiUrl = import.meta.env.VITE_API_URL
+  const appTitle = import.meta.env.VITE_APP_TITLE
+  const isDebug = import.meta.env.VITE_DEBUG_MODE === 'true'
+  
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;{appTitle}&lt;/h1&gt;
+      &lt;p&gt;API: {apiUrl}&lt;/p&gt;
+      {isDebug && &lt;p&gt;🐛 디버그 모드&lt;/p&gt;}
+    &lt;/div&gt;
+  )
+}</div>
+            </div>
+            
+            <div class="card env-card">
+                <div class="card-title">
+                    <span class="step-number">3</span>
+                    🛡️ 타입 안전성
+                </div>
+                <div class="code-block">// vite-env.d.ts
+interface ImportMetaEnv {
+  readonly VITE_API_URL: string
+  readonly VITE_APP_TITLE: string
+  readonly VITE_DEBUG_MODE: string
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv
+}</div>
+            </div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="card full-width">
+                <div class="card-title">
+                    🚀 실제 프로젝트 예제
+                </div>
+                <div class="code-block">// src/config/api.js
+const config = {
+  apiUrl: import.meta.env.VITE_API_URL,
+  timeout: parseInt(import.meta.env.VITE_API_TIMEOUT) || 5000,
+  retryCount: parseInt(import.meta.env.VITE_RETRY_COUNT) || 3,
+  isProduction: import.meta.env.PROD,
+  isDevelopment: import.meta.env.DEV
+}
+
+// API 클라이언트 설정
+export const apiClient = axios.create({
+  baseURL: config.apiUrl,
+  timeout: config.timeout,
+  headers: {
+    'Content-Type': 'application/json',
+    ...(import.meta.env.VITE_API_KEY && {
+      'Authorization': `Bearer ${import.meta.env.VITE_API_KEY}`
+    })
+  }
+})
+
+// 개발 환경에서만 로깅
+if (config.isDevelopment) {
+  apiClient.interceptors.request.use(request => {
+    console.log('🚀 API Request:', request)
+    return request
+  })
+}</div>
+            </div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">
+                    🔐 보안 주의사항
+                </div>
+                <div class="security-warning">
+                    <h4 style="color: #F24405; margin-bottom: 10px;">❌ 절대 하면 안 되는 것:</h4>
+                    <ul style="color: #334155; margin-bottom: 15px;">
+                        <li>비밀번호, API 시크릿 키</li>
+                        <li>데이터베이스 연결 정보</li>
+                        <li>개인정보나 민감한 데이터</li>
+                    </ul>
+                    <h4 style="color: #10B981; margin-bottom: 10px;">✅ 안전하게 사용 가능:</h4>
+                    <ul style="color: #334155;">
+                        <li>API 엔드포인트 URL</li>
+                        <li>앱 제목, 버전 정보</li>
+                        <li>기능 플래그 (feature flags)</li>
+                        <li>공개 설정값들</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    🛠️ 내장 환경 변수들
+                </div>
+                <table class="env-table">
+                    <thead>
+                        <tr>
+                            <th>변수명</th>
+                            <th>설명</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>import.meta.env.MODE</td>
+                            <td>현재 모드</td>
+                        </tr>
+                        <tr>
+                            <td>import.meta.env.PROD</td>
+                            <td>프로덕션 여부</td>
+                        </tr>
+                        <tr>
+                            <td>import.meta.env.DEV</td>
+                            <td>개발 환경 여부</td>
+                        </tr>
+                        <tr>
+                            <td>import.meta.env.BASE_URL</td>
+                            <td>기본 URL</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="highlight-box" style="background: linear-gradient(45deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05)); border-color: #3B82F6;">
+            <h3 style="font-family: 'Nanum Pen Script', cursive; font-size: 20px; color: #593C47; margin-bottom: 15px;">
+                💡 실전 팁 & 베스트 프랙티스
+            </h3>
+            <div class="content-grid" style="margin: 0;">
+                <div>
+                    <h4 style="color: #3B82F6; margin-bottom: 10px;">🔧 개발 효율성:</h4>
+                    <ul style="color: #334155;">
+                        <li>환경별로 다른 API 서버 사용</li>
+                        <li>디버그 모드 토글 기능</li>
+                        <li>기능 플래그로 실험적 기능 제어</li>
+                        <li>로깅 레벨 환경별 설정</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 style="color: #3B82F6; margin-bottom: 10px;">🛡️ 보안 강화:</h4>
+                    <ul style="color: #334155;">
+                        <li>.env.*.local 파일은 .gitignore에 추가</li>
+                        <li>민감한 정보는 서버 환경변수 사용</li>
+                        <li>VITE_ 접두사로만 브라우저 노출</li>
+                        <li>프로덕션에서는 빌드 시점에 주입</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>📚 출처: Vite 공식 문서 | Environment Variables 완전 가이드</p>
+        </div>
+    </div>
