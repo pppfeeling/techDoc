@@ -1,0 +1,1 @@
+import{r as e,j as a}from"./index-DKjlLsZP.js";function r(){const[n,t]=e.useState("");return e.useEffect(()=>{fetch("/techDoc//vite/chap03.html").then(o=>o.text()).then(t).catch(()=>t("<p>Failed to load content.</p>"))},[]),a.jsx("div",{dangerouslySetInnerHTML:{__html:n}})}export{r as default};

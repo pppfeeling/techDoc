@@ -1,1 +1,0 @@
-import{r as e,j as a}from"./index-B3VBggoA.js";function s(){const[n,t]=e.useState("");return e.useEffect(()=>{fetch("/vite/chap02.html").then(o=>o.text()).then(t).catch(()=>t("<p>Failed to load content.</p>"))},[]),a.jsx("div",{dangerouslySetInnerHTML:{__html:n}})}export{s as default};
