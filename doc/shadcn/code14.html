@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Progress</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+        
+        /* Progress 시각화 예시 */
+        .progress-visual-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(242, 230, 61, 0.1); /* 패션-2의 연한 배경 */
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .progress-bar-visual {
+            width: 100%;
+            height: 12px; /* shadcn 기본 높이 h-2.5 */
+            background-color: var(--color-fashion-1); /* 배경색 */
+            opacity: 0.2; /* 배경색 연하게 */
+            border-radius: 9999px; /* pill shape */
+            overflow: hidden; /* 내부 인디케이터가 벗어나지 않도록 */
+            position: relative; /* 텍스트 표시용 */
+        }
+        .progress-indicator-visual {
+            height: 100%;
+            background-color: var(--color-fashion-4); /* 진행 표시 색상 */
+            border-radius: 9999px;
+            transition: width 0.3s ease-in-out; /* 부드러운 전환 효과 */
+        }
+        .progress-text-visual {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 10px;
+            color: var(--color-fashion-1);
+            font-weight: bold;
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-progress"></span><br>
+                정보 출처: <strong>Shadcn UI & Radix UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Progress 컴포넌트 카드 시작 -->
+        <div class="component-card" id="progress-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">📊</span>
+                <h1 class="component-main-title">Progress (프로그레스 바)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Progress 컴포넌트는 작업의 <span class="highlight-keyword">진행 상태</span>나 특정 값의 정도를 시각적으로 나타내는 바(bar)입니다. 📈 사용자에게 현재 얼마나 많은 작업이 완료되었는지, 또는 목표치에 얼마나 도달했는지 직관적으로 보여줍니다.</p>
+                <p>주요 사용 사례:</p>
+                <ul>
+                    <li>파일 업로드/다운로드 진행률 표시</li>
+                    <li>설문조사 또는 다단계 폼의 완료율 표시</li>
+                    <li>로딩 상태 표시 (결정적 로딩, indeterminate 상태는 아님)</li>
+                    <li>사용자의 목표 달성률 (예: 운동 목표, 학습 진도)</li>
+                </ul>
+                <p>Shadcn UI의 Progress는 Radix UI의 Progress Primitive를 기반으로 하며, 접근성을 위해 <code>aria-valuenow</code>, <code>aria-valuemin</code>, <code>aria-valuemax</code> 등의 ARIA 속성을 올바르게 사용합니다.</p>
+                <div class="progress-visual-container">
+                    <div>
+                        <p style="font-size:13px; margin-bottom:5px;">진행률 30%</p>
+                        <div class="progress-bar-visual">
+                            <div class="progress-indicator-visual" style="width: 30%;"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <p style="font-size:13px; margin-bottom:5px;">진행률 75% (텍스트 표시)</p>
+                        <div class="progress-bar-visual">
+                            <div class="progress-indicator-visual" style="width: 75%;"></div>
+                            <span class="progress-text-visual">75%</span>
+                        </div>
+                    </div>
+                     <div>
+                        <p style="font-size:13px; margin-bottom:5px;">진행률 100% (완료)</p>
+                        <div class="progress-bar-visual">
+                            <div class="progress-indicator-visual" style="width: 100%; background-color: var(--color-fashion-2);"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ Progress 바는 사용자에게 기다림에 대한 피드백을 주어 긍정적인 경험을 유지하는 데 도움을 줍니다!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>Progress (메인 컴포넌트) Props</h2>
+                <div class="text-content">
+                    <p><code>&lt;Progress&gt;</code> 컴포넌트는 현재 진행률 값을 받아 시각적으로 표현합니다. Radix UI에서는 <code>Progress.Root</code>와 <code>Progress.Indicator</code>로 나뉘지만, shadcn/ui에서는 <code>&lt;Progress value={...} /&gt;</code> 형태로 통합되어 사용됩니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">value</td>
+                                <td><span class="highlight-value">number</span></td>
+                                <td>-</td>
+                                <td>현재 진행률 값입니다. (0 ~ <code>max</code> 사이의 값, 보통 0 ~ 100). <code>null</code>이나 <code>undefined</code>를 전달하면 "미결정(indeterminate)" 상태처럼 보일 수 있으나, shadcn/ui의 기본 스타일은 결정적 상태를 가정합니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">max</td>
+                                <td><span class="highlight-value">number</span></td>
+                                <td><span class="highlight-value">100</span> (Radix 기본)</td>
+                                <td>진행률의 최대값입니다. <code>value</code> prop은 이 <code>max</code> 값에 대한 백분율로 계산되어 표시됩니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">getValueLabel</td>
+                                <td><span class="highlight-value">(value: number, max: number) =&gt; string</span></td>
+                                <td>- (Radix)</td>
+                                <td>스크린 리더 사용자에게 제공될 진행률 레이블을 생성하는 함수입니다. (예: "75% 로딩됨"). shadcn/ui에서는 직접적인 prop보다는 ARIA 속성을 통해 관리될 수 있습니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">asChild</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>기본 렌더링 요소(<code>&lt;div role="progressbar"&gt;</code>) 대신 자식으로 전달된 컴포넌트를 렌더링합니다. (Radix <code>Progress.Root</code>에 해당)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">className</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>컴포넌트에 적용할 CSS 클래스입니다. (Tailwind CSS 등)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-content">
+                    <p>💡 shadcn/ui의 <code>Progress</code> 컴포넌트는 내부적으로 Radix UI의 <code>Progress.Root</code>와 <code>Progress.Indicator</code>를 함께 사용합니다. <code>value</code> prop을 전달하면 <code>Indicator</code>의 너비가 자동으로 계산되어 스타일링됩니다.</p>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>서브 컴포넌트들 (Radix UI 기준)</h2>
+                <div class="text-content">
+                    <p>Shadcn UI에서는 <code>&lt;Progress value={...} /&gt;</code> 형태로 사용하지만, Radix UI의 원본 구조는 다음과 같습니다. 이해를 돕기 위해 간단히 소개합니다.</p>
+                    <ul>
+                        <li><strong><code>Progress.Root</code></strong>: 프로그레스 바의 전체 컨테이너입니다. <code>value</code>, <code>max</code> 등의 주요 props를 받습니다.</li>
+                        <li><strong><code>Progress.Indicator</code></strong>: 실제 진행 상태를 시각적으로 나타내는 내부 바입니다. <code>Root</code>의 <code>value</code>에 따라 너비가 동적으로 변경됩니다.</li>
+                    </ul>
+                    <p>Shadcn UI 컴포넌트는 이 두 가지를 조합하여 사용자가 더 간편하게 쓸 수 있도록 추상화한 것입니다. 😊</p>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 시간에 따라 진행률이 변하는 Progress 바 예시입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+"use client" // 상태 변경을 위해 클라이언트 컴포넌트로 사용
+
+import * as React from "react"
+import { Progress } from "@/components/ui/progress"
+
+function LoadingProgress() {
+  const [progress, setProgress] = React.useState(10) // 초기 진행률
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (progress &lt; 90) { // 90%까지만 자동으로 증가
+        setProgress((prev) => prev + Math.floor(Math.random() * 10) + 5);
+      }
+    }, 800); // 0.8초마다 업데이트
+
+    // 90% 도달 시 완료 처리 (예시)
+    if (progress >= 90 && progress &lt; 100) {
+        const finalTimer = setTimeout(() => setProgress(100), 1500);
+        return () => clearTimeout(finalTimer);
+    }
+
+    return () => clearTimeout(timer);
+  }, [progress]);
+
+  return (
+    &lt;div className="w-full max-w-md space-y-4"&gt;
+      &lt;div&gt;
+        &lt;p className="text-sm mb-1"&gt;파일 업로드 중... ({progress}%)&lt;/p&gt;
+        &lt;Progress value={progress} className="w-full" /&gt;
+      &lt;/div&gt;
+
+      &lt;div&gt;
+        &lt;p className="text-sm mb-1"&gt;다른 작업 진행률 (고정값 66%)&lt;/p&gt;
+        &lt;Progress value={66} className="h-4" /&gt; {/* 높이 조절 예시 */}
+      &lt;/div&gt;
+
+      {progress === 100 && (
+        &lt;p className="text-sm font-semibold text-green-600"&gt;업로드 완료! 🎉&lt;/p&gt;
+      )}
+    &lt;/div&gt;
+  )
+}
+
+export default LoadingProgress;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> Progress 바의 색상, 높이 등은 Tailwind CSS 유틸리티 클래스를 사용하여 쉽게 커스터마이징할 수 있습니다. 예를 들어, 특정 진행률에 도달하면 바의 색상을 변경하는 로직을 추가하여 사용자에게 더 명확한 피드백을 줄 수도 있습니다 (예: 완료 시 초록색).
+                </div>
+            </section>
+            
+        </div>
+        <!-- Progress 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>다음은 여러 옵션 중 하나만 선택할 수 있는 Radio Group입니다! 🔘</p>
+            <p>이 문서를 통해 shadcn UI로 <strong>데이터를 시각화</strong>하는 방법을 배우시길 바랍니다. 📈</p>
+            <p>&copy; <span id="current-year-progress"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-progress').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-progress').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

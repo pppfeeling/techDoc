@@ -27,10 +27,45 @@
         }
       })(window.location);
     </script>
-    <script type="module" crossorigin src="/techDoc/assets/index-D16EnZtd.js"></script>
-    <link rel="stylesheet" crossorigin href="/techDoc/assets/index-9xqv0-GT.css">
+    <script type="module" crossorigin src="/techDoc/assets/index-DDqbtzqi.js"></script>
+    <link rel="stylesheet" crossorigin href="/techDoc/assets/index-BC-KKFit.css">
   </head>
   <body>
     <div id="root"></div>
   </body>
-</html>
+  <!--
+GitHub Pages에서도 SPA의 직접 URL 접근과 쿼리 파라미터 처리방법
+
+1. **원본 URL 분석**
+   - 프로토콜: `https://`
+   - 도메인: `pppfeeling.github.io`
+   - 경로: `/techDoc/vite/chap01`
+   - 쿼리 파라미터: `?name=aa&id=1`
+
+2. **404.html 스크립트의 URL 변환 과정**
+   ```js
+   // 변환 전: https://pppfeeling.github.io/techDoc/vite/chap01?name=aa&id=1
+   
+   // 1단계: baseUrl 추출 (/techDoc)
+   pathSegmentsToKeep = 1 이므로 첫 번째 세그먼트만 유지
+   
+   // 2단계: 나머지 경로 추출 (vite/chap01)
+   남은 경로 세그먼트 추출
+   
+   // 3단계: 쿼리 파라미터 변환
+   ?name=aa&id=1 → &name=aa~and~id=1
+   
+   // 변환 후: https://pppfeeling.github.io/techDoc/?/vite/chap01&name=aa~and~id=1
+   ```
+
+3. **index.html에서의 처리**
+   - URL에서 `?/` 이후의 경로를 감지
+   - `~and~`를 다시 `&`로 복원
+   - 실제 라우팅 경로로 변환하여 React Router에 전달
+
+4. **최종 라우팅**
+   - React Router가 `/vite/chap01` 경로로 내부 라우팅 수행
+   - 쿼리 파라미터 `name=aa&id=1`는 그대로 유지되어 컴포넌트에서 사용 가능
+
+
+--></html>

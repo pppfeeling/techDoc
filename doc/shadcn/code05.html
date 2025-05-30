@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Collapsible</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+
+        .subcomponent-card {
+            border: 2px solid var(--color-fashion-2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            background-color: rgba(242, 230, 61, 0.08);
+            position: relative;
+        }
+        .subcomponent-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .subcomponent-title .icon {
+            margin-right: 8px;
+            font-size: 20px;
+            color: var(--color-fashion-4);
+        }
+        .subcomponent-card::before {
+            content: '🧩';
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            font-size: 20px;
+            transform: rotate(10deg);
+        }
+
+        .parent-child-relation {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-fashion-5);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .component-box {
+            background-color: var(--color-fashion-5);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin: 5px;
+        }
+        .arrow {
+            font-size: 28px;
+            color: var(--color-fashion-1);
+            margin: 0 10px;
+            font-family: 'Nanum Pen Script', cursive;
+        }
+        
+        /* Collapsible 시각화 예시 */
+        .collapsible-example-visual {
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        .collapsible-trigger-visual {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+        .collapsible-content-visual {
+            background-color: rgba(242, 196, 61, 0.1);
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 6px;
+            border: 1px dashed var(--color-fashion-3);
+        }
+        .collapsible-content-visual.hidden {
+            display: none;
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-collapsible"></span><br>
+                정보 출처: <strong>Shadcn UI & Radix UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Collapsible 컴포넌트 카드 시작 -->
+        <div class="component-card" id="collapsible-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">↕️</span>
+                <h1 class="component-main-title">Collapsible (접고 펴기)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Collapsible 컴포넌트는 특정 콘텐츠 영역을 <span class="highlight-keyword">동적으로 접거나 펼칠 수 있게</span> 해주는 UI 컨트롤입니다. 사용자가 필요에 따라 정보를 보거나 숨길 수 있도록 하여, 화면 공간을 효율적으로 사용하고 복잡한 정보를 단계적으로 제시할 수 있습니다. ↔️</p>
+                <p>주요 사용 사례:</p>
+                <ul>
+                    <li>"자세히 보기 / 간략히 보기" 기능 구현</li>
+                    <li>긴 텍스트나 목록의 일부만 우선 보여주고, 나머지는 펼쳐서 보도록 유도</li>
+                    <li>설정 패널이나 필터 옵션 같이 부가적인 정보를 숨겨두었다가 필요시 표시</li>
+                </ul>
+                <p>이 컴포넌트는 Radix UI의 Collapsible Primitive를 기반으로 하며, 뛰어난 접근성과 유연한 커스터마이징을 제공합니다.</p>
+                <div class="collapsible-example-visual">
+                    <div class="collapsible-trigger-visual" onclick="toggleCollapsibleVisual(this)">
+                        <span>여기를 클릭하여 내용 보기</span>
+                        <span class="visual-icon">➕</span>
+                    </div>
+                    <div class="collapsible-content-visual hidden">
+                        <p>짠! 숨겨져 있던 내용이 나타났어요. 🎉 다시 트리거를 클릭하면 내용이 숨겨집니다.</p>
+                    </div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ Accordion과 비슷해 보이지만, Collapsible은 주로 단일 섹션의 독립적인 접힘/펼침에 사용된다는 점이 달라요!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>Collapsible (루트 컴포넌트) Props</h2>
+                <div class="text-content">
+                    <p><code>&lt;Collapsible&gt;</code> 루트 컴포넌트는 접고 펴는 동작의 전체 컨테이너 역할을 하며, 다음과 같은 주요 Prop들을 가집니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">open</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td>-</td>
+                                <td>Collapsible 콘텐츠의 열림/닫힘 상태를 제어합니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">onOpenChange</td>
+                                <td><span class="highlight-value">(open: boolean) =&gt; void</span></td>
+                                <td>-</td>
+                                <td>열림/닫힘 상태가 변경될 때 호출되는 콜백 함수입니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">defaultOpen</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>컴포넌트가 처음 마운트될 때의 기본 열림 상태입니다. (비제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">disabled</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>Collapsible 전체를 비활성화합니다. 비활성화되면 <code>CollapsibleTrigger</code>를 통해 상태를 변경할 수 없습니다. 🚫</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">asChild</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>기본 렌더링 요소(<code>&lt;div&gt;</code>) 대신 자식으로 전달된 컴포넌트를 렌더링합니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>서브 컴포넌트들</h2>
+                <div class="text-content">
+                    <p>Collapsible 컴포넌트는 주로 세 가지 서브 컴포넌트로 구성됩니다: <code>CollapsibleTrigger</code>, 그리고 <code>CollapsibleContent</code>.</p>
+                </div>
+
+                <div class="parent-child-relation">
+                    <span class="component-box">Collapsible</span> <span class="arrow">➡️</span>
+                    ( <span class="component-box">CollapsibleTrigger</span> &amp; <span class="component-box">CollapsibleContent</span> )
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">👆</span>CollapsibleTrigger</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> <code>CollapsibleContent</code>를 열거나 닫는 역할을 하는 클릭 가능한 요소입니다. 보통 버튼 형태로 구현되며, 내부에 텍스트나 아이콘(예: 펼침/닫힘 표시 아이콘)을 포함할 수 있습니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;Collapsible&gt;</code>의 직접적인 자식으로 사용됩니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;CollapsibleTrigger&gt;자세히 보기&lt;/CollapsibleTrigger&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props:</span></p>
+                         <div class="prop-table-wrapper">
+                            <table class="prop-table">
+                                <thead><tr><th>Prop</th><th>타입</th><th>설명</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="prop-name">asChild</td><td><span class="highlight-value">boolean</span></td><td>기본 <code>&lt;button&gt;</code> 대신 자식으로 렌더링합니다. 커스텀 버튼 컴포넌트 등을 사용할 때 유용합니다.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">📄</span>CollapsibleContent</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 실제로 접히거나 펼쳐지는 콘텐츠 영역입니다. <code>CollapsibleTrigger</code>에 의해 표시 상태가 제어됩니다. 이 안에는 텍스트, 이미지, 다른 컴포넌트 등 다양한 내용을 넣을 수 있습니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;Collapsible&gt;</code>의 직접적인 자식으로 사용됩니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;CollapsibleContent&gt;&lt;p&gt;여기에 숨겨진 내용이 들어갑니다...&lt;/p&gt;&lt;/CollapsibleContent&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props (Radix UI 기반):</span></p>
+                        <div class="prop-table-wrapper">
+                            <table class="prop-table">
+                                <thead><tr><th>Prop</th><th>타입</th><th>설명</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="prop-name">forceMount</td><td><span class="highlight-value">boolean</span></td><td>콘텐츠가 닫혀 있을 때도 DOM에서 제거하지 않고 숨김 처리만 합니다. 애니메이션이나 특정 DOM 상태 유지가 필요할 때 사용합니다.</td></tr>
+                                    <tr><td class="prop-name">asChild</td><td><span class="highlight-value">boolean</span></td><td>기본 <code>&lt;div&gt;</code> 대신 자식으로 렌더링합니다.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-content">shadcn/ui에서는 <code>CollapsibleContent</code>가 열리고 닫힐 때 애니메이션 효과(높이 변경)를 기본적으로 제공합니다. 이는 CSS 트랜지션과 데이터 속성(<code>data-state="open"</code> 또는 <code>data-state="closed"</code>)을 활용하여 구현됩니다.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 간단한 "더보기/숨기기" 기능을 구현한 Collapsible 예제입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+import React, { useState } from "react"
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+import { Button } from "@/components/ui/button" // Trigger를 Button으로 사용하기 위해
+import { ChevronsUpDown, Plus, Minus } from "lucide-react" // 아이콘 예시
+
+function ReadMoreSection() {
+  const [isOpen, setIsOpen] = useState(false);
+  const longText = "이것은 매우 긴 텍스트입니다. 처음에는 일부만 보이고, '더보기' 버튼을 누르면 전체 내용이 펼쳐집니다. 사용자는 이렇게 긴 내용을 한 번에 보지 않아도 되므로 초기 화면이 깔끔해지는 장점이 있습니다. React, TypeScript, Vite, 그리고 shadcn UI는 정말 멋진 조합입니다! 🚀✨";
+  const previewText = longText.substring(0, 100) + "...";
+
+  return (
+    &lt;Collapsible
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      className="w-[350px] space-y-2"
+    &gt;
+      &lt;div className="flex items-center justify-between space-x-4 px-4"&gt;
+        &lt;h4 className="text-sm font-semibold"&gt;
+          @peduarte 님이 최근 업데이트 한 내용
+        &lt;/h4&gt;
+        &lt;CollapsibleTrigger asChild&gt;
+          &lt;Button variant="ghost" size="sm" className="w-9 p-0"&gt;
+            {isOpen ? &lt;Minus className="h-4 w-4" /&gt; : &lt;Plus className="h-4 w-4" /&gt;}
+            {/* &lt;ChevronsUpDown className="h-4 w-4" /&gt; */}
+            &lt;span className="sr-only"&gt;Toggle&lt;/span&gt;
+          &lt;/Button&gt;
+        &lt;/CollapsibleTrigger&gt;
+      &lt;/div&gt;
+      &lt;div className="rounded-md border px-4 py-3 font-mono text-sm"&gt;
+        {isOpen ? longText.substring(0, 150) : previewText.substring(0,50)} {/* 처음엔 더 짧게 */}
+      &lt;/div&gt;
+      &lt;CollapsibleContent className="space-y-2 px-4"&gt;
+        &lt;div className="rounded-md border px-4 py-3 font-mono text-sm"&gt;
+          {longText.substring(150)} {/* 더보기로 나머지 내용 표시 */}
+        &lt;/div&gt;
+        &lt;div className="rounded-md border px-4 py-3 font-mono text-sm"&gt;
+          추가적인 숨겨진 내용이 있다면 여기에 표시할 수 있습니다.
+        &lt;/div&gt;
+      &lt;/CollapsibleContent&gt;
+      {/* CollapsibleContent가 닫혀있을 때 '더보기' 버튼, 열려있을 때 '숨기기' 버튼을 별도로 보여줄 수도 있습니다. */}
+      {!isOpen && (
+         &lt;CollapsibleTrigger asChild&gt;
+            &lt;Button variant="link" className="px-4"&gt;더 보기&lt;/Button&gt;
+         &lt;/CollapsibleTrigger&gt;
+      )}
+    &lt;/Collapsible&gt;
+  )
+}
+
+export default ReadMoreSection;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> <code>CollapsibleTrigger</code> 내부에 현재 상태(열림/닫힘)에 따라 다른 아이콘(예: 플러스/마이너스, 위/아래 화살표)을 표시하면 사용자에게 명확한 시각적 피드백을 줄 수 있습니다. <code>CollapsibleContent</code>는 기본적으로 애니메이션 효과가 적용되지만, <code>forceMount</code> prop을 사용하면 닫힌 상태에서도 DOM에 남아있게 되어 SEO나 특정 상태 유지에 유리할 수 있습니다 (단, 초기 로딩 성능에 미미한 영향을 줄 수 있음).
+                </div>
+            </section>
+            
+        </div>
+        <!-- Collapsible 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>흥미로운 컴포넌트들이 아직 많이 남아있어요! 🏃💨</p>
+            <p>이 문서는 shadcn UI 학습을 <strong>즐겁게</strong> 할 수 있도록 제작되었습니다. 🥳</p>
+            <p>&copy; <span id="current-year-collapsible"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-collapsible').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-collapsible').textContent = new Date().getFullYear();
+
+        // 간단한 시각화 예제용 스크립트
+        function toggleCollapsibleVisual(triggerElement) {
+            const contentElement = triggerElement.nextElementSibling;
+            const iconElement = triggerElement.querySelector('.visual-icon');
+            const isOpen = !contentElement.classList.contains('hidden');
+            
+            if (isOpen) {
+                contentElement.classList.add('hidden');
+                iconElement.textContent = '➕';
+            } else {
+                contentElement.classList.remove('hidden');
+                iconElement.textContent = '➖';
+            }
+        }
+    </script>
+</body>
+</html>

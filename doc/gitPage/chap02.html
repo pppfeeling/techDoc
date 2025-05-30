@@ -1,0 +1,111 @@
+<div class="container">
+    <header class="header">
+      <h1 class="title">챕터 2: 개발 환경에 프로젝트 생성 및 배포</h1>
+      <div class="date">2025.05.29 | GitHub Pages 사용</div>
+    </header>
+
+    <div class="content-grid">
+        <div class="card">
+            <p>이제 본격적으로 코딩의 세계로 뛰어들 시간입니다! Vite를 사용해 번개처럼 빠른 개발 환경을 구축하고, 여러분의 React 애플리케이션에 생명을 불어넣어 보겠습니다. 그리고 마법의 주문 <code  style="display:inline-block; padding: 2px 5px; margin:0;">gh-pages</code>를 외쳐 GitHub Pages에 여러분의 작품을 선보일 거예요! 🪄</p>
+        </div>
+    </div>
+    
+    
+    <div class="content-grid">
+        <div class="card">
+            <h3 class="card-title"><span class="icon">🌱</span>1. Vite로 React + TypeScript 프로젝트 생성</h3>
+            <p>터미널을 열고 다음 명령어를 입력하여 새로운 프로젝트를 생성하세요. 마치 씨앗을 심고 새싹이 돋아나길 기다리는 설레는 순간과 같아요!</p>
+            <div class="code-block">npm create vite@latest my-gh-pages-app --template react-ts</div>
+            <p>여기서 <code class="keyword">my-gh-pages-app</code>은 여러분의 프로젝트 이름입니다. 자유롭게 변경하세요! <code class="keyword">--template react-ts</code> 옵션으로 React와 TypeScript가 설정된 프로젝트가 만들어집니다.</p>
+            <p>프로젝트가 생성되면 해당 폴더로 이동하고 필요한 패키지를 설치합니다.</p>
+            <div class="code-block">cd my-gh-pages-app
+npm install</div>
+            <p>그리고 <span class="keyword hand-drawn">React Router</span>를 설치하여 페이지 간 이동 기능을 추가해봅시다.</p>
+            <div class="code-block">npm install react-router-dom</div>
+            <p>이제 <div class="code-block">npm run dev</div> 명령어로 개발 서버를 실행하여 멋진 시작 페이지를 확인해보세요! (기본 포트: 5173)</p>
+        </div>
+    </div>
+
+    <div class="content-grid">
+        <div class="card">
+            <h3 class="card-title"><span class="icon">🛠️</span>2. GitHub Pages 배포 설정</h3>
+            <p>이제 마법의 가루, <code class="keyword">gh-pages</code> 패키지를 설치하여 배포 준비를 합니다.</p>
+            <div class="code-block">npm install gh-pages --save-dev</div>
+            <p>다음으로, <code class="keyword hand-drawn">package.json</code> 파일을 열어 <code class="keyword">scripts</code> 부분을 수정합니다. 여기에 배포 명령어를 추가할 거예요.</p>
+            <div class="code-block">// package.json
+"scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
+    <span style="color: #F2E63D;">"deploy": "gh-pages -d dist"</span> <span style="color: #475569;">// ✨ 이 부분을 추가하세요!</span>
+},
+            </div>
+            <p>마지막으로 가장 중요한 설정! <code class="keyword hand-drawn">vite.config.ts</code> 파일에 <code class="keyword">base</code> 옵션을 추가해야 합니다. GitHub Pages는 프로젝트 페이지를 <code style="color: #F24405;">&lt;username&gt;.github.io/&lt;repository-name&gt;/</code> 형태로 제공하기 때문에, 우리 앱이 올바른 경로에서 리소스를 찾도록 알려줘야 해요.</p>
+            <div class="code-block">// vite.config.ts
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+plugins: [react()],
+    <span style="color: #F2E63D;">base: '/your-repository-name/', </span> <span style="color: #475569;">// ✨ 이 부분을 추가! 'your-repository-name'을 실제 저장소 이름으로 변경하세요.</span>
+})
+            </div>
+            <div class="highlight-box">
+                <p><strong>🚨 중요:</strong> <code class="keyword">base</code> 값은 반드시 <code style="color: #F24405;">/저장소이름/</code> 형식이어야 합니다! (앞뒤 슬래시 포함) <br>예를 들어 저장소 이름이 <code style="color: #F24405;">my-react-app</code>이라면 <code style="color: #F24405;">/my-react-app/</code>으로 설정합니다.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="content-grid">
+        <div class="card">
+            <h3 class="card-title"><span class="icon">🌍</span>3. 프로젝트 빌드 및 배포</h3>
+            <p>이제 모든 준비가 끝났습니다! 다음 단계를 따라 프로젝트를 빌드하고 GitHub Pages에 배포해봅시다.</p>
+            
+            <div class="process-flow flex-col">
+                <div class="process-step w-full">
+                    <strong><span class="step-number">1</span>로컬 변경사항 커밋 (선택 사항)</strong>
+                    <p>프로젝트에 변경사항이 있다면 먼저 Git에 커밋합니다.</p>
+                    <div class="code-block text-left" style="margin-top: 5px;">git add .
+git commit -m "프로젝트 초기 설정 및 gh-pages 준비"
+git push origin main <span style="color: #475569;"># 또는 여러분의 기본 브랜치</span>
+                    </div>
+                </div>
+                <div class="process-arrow">⬇️</div>
+                <div class="process-step w-full">
+                    <strong><span class="step-number">2</span>프로젝트 빌드</strong>
+                    <p><code class="keyword">package.json</code>에 설정한 빌드 명령어를 실행하여 프로젝트를 빌드합니다. <code class="keyword">dist</code> 폴더가 생성될 거예요!</p>
+                    <div class="code-block text-left" style="margin-top: 5px;">npm run build</div>
+                    <div class="folder-structure text-left" style="margin-top:10px;">
+dist/
+  ├── assets/
+  │   ├── index-xxxxxx.js
+  │   └── index-xxxxxx.css
+  ├── index.html
+  └── ... (기타 정적 파일들)
+                    </div>
+                </div>
+                <div class="process-arrow">⬇️</div>
+                <div class="process-step">
+                    <strong><span class="step-number">3</span>GitHub Pages에 배포</strong>
+                    <p>드디어 마법의 주문을 외칠 시간! <code class="keyword">package.json</code>에 추가한 <code class="keyword">deploy</code> 스크립트를 실행합니다.</p>
+                    <div class="code-block text-left" style="margin-top: 5px;">npm run deploy</div>
+                    <p style="margin-top:10px;">이 명령어는 <code class="keyword">gh-pages</code> 패키지를 사용하여 <code class="keyword">dist</code> 폴더의 내용을 여러분의 GitHub 저장소의 <code class="keyword hand-drawn">gh-pages</code> 브랜치에 푸시합니다. (만약 브랜치가 없다면 새로 생성해줍니다!)</p>
+                </div>
+                <div class="process-arrow">⬇️</div>
+                <div class="process-step">
+                    <strong><span class="step-number">4</span>배포 확인</strong>
+                    <p>배포가 완료되면 GitHub 저장소의 <span class="keyword">Settings</span> > <span class="keyword">Pages</span> 탭에서 여러분의 사이트가 게시된 URL을 확인할 수 있습니다. (예: <code style="color: #F24405;">https://&lt;username&gt;.github.io/&lt;repository-name&gt;/</code>)</p>
+                    <p style="margin-top:10px;">몇 분 정도 시간이 걸릴 수 있으니, 커피 한 잔의 여유를 가지세요! ☕</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <footer class="footer">
+      출처: React, TypeScript, Vite, React Router 엔지니어를 위한 GitHub Pages 배포 가이드 
+    </footer>
+  </div>

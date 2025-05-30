@@ -1,0 +1,141 @@
+<div class="container">
+    <header class="header">
+      <h1 class="title">챕터 3: 프로젝트에서 Base URL 사용하기 위한 처리 절차</h1>
+      <div class="date">2025.05.29 | GitHub Pages 사용</div>
+    </header>
+
+    <div class="content-grid">
+        <div class="card">
+            <p>GitHub Pages에 프로젝트를 배포하면, 우리 앱은 <code class="keyword hand-drawn">&lt;username&gt;.github.io/&lt;repository-name&gt;/</code> 과 같은 하위 경로에서 제공됩니다. <br>이 때문에 앱 내부의 모든 경로(링크, 이미지, API 요청 등)는 이 <span class="keyword">base URL</span>을 기준으로 설정되어야 합니다. <br>그렇지 않으면 "어? 이 파일 어디 갔지? 😢" 하는 상황이 발생할 수 있어요.</p>
+            <p>Vite는 <code class="keyword">vite.config.ts</code>의 <code class="keyword">base</code> 설정을 통해 이 문제를 해결하도록 도와줍니다. <br>빌드 시 이 값을 참조하여 HTML, CSS, JS 파일 내의 모든 절대 경로 앞에 자동으로 base URL을 붙여줍니다.</p>
+        </div>
+    </div>
+    <div class="content-grid">
+      <div class="card">
+            <h3 class="card-title"><span class="icon">🔧</span>1. <code style="font-family: 'Courier New', monospace; color: #F24405;">vite.config.ts</code>의 <code style="font-family: 'Courier New', monospace; color: #F24405;">base</code> 설정 복습</h3>
+            <p>다시 한번 <code class="keyword">vite.config.ts</code> 파일을 살펴봅시다.</p>
+            <div class="code-block">// vite.config.ts
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  base: '/your-repository-name/', // 👈 이 부분이 핵심!
+})
+            </div>
+            <p>만약 여러분의 GitHub 저장소 이름이 <code class="keyword">my-cool-project</code>라면, <code class="keyword">base</code> 값은 <code class="keyword hand-drawn">/my-cool-project/</code>가 됩니다. 이 설정 하나로 Vite는 빌드 시 생성되는 <code class="keyword">index.html</code> 파일 내부의 에셋 경로들을 다음과 같이 자동으로 수정해줍니다.</p>
+            
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>설정 전 (예시)</th>
+                        <th><code class="keyword">base: '/my-cool-project/'</code> 설정 후 (빌드 결과)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code style="color: #F25C05;">&lt;script src="/assets/index-xxxx.js"&gt;</code></td>
+                        <td><code style="color: #10b981;">&lt;script src="/my-cool-project/assets/index-xxxx.js"&gt;</code></td>
+                    </tr>
+                    <tr>
+                        <td><code style="color: #F25C05;">&lt;link rel="stylesheet" href="/assets/index-yyyy.css"&gt;</code></td>
+                        <td><code style="color: #10b981;">&lt;link rel="stylesheet" href="/my-cool-project/assets/index-yyyy.css"&gt;</code></td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="margin-top: 15px;">덕분에 개발 환경에서는 루트 경로(<code style="color: #F24405;">/</code>)를 기준으로 작업하고, 배포 시에는 GitHub Pages 경로에 맞게 자동으로 조정됩니다. 정말 편리하죠? ✨</p>
+        </div>
+    </div>
+    <div class="content-grid">
+        <div class="card">
+            <h3 class="card-title"><span class="icon">🛣️</span>2. React Router에서 Base URL 처리</h3>
+            <p>React Router를 사용할 때도 <code class="keyword">base URL</code>을 고려해야 합니다. <code class="keyword">&lt;BrowserRouter&gt;</code> 컴포넌트에 <code class="keyword hand-drawn">basename</code> prop을 설정해주면 됩니다.</p>
+            <p>Vite는 개발/프로덕션 환경에 따라 자동으로 `base` 값을 제공하는 <code class="keyword">import.meta.env.BASE_URL</code> 환경 변수를 지원합니다. 이를 활용하면 편리하게 설정할 수 있습니다.</p>
+            <div class="code-block">// src/main.tsx 또는 App.tsx 등 라우터 설정 파일
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App';
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  &lt;React.StrictMode&gt;
+    &lt;BrowserRouter <span style="color: #F2E63D;">basename={import.meta.env.BASE_URL}</span>> <span style="color: #475569;">// ✨ 이 부분을 추가!</span>
+      &lt;App /&gt;
+    &lt;/BrowserRouter&gt;
+  &lt;/React.StrictMode&gt;
+);
+            </div>
+            <div class="env-card">
+                <p><strong><code class="keyword">import.meta.env.BASE_URL</code> 이란?</strong> 🤔</p>
+                <p>Vite가 제공하는 특별한 환경 변수입니다. <code class="keyword">vite.config.ts</code>에 설정된 <code class="keyword">base</code> 값을 자동으로 가져옵니다.</p>
+                <ul>
+                    <li>개발 환경 (npm run dev): 기본값은 <code style="color: #F24405;">'/'</code> 입니다.</li>
+                    <li>프로덕션 빌드 (npm run build): <code style="color: #F24405;">vite.config.ts</code>의 <code style="color: #F24405;">base</code> 값 (예: <code style="color: #F24405;">'/your-repository-name/'</code>)이 사용됩니다.</li>
+                </ul>
+                <p>따라서 코드를 수정할 필요 없이 개발과 배포 환경 모두에서 올바르게 작동합니다!</p>
+            </div>
+            <p>이제 <code class="keyword">&lt;Link&gt;</code> 컴포넌트나 <code class="keyword">navigate</code> 함수를 사용할 때 평소처럼 상대 경로 또는 절대 경로를 사용하면, React Router가 <code class="keyword">basename</code>을 기준으로 올바르게 경로를 처리해줍니다.</p>
+            <div class="code-block">// 예시 컴포넌트
+import { Link } from 'react-router-dom';
+
+function Navigation() {
+  return (
+    &lt;nav&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;Link to="/"&gt;홈&lt;/Link&gt;&lt;/li&gt; <span style="color: #475569;">// 실제 경로는 /your-repository-name/</span>
+        &lt;li&gt;&lt;Link to="/about"&gt;소개&lt;/Link&gt;&lt;/li&gt; <span style="color: #475569;">// 실제 경로는 /your-repository-name/about</span>
+      &lt;/ul&gt;
+    &lt;/nav&gt;
+  );
+}
+            </div>
+        </div>
+    </div>
+
+    <div class="content-grid">
+        <div class="card">
+            <h3 class="card-title"><span class="icon">🖼️</span>3. Public 디렉토리의 정적 에셋 경로 처리</h3>
+            <p>Vite 프로젝트의 <code class="keyword">public</code> 디렉토리에 있는 이미지나 파일들은 빌드 시 <code class="keyword">dist</code> 폴더의 루트에 그대로 복사됩니다. 이 파일들을 코드에서 참조할 때는 어떻게 해야 할까요?</p>
+            <ul>
+                <li><strong>HTML에서 직접 참조 시:</strong> <code class="keyword">vite.config.ts</code>의 <code class="keyword">base</code> 설정에 의해 자동으로 경로가 수정됩니다. (예: <code style="color: #F24405;">&lt;img src="/my-image.png"&gt;</code> → <code style="color: #10b981;">&lt;img src="/your-repository-name/my-image.png"&gt;</code>)</li>
+                <li>
+                    <strong>JavaScript/JSX에서 참조 시:</strong>
+                    <p>가장 좋은 방법은 이미지를 <code class="keyword">src</code> 폴더로 가져와서 모듈처럼 사용하는 것입니다. 그러면 Vite가 해시된 파일명으로 빌드하고 올바른 경로를 제공합니다.</p>
+                    <div class="code-block">// src/assets/logo.png 와 같이 이미지를 src 폴더 안에 위치
+import myImage from './assets/my-image.png'; // 또는 ../assets/my-image.png 등 상대경로
+
+function MyComponent() {
+  return &lt;img src={myImage} alt="My Image" /&gt;; // Vite가 경로 처리
+}
+                    </div>
+                    <p>하지만 때로는 동적으로 public 폴더의 에셋 경로를 만들어야 할 수도 있습니다. 이때도 <code class="keyword hand-drawn">import.meta.env.BASE_URL</code>을 활용할 수 있습니다.</p>
+                    <div class="code-block">
+function MyComponentWithPublicAsset() {
+  const imageUrl = `${import.meta.env.BASE_URL}my-public-image.png`; 
+  // 개발 시: "/my-public-image.png"
+  // 배포 시: "/your-repository-name/my-public-image.png"
+  
+  return &lt;img src={imageUrl} alt="My Public Image" /&gt;;
+}
+                    </div>
+                    <p><strong>주의:</strong> <code class="keyword">public</code> 디렉토리의 파일들은 Vite의 빌드 프로세스에서 해싱되거나 최적화되지 않습니다. 로고, 파비콘 등 자주 바뀌지 않는 정적 파일에 적합합니다.</p>
+                </li>
+            </ul>
+            <div class="highlight-box">
+                <p><strong>정리하자면 :</strong></p>
+                <ul>
+                    <li><code class="keyword">vite.config.ts</code>의 <code class="keyword hand-drawn">base</code> 설정: 빌드 시 모든 정적 에셋 경로의 기준점을 잡아줍니다.</li>
+                    <li>React Router의 <code class="keyword hand-drawn">basename</code> prop: <code class="keyword">import.meta.env.BASE_URL</code>을 사용하여 라우팅 기준점을 설정합니다.</li>
+                    <li>JavaScript/JSX에서 Public 에셋 참조: 가능하면 <code class="keyword">src</code> 폴더로 가져와 사용하거나, <code class="keyword">import.meta.env.BASE_URL</code>을 조합하여 경로를 만듭니다.</li>
+                </ul>
+                <p>이 세 가지를 기억하면 GitHub Pages에서도 여러분의 앱이 길을 잃지 않고 잘 동작할 거예요! 😉</p>
+            </div>
+        </div>
+    </div>
+
+    
+
+    <footer class="footer">
+      출처: React, TypeScript, Vite, React Router 엔지니어를 위한 GitHub Pages 배포 가이드 
+    </footer>
+  </div>

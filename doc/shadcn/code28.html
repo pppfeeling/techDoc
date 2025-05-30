@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 가이드 - Table 컴포넌트</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+         .text-content li > code { /* li 내부 코드 스타일 */
+             font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+        
+        /* Table 시각화 예시 */
+        .table-visual-example {
+            margin-top: 20px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden; /* 내부 테이블이 삐져나오지 않도록 */
+            box-shadow: 0 4px 6px rgba(89, 59, 70, 0.1);
+        }
+        .table-visual-example table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .table-visual-example th, .table-visual-example td {
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--color-fashion-3);
+            font-size: 14px;
+        }
+        .table-visual-example th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: bold;
+            font-family: 'Poor Story', cursive;
+        }
+        .table-visual-example tr:last-child td {
+            border-bottom: none;
+        }
+        .table-visual-example tr:hover td {
+            background-color: rgba(242, 196, 61, 0.1);
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-table"></span><br>
+                정보 출처: <strong>@tanstack/react-table & Shadcn UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Table 컴포넌트 카드 시작 -->
+        <div class="component-card" id="table-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">📜</span>
+                <h1 class="component-main-title">Table (테이블)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Table 컴포넌트는 데이터를 <span class="highlight-keyword">행(row)과 열(column)</span> 형식으로 구조화하여 보여주는 데 사용됩니다. 📊 Shadcn UI의 Table은 <code>@tanstack/react-table</code> (이전 React Table v8)이라는 강력한 <span class="highlight-keyword">헤드리스 UI 라이브러리</span>를 기반으로 합니다. 이는 테이블의 로직(정렬, 필터링, 페이지네이션, 그룹핑, 컬럼 숨기기/보이기 등)은 <code>@tanstack/react-table</code>이 담당하고, 실제 UI 렌더링은 사용자가 shadcn UI의 스타일링된 테이블 관련 컴포넌트들(<code>&lt;Table&gt;</code>, <code>&lt;TableHeader&gt;</code>, <code>&lt;TableRow&gt;</code> 등)을 사용하여 직접 구성하는 방식입니다.</p>
+                <p>주요 특징:</p>
+                <ul>
+                    <li>강력한 기능: 정렬, 필터링, 페이지네이션, 그룹핑, 컬럼 리사이징, 행 선택 등 거의 모든 테이블 기능을 지원</li>
+                    <li>헤드리스 UI: 테이블 로직과 UI가 분리되어 있어 높은 유연성과 커스터마이징 가능성 제공</li>
+                    <li>타입스크립트 완벽 지원</li>
+                    <li>Shadcn UI를 통해 미리 스타일링된 테이블 마크업 컴포넌트 제공</li>
+                </ul>
+                <div class="table-visual-example">
+                    <table>
+                        <thead>
+                            <tr><th>ID</th><th>이름</th><th>이메일</th><th>상태</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>1</td><td>홍길동</td><td>hong@example.com</td><td>활성</td></tr>
+                            <tr><td>2</td><td>김철수</td><td>kim@example.com</td><td>비활성</td></tr>
+                            <tr><td>3</td><td>이영희</td><td>lee@example.com</td><td>활성</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="speech-bubble">
+                    ✨ <code>@tanstack/react-table</code>의 강력한 기능과 shadcn UI의 깔끔한 스타일이 만나 최고의 테이블 경험을 선사합니다!
+                </div>
+            </section>
+
+            <section class="setup-section">
+                <h2 class="section-heading"><span class="icon">⚙️</span>기본 설정 및 설치</h2>
+                <div class="text-content">
+                    <p>먼저 <code>@tanstack/react-table</code> 라이브러리를 설치해야 합니다:</p>
+                    <div class="code-block-wrapper">
+                        <pre><code>
+npm install @tanstack/react-table
+# 또는
+yarn add @tanstack/react-table
+                        </code></pre>
+                    </div>
+                    <p>그리고 shadcn UI에서 제공하는 테이블 관련 컴포넌트들 (<code>Table</code>, <code>TableHeader</code>, <code>TableBody</code>, <code>TableRow</code>, <code>TableHead</code>, <code>TableCell</code>, <code>TableCaption</code>)을 프로젝트에 추가합니다 (CLI 사용).</p>
+                </div>
+            </section>
+
+            <section class="integration-steps">
+                <h2 class="section-heading"><span class="icon">🔗</span>핵심 사용 단계</h2>
+                <div class="text-content">
+                    <p><strong>1. 데이터 및 컬럼 정의 (<code>columns</code>)</strong></p>
+                    <p>테이블에 표시할 데이터와 각 컬럼의 구조를 정의합니다. <code>@tanstack/react-table</code>의 <code>ColumnDef</code> 타입을 사용합니다.</p>
+                    <pre><code>
+import { type ColumnDef } from "@tanstack/react-table"
+
+// 데이터 타입 정의 (예시)
+export type Payment = {
+  id: string
+  amount: number
+  status: "pending" | "processing" | "success" | "failed"
+  email: string
+}
+
+export const columns: ColumnDef&lt;Payment&gt;[] = [
+  {
+    accessorKey: "status", // 데이터 객체의 키
+    header: "상태",       // 헤더에 표시될 텍스트
+  },
+  {
+    accessorKey: "email",
+    header: "이메일",
+  },
+  {
+    accessorKey: "amount",
+    header: () => &lt;div className="text-right"&gt;금액&lt;/div&gt;, // 헤더 커스텀 렌더링
+    cell: ({ row }) => { // 셀 커스텀 렌더링
+      const amount = parseFloat(row.getValue("amount"))
+      const formatted = new Intl.NumberFormat("ko-KR", {
+        style: "currency",
+        currency: "KRW",
+      }).format(amount)
+      return &lt;div className="text-right font-medium"&gt;{formatted}&lt;/div&gt;
+    },
+  },
+  // ... 다른 컬럼들
+]
+                    </code></pre>
+                     <p><code>accessorKey</code>는 데이터 객체에서 해당 셀의 값을 가져올 키입니다. <code>header</code>와 <code>cell</code>은 각각 헤더와 셀의 내용을 어떻게 렌더링할지 정의합니다. 함수를 사용하여 JSX를 반환할 수도 있습니다.</p>
+
+                    <p style="margin-top:15px;"><strong>2. 테이블 인스턴스 생성 (<code>useReactTable</code>)</strong></p>
+                    <p><code>useReactTable</code> 훅을 사용하여 테이블 인스턴스를 생성합니다. 이 훅에 데이터와 컬럼 정의, 그리고 필요한 기능(정렬, 필터링 등)을 위한 상태와 핸들러를 전달합니다.</p>
+                     <pre><code>
+import {
+  useReactTable,
+  getCoreRowModel,
+  getPaginationRowModel, // 페이지네이션 사용 시
+  getSortedRowModel,    // 정렬 사용 시
+  getFilteredRowModel,  // 필터링 사용 시
+  type SortingState,
+  type ColumnFiltersState,
+  // ... 기타 필요한 타입들
+} from "@tanstack/react-table"
+import *_React from "react" // React 명시적 import (useEffect 등 사용 시)
+
+// ... 데이터(data)와 컬럼(columns) 정의 ...
+
+function MyDataTable({ columns, data }: DataTableProps&lt;TData, TValue&gt;) {
+  const [sorting, setSorting] = React.useState&lt;SortingState&gt;([])
+  const [columnFilters, setColumnFilters] = React.useState&lt;ColumnFiltersState&gt;([])
+  // ... 기타 상태 (페이지네이션, 행 선택 등) ...
+
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(), // 필수
+    getPaginationRowModel: getPaginationRowModel(), // 페이지네이션 사용 시
+    onSortingChange: setSorting,         // 정렬 상태 변경 핸들러
+    getSortedRowModel: getSortedRowModel(), // 정렬 로직 활성화
+    onColumnFiltersChange: setColumnFilters, // 필터 상태 변경 핸들러
+    getFilteredRowModel: getFilteredRowModel(), // 필터 로직 활성화
+    state: { // 현재 테이블 상태 전달
+      sorting,
+      columnFilters,
+      // ... 기타 상태 ...
+    },
+  })
+
+  // ... JSX 렌더링 ...
+}
+                     </code></pre>
+
+                    <p style="margin-top:15px;"><strong>3. 테이블 UI 렌더링 (Shadcn UI 컴포넌트 사용)</strong></p>
+                    <p><code>useReactTable</code>에서 반환된 <code>table</code> 인스턴스의 메서드와 상태를 사용하여 shadcn UI의 테이블 컴포넌트들(<code>Table</code>, <code>TableHeader</code>, <code>TableRow</code>, <code>TableHead</code>, <code>TableCell</code> 등)로 UI를 구성합니다.</p>
+                    <pre><code>
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table" // shadcn UI 테이블 컴포넌트
+import { flexRender } from "@tanstack/react-table" // 셀/헤더 렌더링 헬퍼
+
+// MyDataTable 컴포넌트 내부의 return 문
+return (
+  &lt;div&gt;
+    {/* 필터링 UI (예: Input) */}
+    &lt;div className="flex items-center py-4"&gt;
+      &lt;Input
+        placeholder="이메일 필터링..."
+        value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+        onChange={(event) =>
+          table.getColumn("email")?.setFilterValue(event.target.value)
+        }
+        className="max-w-sm"
+      /&gt;
+    &lt;/div&gt;
+    &lt;div className="rounded-md border"&gt;
+      &lt;Table&gt;
+        &lt;TableHeader&gt;
+          {table.getHeaderGroups().map((headerGroup) => (
+            &lt;TableRow key={headerGroup.id}&gt;
+              {headerGroup.headers.map((header) => (
+                &lt;TableHead key={header.id}&gt;
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                &lt;/TableHead&gt;
+              ))}
+            &lt;/TableRow&gt;
+          ))}
+        &lt;/TableHeader&gt;
+        &lt;TableBody&gt;
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              &lt;TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
+              &gt;
+                {row.getVisibleCells().map((cell) => (
+                  &lt;TableCell key={cell.id}&gt;
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  &lt;/TableCell&gt;
+                ))}
+              &lt;/TableRow&gt;
+            ))
+          ) : (
+            &lt;TableRow&gt;
+              &lt;TableCell colSpan={columns.length} className="h-24 text-center"&gt;
+                결과가 없습니다.
+              &lt;/TableCell&gt;
+            &lt;/TableRow&gt;
+          )}
+        &lt;/TableBody&gt;
+      &lt;/Table&gt;
+    &lt;/div&gt;
+    {/* 페이지네이션 UI (예: Button) */}
+    &lt;div className="flex items-center justify-end space-x-2 py-4"&gt;
+      &lt;Button
+        variant="outline"
+        size="sm"
+        onClick={() => table.previousPage()}
+        disabled={!table.getCanPreviousPage()}
+      &gt;
+        이전
+      &lt;/Button&gt;
+      &lt;Button
+        variant="outline"
+        size="sm"
+        onClick={() => table.nextPage()}
+        disabled={!table.getCanNextPage()}
+      &gt;
+        다음
+      &lt;/Button&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+)
+                    </code></pre>
+                    <p><strong>주요 포인트:</strong></p>
+                    <ul>
+                        <li><code>table.getHeaderGroups()</code>, <code>table.getRowModel().rows</code> 등을 사용하여 헤더와 행 데이터를 가져옵니다.</li>
+                        <li><code>flexRender</code> 유틸리티 함수는 <code>header</code>나 <code>cell</code>에 정의된 내용(문자열, 함수, JSX)을 올바르게 렌더링해줍니다.</li>
+                        <li>필터링, 정렬, 페이지네이션 등의 UI는 별도로 구현하고, <code>table</code> 인스턴스의 메서드(<code>setFilterValue</code>, <code>toggleSorting</code>, <code>nextPage</code> 등)와 상태(<code>getCanNextPage</code> 등)를 사용합니다.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="additional-features">
+                <h2 class="section-heading"><span class="icon">🌟</span>추가 기능 활용</h2>
+                <div class="text-content">
+                    <p><code>@tanstack/react-table</code>은 매우 다양한 기능을 제공합니다. 몇 가지 예시:</p>
+                    <ul>
+                        <li><strong>행 선택 (Row Selection):</strong> 사용자가 테이블의 특정 행들을 선택할 수 있게 합니다. (<code>enableRowSelection</code>, <code>onRowSelectionChange</code>, <code>rowSelection</code> 상태 등)</li>
+                        <li><strong>컬럼 정렬 (Column Sorting):</strong> 컬럼 헤더를 클릭하여 데이터를 정렬합니다. (<code>getSortedRowModel</code>, <code>onSortingChange</code>, <code>sorting</code> 상태 등)</li>
+                        <li><strong>컬럼 필터링 (Column Filtering):</strong> 특정 컬럼의 값을 기준으로 데이터를 필터링합니다. (<code>getFilteredRowModel</code>, <code>onColumnFiltersChange</code>, <code>columnFilters</code> 상태 등)</li>
+                        <li><strong>페이지네이션 (Pagination):</strong> 많은 양의 데이터를 여러 페이지로 나누어 보여줍니다. (<code>getPaginationRowModel</code>, <code>pageCount</code>, <code>setPageIndex</code> 등)</li>
+                        <li><strong>컬럼 숨기기/보이기 (Column Visibility):</strong> 사용자가 특정 컬럼을 숨기거나 보이게 할 수 있습니다. (<code>onColumnVisibilityChange</code>, <code>columnVisibility</code> 상태 등)</li>
+                        <li><strong>액션 컬럼 추가:</strong> 각 행에 수정/삭제 버튼 등을 포함하는 "액션" 컬럼을 쉽게 추가할 수 있습니다. (<code>ColumnDef</code>의 <code>cell</code> 렌더링 활용)</li>
+                    </ul>
+                    <p>이러한 기능들은 <code>useReactTable</code> 훅의 옵션과 반환된 <code>table</code> 인스턴스를 통해 제어하고 구현할 수 있습니다. shadcn UI 공식 문서의 Table 예제(<code>data-table.tsx</code>)가 이러한 기능들을 잘 보여주고 있으니 꼭 참고하세요!</p>
+                </div>
+            </section>
+            
+            <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                💡 <strong>팁:</strong> <code>@tanstack/react-table</code>은 처음에는 다소 복잡해 보일 수 있지만, 헤드리스 UI의 강력함과 유연성을 이해하면 매우 효과적으로 사용할 수 있습니다. shadcn UI의 예제 코드를 분석하고, 필요에 따라 공식 문서를 참고하면서 다양한 기능을 실험해보세요!
+            </div>
+        </div>
+        <!-- Table 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>🎉 Table 컴포넌트까지 정복 완료! 이제 데이터를 멋지게 보여줄 수 있겠네요! 🎉</p>
+            <p>이것으로 요청하신 모든 주요 컴포넌트 및 추가 주제에 대한 설명을 마칩니다. 정말 수고 많으셨습니다! 🥳</p>
+            <p>&copy; <span id="current-year-table"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-table').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-table').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

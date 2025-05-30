@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Checkbox</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'NotoSansKR', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+        /* Checkbox 시각화 예시 */
+        .checkbox-visual-example {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: rgba(242, 230, 61, 0.1); /* 패션-2의 연한 배경 */
+            border-radius: 8px;
+        }
+        .checkbox-mock {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--color-fashion-1);
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .checkbox-mock.checked {
+            background-color: var(--color-fashion-4);
+            border-color: var(--color-fashion-4);
+        }
+        .checkbox-mock.checked::before {
+            content: '✔'; /* 체크 표시 */
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .checkbox-mock.indeterminate {
+            background-color: var(--color-fashion-4);
+            border-color: var(--color-fashion-4);
+        }
+        .checkbox-mock.indeterminate::before {
+            content: '➖'; /* 중간 상태 표시 */
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .checkbox-label-example {
+            font-size: 15px;
+            color: var(--color-text-default);
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-checkbox"></span><br>
+                정보 출처: <strong>Shadcn UI & Radix UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Checkbox 컴포넌트 카드 시작 -->
+        <div class="component-card" id="checkbox-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">✅</span>
+                <h1 class="component-main-title">Checkbox (체크박스)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Checkbox 컴포넌트는 사용자가 하나 이상의 옵션을 선택하거나, 특정 조건에 대한 동의 여부를 표시할 수 있는 <span class="highlight-keyword">선택 컨트롤</span>입니다. 📝 사용자는 체크박스를 클릭하여 선택(checked) 또는 해제(unchecked) 상태로 전환할 수 있습니다. 또한, <span class="highlight-keyword">"중간(indeterminate)" 상태</span>도 지원하여, 하위 항목들이 부분적으로 선택되었음을 나타낼 수 있습니다 (예: 트리 구조에서 일부 자식 노드만 선택된 경우).</p>
+                <p>주요 특징 및 사용 사례:</p>
+                <ul>
+                    <li>하나 또는 여러 항목 선택 (예: 관심사 선택, 할 일 목록)</li>
+                    <li>이용 약관 동의, 설정 활성화/비활성화</li>
+                    <li>선택(checked), 해제(unchecked), 중간(indeterminate) 세 가지 상태 표현 가능</li>
+                    <li>키보드 접근성 우수 (스페이스 바로 선택/해제)</li>
+                    <li>Radix UI의 Checkbox Primitive를 기반으로 제작</li>
+                </ul>
+                <div class="checkbox-visual-example">
+                    <div class="checkbox-mock"></div> <span class="checkbox-label-example">선택 안됨</span>
+                    <div class="checkbox-mock checked"></div> <span class="checkbox-label-example">선택됨</span>
+                    <div class="checkbox-mock indeterminate"></div> <span class="checkbox-label-example">중간 상태</span>
+                </div>
+                <div class="speech-bubble">
+                    ✨ Label 컴포넌트와 함께 사용하면 사용성을 더욱 높일 수 있어요! (Label 컴포넌트는 나중에 다룰 예정입니다.)
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>Checkbox (메인 컴포넌트) Props</h2>
+                <div class="text-content">
+                    <p><code>&lt;Checkbox&gt;</code> 컴포넌트는 다음과 같은 주요 Prop들을 가집니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">checked</td>
+                                <td><span class="highlight-value">boolean | "indeterminate"</span></td>
+                                <td>-</td>
+                                <td>체크박스의 현재 상태를 나타냅니다. <span class="highlight-value">true</span> (선택됨), <span class="highlight-value">false</span> (선택 안됨), 또는 <span class="highlight-value">"indeterminate"</span> (중간 상태) 값을 가질 수 있습니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">onCheckedChange</td>
+                                <td><span class="highlight-value">(checked: boolean | "indeterminate") =&gt; void</span></td>
+                                <td>-</td>
+                                <td>체크박스 상태가 변경될 때 호출되는 콜백 함수입니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">defaultChecked</td>
+                                <td><span class="highlight-value">boolean | "indeterminate"</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>컴포넌트가 처음 마운트될 때의 기본 체크 상태입니다. (비제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">disabled</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>체크박스를 비활성화합니다. 비활성화된 체크박스는 사용자와 상호작용할 수 없습니다. 🚫</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">required</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>폼 제출 시 이 체크박스가 반드시 선택되어야 함을 나타냅니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">name</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>폼 제출 시 사용될 체크박스의 이름입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">value</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td><span class="highlight-value">"on"</span></td>
+                                <td>폼 제출 시 체크박스가 선택되었을 때 전달될 값입니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">asChild</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>기본 렌더링 요소(<code>&lt;button&gt;</code>) 대신 자식으로 전달된 컴포넌트를 렌더링합니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">id</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>체크박스의 DOM ID입니다. Label과 연결할 때 유용합니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                 <div class="text-content">
+                    <p>💡 <span class="highlight-keyword">제어 컴포넌트 vs 비제어 컴포넌트:</span></p>
+                    <ul>
+                        <li><strong>제어 컴포넌트:</strong> <code>checked</code>와 <code>onCheckedChange</code> props를 사용하여 React의 state로 직접 상태를 관리합니다. 상태 변경 로직을 명확하게 제어할 수 있습니다.</li>
+                        <li><strong>비제어 컴포넌트:</strong> <code>defaultChecked</code> prop을 사용하여 초기 상태만 설정하고, 이후 상태는 DOM 자체에서 관리됩니다. 간단한 경우에 유용합니다.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>서브 컴포넌트들</h2>
+                <div class="text-content">
+                    <p>Checkbox 컴포넌트는 일반적으로 단일 컴포넌트(<code>&lt;Checkbox /&gt;</code>)로 사용되며, Radix UI Primitive에서는 내부적으로 <code>Indicator</code>라는 부분이 있지만 shadcn/ui에서는 이를 직접 노출하지 않고 스타일링으로 처리합니다. 따라서 사용자는 주로 <code>&lt;Checkbox /&gt;</code> 컴포넌트 하나만 다루게 됩니다. 😊</p>
+                    <p>체크박스와 함께 사용되는 <strong>Label</strong> 컴포넌트는 별개의 컴포넌트이며, 토픽 목록에 있으므로 나중에 자세히 다룰 예정입니다. Label을 사용하면 체크박스 옆의 텍스트를 클릭해도 체크박스가 선택/해제되도록 하여 사용성을 크게 향상시킬 수 있습니다.</p>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 기본적인 체크박스 사용 예제와 Label과 함께 사용하는 예제입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+import React, { useState, useEffect } from "react"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label" // 나중에 다룰 Label 컴포넌트
+
+function MyCheckboxForm() {
+  // 제어 컴포넌트 예시
+  const [acceptTerms, setAcceptTerms] = useState&lt;boolean | "indeterminate"&gt;(false);
+  const [newsletter, setNewsletter] = useState(true); // 비제어 컴포넌트의 초기값처럼 사용
+
+  // 중간 상태(Indeterminate) 예시
+  const [selectAll, setSelectAll] = useState&lt;boolean | "indeterminate"&gt;("indeterminate");
+  const [option1, setOption1] = useState(true);
+  const [option2, setOption2] = useState(false);
+
+  useEffect(() => {
+    if (option1 && option2) {
+      setSelectAll(true);
+    } else if (option1 || option2) {
+      setSelectAll("indeterminate");
+    } else {
+      setSelectAll(false);
+    }
+  }, [option1, option2]);
+
+  const handleSelectAllChange = (checked: boolean | "indeterminate") => {
+    if (checked === true) {
+      setOption1(true);
+      setOption2(true);
+    } else if (checked === false) { // indeterminate 상태에서 클릭 시 false로 올 수 있음
+      setOption1(false);
+      setOption2(false);
+    }
+    // indeterminate로 직접 설정하는 경우는 보통 없음. 
+    // 사용자가 클릭해서 indeterminate가 되진 않으므로, 그 외의 경우는 boolean으로 처리.
+    setSelectAll(checked === "indeterminate" ? false : checked); 
+  };
+
+
+  return (
+    &lt;div className="space-y-6"&gt;
+      &lt;div className="flex items-center space-x-2"&gt;
+        &lt;Checkbox 
+          id="terms" 
+          checked={acceptTerms} 
+          onCheckedChange={setAcceptTerms} 
+        /&gt;
+        &lt;Label
+          htmlFor="terms"
+          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        &gt;
+          이용 약관에 동의합니다. (제어)
+        &lt;/Label&gt;
+      &lt;/div&gt;
+
+      &lt;div className="flex items-center space-x-2"&gt;
+        &lt;Checkbox id="newsletter" defaultChecked={newsletter} disabled /&gt;
+        &lt;Label htmlFor="newsletter" className="text-sm"&gt;
+          뉴스레터 구독 (비제어, 비활성화)
+        &lt;/Label&gt;
+      &lt;/div&gt;
+
+      &lt;div className="space-y-2"&gt;
+        &lt;h4 className="font-medium"&gt;중간 상태(Indeterminate) 예제&lt;/h4&gt;
+        &lt;div className="flex items-center space-x-2"&gt;
+          &lt;Checkbox 
+            id="selectAll" 
+            checked={selectAll} 
+            onCheckedChange={handleSelectAllChange} 
+          /&gt;
+          &lt;Label htmlFor="selectAll" className="font-semibold"&gt;모두 선택&lt;/Label&gt;
+        &lt;/div&gt;
+        &lt;div className="ml-6 flex items-center space-x-2"&gt;
+          &lt;Checkbox 
+            id="option1" 
+            checked={option1} 
+            onCheckedChange={setOption1} 
+          /&gt;
+          &lt;Label htmlFor="option1"&gt;옵션 1&lt;/Label&gt;
+        &lt;/div&gt;
+        &lt;div className="ml-6 flex items-center space-x-2"&gt;
+          &lt;Checkbox 
+            id="option2" 
+            checked={option2} 
+            onCheckedChange={setOption2}
+          /&gt;
+          &lt;Label htmlFor="option2"&gt;옵션 2&lt;/Label&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div className="flex items-center space-x-2"&gt;
+        &lt;Checkbox id="required-checkbox" required /&gt;
+        &lt;Label htmlFor="required-checkbox"&gt;필수 동의 항목 (required)&lt;/Label&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
+}
+
+export default MyCheckboxForm;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> 체크박스의 <code>id</code> prop과 Label의 <code>htmlFor</code> prop을 동일한 값으로 설정하면, 사용자가 Label 텍스트를 클릭해도 연결된 체크박스가 선택/해제됩니다. 이는 웹 접근성을 향상시키는 중요한 패턴입니다! 또한, shadcn UI의 체크박스는 Tailwind CSS 유틸리티 클래스(<code>peer-disabled:*</code> 등)와 잘 통합되어 다양한 상태에 따른 스타일링이 용이합니다.
+                </div>
+            </section>
+            
+        </div>
+        <!-- Checkbox 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>다음 컴포넌트도 기대해주세요! 😉</p>
+            <p>이 문서는 shadcn UI 학습을 위해 <strong>체계적으로</strong> 구성되었습니다. 📊</p>
+            <p>&copy; <span id="current-year-checkbox"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정 (ID 충돌 방지를 위해 다른 ID 사용)
+        document.getElementById('current-date-checkbox').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-checkbox').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

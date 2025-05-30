@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Navigation Menu</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+
+        .subcomponent-card {
+            border: 2px solid var(--color-fashion-2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            background-color: rgba(242, 230, 61, 0.08);
+            position: relative;
+        }
+        .subcomponent-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .subcomponent-title .icon {
+            margin-right: 8px;
+            font-size: 20px;
+            color: var(--color-fashion-4);
+        }
+        .subcomponent-card::before {
+            content: '🧩';
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            font-size: 20px;
+            transform: rotate(10deg);
+        }
+
+        .parent-child-relation {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-fashion-5);
+            display: flex;
+            flex-direction: column; 
+            align-items: flex-start; 
+        }
+        .parent-child-relation .component-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .component-box {
+            background-color: var(--color-fashion-5);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin: 5px;
+        }
+        .arrow {
+            font-size: 28px;
+            color: var(--color-fashion-1);
+            margin: 0 8px;
+            font-family: 'Nanum Pen Script', cursive;
+        }
+        .indent {
+            margin-left: 30px;
+        }
+        
+        /* Navigation Menu 시각화 예시 */
+        .navmenu-visual-example {
+            background-color: var(--color-fashion-1);
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            justify-content: center; /* 중앙 정렬 */
+            gap: 10px; /* 아이템 간 간격 */
+            margin-top: 15px;
+        }
+        .navmenu-item-visual {
+            color: var(--color-fashion-2);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .navmenu-item-visual:hover, .navmenu-item-visual.active {
+            background-color: rgba(242, 230, 61, 0.2); /* 호버 또는 활성 시 배경색 */
+        }
+        .navmenu-item-visual .dropdown-icon-visual {
+            margin-left: 6px;
+            font-size: 12px;
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-navmenu"></span><br>
+                정보 출처: <strong>Shadcn UI & Radix UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Navigation Menu 컴포넌트 카드 시작 -->
+        <div class="component-card" id="navigation-menu-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">🗺️✈️</span>
+                <h1 class="component-main-title">Navigation Menu (네비게이션 메뉴)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Navigation Menu는 웹사이트나 애플리케이션의 <span class="highlight-keyword">주요 섹션으로의 탐색 경로를 제공</span>하는 컴포넌트입니다. 🧭 일반적으로 페이지 상단에 수평으로 배치되며, 각 메뉴 항목은 다른 페이지로의 링크이거나, 마우스 오버 또는 클릭 시 하위 메뉴 항목들을 보여주는 <span class="highlight-keyword">드롭다운(또는 메가 메뉴 스타일)</span> 형태를 가질 수 있습니다.</p>
+                <p>주요 특징:</p>
+                <ul>
+                    <li>일관된 사이트 탐색 경험 제공</li>
+                    <li>키보드 접근성 및 WAI-ARIA 표준 준수 (Radix UI Navigation Menu Primitive 기반)</li>
+                    <li>유연한 레이아웃: 간단한 링크 목록부터 복잡한 드롭다운 콘텐츠까지 표현 가능</li>
+                    <li>반응형 디자인 지원 (예: 모바일에서는 햄버거 메뉴로 전환)</li>
+                </ul>
+                <div class="navmenu-visual-example">
+                    <div class="navmenu-item-visual active">홈</div>
+                    <div class="navmenu-item-visual">기능 <span class="dropdown-icon-visual">▼</span></div>
+                    <div class="navmenu-item-visual">문서</div>
+                    <div class="navmenu-item-visual">커뮤니티 <span class="dropdown-icon-visual">▼</span></div>
+                    <div class="navmenu-item-visual">가격</div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ Navigation Menu는 사용자가 웹사이트의 구조를 이해하고 원하는 정보에 빠르게 도달하도록 돕는 핵심 요소예요!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>NavigationMenu (루트 컴포넌트) Props</h2>
+                <div class="text-content">
+                    <p><code>&lt;NavigationMenu&gt;</code> 루트 컴포넌트는 전체 네비게이션 메뉴 시스템의 컨테이너 역할을 하며, 메뉴 아이템들의 상호작용 및 상태를 관리합니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">value</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>현재 활성화(열려있는)된 <code>NavigationMenuItem</code>의 <code>value</code>를 제어합니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">onValueChange</td>
+                                <td><span class="highlight-value">(value: string) =&gt; void</span></td>
+                                <td>-</td>
+                                <td>활성화된 아이템이 변경될 때 호출되는 콜백입니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">defaultValue</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>초기에 활성화될 아이템의 <code>value</code>입니다. (비제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">delayDuration</td>
+                                <td><span class="highlight-value">number</span></td>
+                                <td><span class="highlight-value">200</span> (ms, Radix 기본)</td>
+                                <td>마우스가 트리거에서 벗어난 후 드롭다운 콘텐츠가 닫히기까지의 지연 시간입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">skipDelayDuration</td>
+                                <td><span class="highlight-value">number</span></td>
+                                <td><span class="highlight-value">300</span> (ms, Radix 기본)</td>
+                                <td>다른 트리거로 빠르게 이동할 때 <code>delayDuration</code>을 무시하고 즉시 콘텐츠를 열기 위한 시간입니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">orientation</td>
+                                <td><span class="highlight-value">"horizontal" | "vertical"</span></td>
+                                <td>"horizontal"</td>
+                                <td>메뉴 아이템들의 정렬 방향입니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">dir</td>
+                                <td><span class="highlight-value">"ltr" | "rtl"</span></td>
+                                <td>-</td>
+                                <td>텍스트 및 레이아웃 방향입니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">asChild</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>기본 렌더링 요소(<code>&lt;nav&gt;</code>) 대신 자식으로 전달된 컴포넌트를 렌더링합니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>서브 컴포넌트들</h2>
+                <div class="text-content">
+                    <p>Navigation Menu는 여러 서브 컴포넌트들로 구성되어 복잡한 네비게이션 구조를 만들 수 있습니다.</p>
+                </div>
+
+                <div class="parent-child-relation">
+                    <div class="component-group">
+                        <span class="component-box">NavigationMenu</span>
+                    </div>
+                    <div class="component-group indent">
+                         <span class="arrow"> L </span> <span class="component-box">NavigationMenuList</span>
+                         <span style="font-size:12px; margin-left:5px;">(아이템 목록 컨테이너)</span>
+                    </div>
+                    <div class="component-group indent indent">
+                         <span class="arrow"> L </span> <span class="component-box">NavigationMenuItem</span>
+                         <span style="font-size:12px; margin-left:5px;">(각 최상위 메뉴 아이템)</span>
+                    </div>
+                    <div class="component-group indent indent indent">
+                         <span class="arrow"> L </span> <span class="component-box">NavigationMenuTrigger</span>
+                         <span style="font-size:12px; margin-left:5px;">(드롭다운 여는 버튼)</span>
+                    </div>
+                    <div class="component-group indent indent indent">
+                         <span class="arrow"> L </span> <span class="component-box">NavigationMenuContent</span>
+                         <span style="font-size:12px; margin-left:5px;">(드롭다운 내용)</span>
+                    </div>
+                     <div class="component-group indent indent indent">
+                         <span class="arrow"> L </span> <span class="component-box">NavigationMenuLink</span>
+                         <span style="font-size:12px; margin-left:5px;">(스타일링된 링크)</span>
+                    </div>
+                    <div class="component-group indent indent">
+                         <span class="arrow"> L </span> <span class="component-box">NavigationMenuIndicator</span>
+                         <span style="font-size:12px; margin-left:5px;">(활성 아이템 표시기)</span>
+                    </div>
+                    <div class="component-group indent">
+                         <span class="arrow"> L </span> <span class="component-box">NavigationMenuViewport</span>
+                         <span style="font-size:12px; margin-left:5px;">(드롭다운 콘텐츠 포지셔닝)</span>
+                    </div>
+                </div>
+
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">📋</span>NavigationMenuList</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 모든 최상위 <code>NavigationMenuItem</code>들을 감싸는 리스트 컨테이너입니다. 일반적으로 <code>&lt;ul&gt;</code> 태그로 렌더링됩니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;NavigationMenu&gt;</code>의 직접적인 자식입니다.</p>
+                    </div>
+                </div>
+                
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">📌</span>NavigationMenuItem</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 네비게이션 메뉴의 각 최상위 항목입니다. 단순 링크이거나, <code>NavigationMenuTrigger</code>와 <code>NavigationMenuContent</code>를 포함하여 드롭다운 메뉴를 가질 수 있습니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;NavigationMenuList&gt;</code>의 자식입니다.</p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>value</code> (해당 아이템을 식별하는 고유 값, 드롭다운 제어 시 사용)</p>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">👆</span>NavigationMenuTrigger</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> <code>NavigationMenuItem</code> 내에서 드롭다운(<code>NavigationMenuContent</code>)을 열기 위한 클릭 가능한 버튼/링크입니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;NavigationMenuItem&gt;</code>의 자식입니다.</p>
+                        <p class="text-content">내부에 <code>NavigationMenuLink</code>를 사용하여 스타일링된 링크 형태로 만들 수 있습니다.</p>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">📄</span>NavigationMenuContent</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> <code>NavigationMenuTrigger</code>에 의해 열리는 드롭다운 영역의 내용입니다. 이 안에는 링크 목록, 설명 텍스트, 이미지 등 다양한 콘텐츠를 배치할 수 있습니다. (예: 메가 메뉴)</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;NavigationMenuItem&gt;</code>의 자식이며, <code>NavigationMenuTrigger</code>와 함께 사용됩니다.</p>
+                        <p><span class="highlight-keyword">주요 Props (Radix UI 기반):</span> <code>onEscapeKeyDown</code>, <code>onPointerDownOutside</code> (닫힘 동작 제어), <code>forceMount</code></p>
+                    </div>
+                </div>
+                
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">🔗</span>NavigationMenuLink</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 네비게이션 메뉴 내에서 사용되는 스타일링된 링크 컴포넌트입니다. 단순 링크 또는 <code>NavigationMenuTrigger</code>의 내용으로 사용될 수 있습니다. 현재 경로와 일치할 경우 활성 상태 스타일(예: <code>data-[active=true]</code>)을 가질 수 있습니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;NavigationMenuItem&gt;</code> 또는 <code>&lt;NavigationMenuTrigger&gt;</code>, <code>&lt;NavigationMenuContent&gt;</code> 내부에 위치합니다.</p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>active</code> (수동으로 활성 상태 지정), <code>asChild</code> (Next.js의 <code>Link</code> 등과 함께 사용)</p>
+                        <p class="text-content">shadcn/ui에서는 보통 <code>&lt;a&gt;</code> 태그로 렌더링되며, <code>Link</code> (from <code>next/link</code>)와 함께 사용할 때는 <code>asChild</code> prop과 <code>legacyBehavior passHref</code> (또는 최신 Next.js 방식) 조합이 필요할 수 있습니다.</p>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">🎯</span>NavigationMenuIndicator</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 현재 활성화된 <code>NavigationMenuItem</code> 아래에 시각적인 표시기(예: 밑줄, 점)를 추가합니다. 애니메이션 효과와 함께 부드럽게 이동합니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;NavigationMenuList&gt;</code> 내부에 다른 <code>NavigationMenuItem</code>들과 형제 요소로 위치합니다.</p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>forceMount</code></p>
+                    </div>
+                </div>
+                
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">🖼️</span>NavigationMenuViewport</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 열린 <code>NavigationMenuContent</code> (드롭다운 내용)를 실제로 화면에 표시하고 위치를 잡는 역할을 하는 보이지 않는 컨테이너입니다. 보통 페이지의 특정 위치에 한 번만 선언됩니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;NavigationMenu&gt;</code>의 직접적인 자식으로, <code>&lt;NavigationMenuList&gt;</code> 다음 또는 이전에 위치합니다.</p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>forceMount</code></p>
+                        <p class="text-content">이 컴포넌트를 통해 드롭다운 콘텐츠가 메뉴바에서 "분리되어" 오버레이처럼 표시될 수 있습니다.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 간단한 드롭다운을 포함한 네비게이션 메뉴 예시입니다. (shadcn/ui 공식 문서 예제를 단순화)</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+"use client" // Next.js App Router에서 클라이언트 컴포넌트로 사용 시
+
+import * as React from "react"
+import Link from "next/link" // Next.js Link 사용 예시
+import { cn } from "@/lib/utils" // shadcn/ui의 유틸리티 함수
+// import { Icons } from "@/components/icons" // 아이콘 예시
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  NavigationMenuViewport, // Viewport 추가
+  NavigationMenuIndicator, // Indicator 추가
+  navigationMenuTriggerStyle, // 기본 트리거 스타일
+} from "@/components/ui/navigation-menu"
+
+const components: { title: string; href: string; description: string }[] = [
+  {
+    title: "Alert Dialog",
+    href: "/docs/primitives/alert-dialog",
+    description:
+      "사용자에게 중요한 작업을 확인하거나 정보를 전달하는 모달입니다.",
+  },
+  {
+    title: "Hover Card",
+    href: "/docs/primitives/hover-card",
+    description:
+      "마우스를 올렸을 때 추가 정보를 보여주는 팝업입니다.",
+  },
+  // ... 더 많은 컴포넌트들
+]
+
+export function SiteNavigationMenu() {
+  return (
+    &lt;NavigationMenu&gt;
+      &lt;NavigationMenuList&gt;
+        &lt;NavigationMenuItem&gt;
+          &lt;NavigationMenuTrigger&gt;시작하기&lt;/NavigationMenuTrigger&gt;
+          &lt;NavigationMenuContent&gt;
+            &lt;ul className="grid gap-3 p-6 md:w-[400px] lg:w-[500px] lg:grid-cols-[.75fr_1fr]"&gt;
+              &lt;li className="row-span-3"&gt;
+                &lt;NavigationMenuLink asChild&gt;
+                  &lt;a
+                    className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
+                    href="/"
+                  &gt;
+                    {/* &lt;Icons.logo className="h-6 w-6" /&gt; */} {/* 로고 아이콘 */}
+                    &lt;div className="mb-2 mt-4 text-lg font-medium"&gt;
+                      shadcn/ui
+                    &lt;/div&gt;
+                    &lt;p className="text-sm leading-tight text-muted-foreground"&gt;
+                      Radix UI와 Tailwind CSS를 기반으로 한 아름다운 컴포넌트.
+                    &lt;/p&gt;
+                  &lt;/a&gt;
+                &lt;/NavigationMenuLink&gt;
+              &lt;/li&gt;
+              &lt;ListItem href="/docs" title="소개"&gt;
+                컴포넌트 재사용, 접근성, 커스터마이징에 대해 알아보세요.
+              &lt;/ListItem&gt;
+              &lt;ListItem href="/docs/installation" title="설치"&gt;
+                프로젝트에 컴포넌트를 복사-붙여넣기하는 방법.
+              &lt;/ListItem&gt;
+              &lt;ListItem href="/docs/primitives/typography" title="타이포그래피"&gt;
+                헤딩, 단락, 리스트 등의 스타일.
+              &lt;/ListItem&gt;
+            &lt;/ul&gt;
+          &lt;/NavigationMenuContent&gt;
+        &lt;/NavigationMenuItem&gt;
+        &lt;NavigationMenuItem&gt;
+          &lt;NavigationMenuTrigger&gt;컴포넌트&lt;/NavigationMenuTrigger&gt;
+          &lt;NavigationMenuContent&gt;
+            &lt;ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] "&gt;
+              {components.map((component) => (
+                &lt;ListItem
+                  key={component.title}
+                  title={component.title}
+                  href={component.href}
+                &gt;
+                  {component.description}
+                &lt;/ListItem&gt;
+              ))}
+            &lt;/ul&gt;
+          &lt;/NavigationMenuContent&gt;
+        &lt;/NavigationMenuItem&gt;
+        &lt;NavigationMenuItem&gt;
+          &lt;Link href="/docs" legacyBehavior passHref&gt;
+            &lt;NavigationMenuLink className={navigationMenuTriggerStyle()}&gt;
+              문서
+            &lt;/NavigationMenuLink&gt;
+          &lt;/Link&gt;
+        &lt;/NavigationMenuItem&gt;
+        &lt;NavigationMenuIndicator /&gt; {/* 인디케이터 추가 */}
+      &lt;/NavigationMenuList&gt;
+      &lt;NavigationMenuViewport /&gt; {/* 뷰포트 추가 */}
+    &lt;/NavigationMenu&gt;
+  )
+}
+
+// ListItem 헬퍼 컴포넌트 (예제용)
+const ListItem = React.forwardRef&lt;
+  React.ElementRef&lt;"a"&gt;,
+  React.ComponentPropsWithoutRef&lt;"a"&gt;
+&gt;(({ className, title, children, ...props }, ref) => {
+  return (
+    &lt;li&gt;
+      &lt;NavigationMenuLink asChild&gt;
+        &lt;a
+          ref={ref}
+          className={cn(
+            "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+            className
+          )}
+          {...props}
+        &gt;
+          &lt;div className="text-sm font-medium leading-none"&gt;{title}&lt;/div&gt;
+          &lt;p className="line-clamp-2 text-sm leading-snug text-muted-foreground"&gt;
+            {children}
+          &lt;/p&gt;
+        &lt;/a&gt;
+      &lt;/NavigationMenuLink&gt;
+    &lt;/li&gt;
+  )
+})
+ListItem.displayName = "ListItem"
+
+export default SiteNavigationMenu;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> <code>NavigationMenuContent</code> 내부에는 자유롭게 HTML 구조와 다른 컴포넌트들을 배치하여 "메가 메뉴" 스타일의 풍부한 드롭다운을 만들 수 있습니다. Next.js와 같은 프레임워크의 라우터 링크(예: <code>next/link</code>)와 함께 사용할 때는 <code>NavigationMenuLink</code>의 <code>asChild</code> prop을 활용하여 스타일과 동작을 올바르게 통합하는 것이 중요합니다. <code>NavigationMenuIndicator</code>와 <code>NavigationMenuViewport</code>는 메뉴바 바깥에, <code>NavigationMenuList</code>와 같은 레벨 또는 <code>NavigationMenu</code>의 직접 자식으로 한 번만 선언해주면 됩니다.
+                </div>
+            </section>
+            
+        </div>
+        <!-- Navigation Menu 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>다음 컴포넌트는 클릭 시 작은 정보창을 보여주는 Popover입니다! 🎈</p>
+            <p>이 문서를 통해 shadcn UI의 다양한 <strong>네비게이션 패턴</strong>을 익히시길 바랍니다. 🌟</p>
+            <p>&copy; <span id="current-year-navmenu"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-navmenu').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-navmenu').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

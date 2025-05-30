@@ -1,0 +1,169 @@
+ <div class="container">
+        <header class="header">
+            <h1 class="title">Vite.js 마스터하기: 설정과 확장 🛠️</h1>
+            <div class="date">2025년 5월 29일<br>출처: Vite 공식 문서 및 경험 기반</div>
+        </header>
+
+        <p class="subtitle">Vite의 핵심 설정 파일과 다양한 옵션을 통해 프로젝트를 자유자재로 커스터마이징 해봐요! 🎨</p>
+
+        <div class="triple-grid">
+            <div class="card">
+                <h2 class="card-title"><span class="card-title-icon">📄</span>Vite 설정 파일이란?</h2>
+                <p class="main-text">Vite 프로젝트의 루트 디렉토리에 있는 <code class="keyword">vite.config.js</code> 또는 <code class="keyword">vite.config.ts</code> 파일은 Vite의 심장과 같아요! ❤️ 이 파일을 통해 개발 서버, 빌드 옵션, 플러그인 등 거의 모든 것을 제어할 수 있습니다.</p>
+                <p class="main-text">ES 모듈 문법을 사용하며, <code class="keyword">defineConfig</code> 헬퍼 함수를 사용하면 타입스크립트 환경에서 자동 완성 기능을 활용할 수 있어 편리해요.</p>
+                <div class="code-block">
+// vite.config.js
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  // 여기에 다양한 설정을 추가할 수 있어요!
+})
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 class="card-title"><span class="card-title-icon">🔧</span>주요 설정 옵션: 서버 & 빌드</h2>
+                 <p class="main-text"><code class="keyword">server</code> 객체에서는 개발 서버의 포트, 프록시 등을 설정하고, <code class="keyword">build</code> 객체에서는 최종 결과물의 출력 경로, 소스맵 생성 여부 등을 제어합니다.</p>
+                <ul>
+                    <li><strong class="hand-drawn">server.port</strong>: <code>3000</code>번 포트가 이미 사용 중이라면? 여기서 바꿔주세요! (예: <code>port: 5173</code>)</li>
+                    <li><strong class="hand-drawn">server.proxy</strong>: API 서버가 따로 있다면 CORS 걱정 없이 여기서 프록시 설정을 할 수 있어요. 🕵️‍♀️
+<div class="code-block">
+// vite.config.js (server.proxy 예시)
+server: {
+  proxy: {
+    '/api': {
+      target: 'http://jsonplaceholder.typicode.com',
+      changeOrigin: true,
+      rewrite: (path) => path.replace(/^\/api/, '')
+    }
+  }
+}
+</div>
+                    </li>
+                    <li><strong class="hand-drawn">build.outDir</strong>: 빌드 결과물이 저장될 폴더 이름을 바꿀 수 있어요. (기본값: <code>dist</code>)</li>
+                    <li><strong class="hand-drawn">build.sourcemap</strong>: 디버깅을 위한 소스맵 생성! 🗺️ (기본값: <code>false</code> for prod)</li>
+                </ul>
+            </div>
+
+            <div class="card">
+                 <h2 class="card-title"><span class="card-title-icon">🔗</span>주요 설정 옵션: 경로 & CSS</h2>
+                <p class="main-text"><code class="keyword">resolve.alias</code>를 사용하면 긴~ import 경로를 짧게 줄여 가독성을 높일 수 있고, <code class="keyword">css</code> 옵션으로 CSS 전처리기나 모듈 설정을 할 수 있습니다.</p>
+                <ul>
+                    <li><strong class="hand-drawn">resolve.alias</strong>: 마치 별명처럼 경로에 이름을 붙여줘요!
+                        <div class="code-block">
+// vite.config.js (resolve.alias 예시)
+resolve: {
+  alias: {
+    '@': '/src', // '/src'를 '@'로!
+    '@components': '/src/components'
+  }
+}
+                        </div>
+                    </li>
+                    <li><strong class="hand-drawn">css.preprocessorOptions</strong>: Sass, Less 같은 CSS 전처리기를 사용한다면 여기에 설정을 추가해요. 💅
+                         <div class="code-block">
+// vite.config.js (Sass 전역 변수 예시)
+css: {
+  preprocessorOptions: {
+    scss: {
+      additionalData: `\$color-primary: #F25C05;` // 패션-4 컬러!
+    }
+  }
+}
+                        </div>
+                    </li>
+                     <li><strong class="hand-drawn">css.modules</strong>: CSS Modules의 스코프 동작 방식을 커스텀할 수 있어요.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="full-width card highlight-box">
+            <h2 class="card-title" style="color: #593C47;"><span class="card-title-icon">✨</span>플러그인으로 Vite 파워 업!</h2>
+            <p class="main-text">Vite의 진정한 강력함은 <strong class="keyword hand-drawn">플러그인 생태계</strong>에서 나와요! 🧩 React, Vue 같은 프레임워크 지원은 기본이고, 이미지 최적화, SVG 컴포넌트 변환 등 상상하는 거의 모든 기능을 플러그인으로 추가할 수 있습니다.</p>
+            <p class="main-text">공식 플러그인 외에도 커뮤니티에서 만든 유용한 플러그인이 정말 많으니, <a href="https://vitejs.dev/plugins/" target="_blank" style="color: #F24405; text-decoration: none;">Vite Awesome</a> 같은 곳에서 찾아보세요!</p>
+            <div class="code-block">
+// vite.config.js (플러그인 사용 예시: vite-plugin-svgr)
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import svgr from 'vite-plugin-svgr' // SVG를 React 컴포넌트로!
+
+export default defineConfig({
+  plugins: [
+    react(),
+    svgr() // svgr 플러그인 추가!
+  ],
+})
+            </div>
+            <p class="main-text" style="margin-top:10px;">예를 들어, <code class="keyword">@vitejs/plugin-react</code>는 React 프로젝트를 위한 JSX 변환, Fast Refresh (HMR) 등을 제공하고, <code class="keyword">vite-plugin-svgr</code>은 SVG 파일을 React 컴포넌트처럼 바로 가져와서 사용할 수 있게 해줘요. 정말 편리하죠? 😉</p>
+        </div>
+
+
+        <div class="content-grid">
+            <div class="card env-card">
+                <h2 class="card-title"><span class="card-title-icon">🌳</span>환경 변수 똑똑하게 사용하기</h2>
+                <p class="main-text">API 키나 특정 모드에서만 사용해야 하는 값을 코드에 직접 넣는 건 좋지 않아요. 😥 Vite는 <code class="keyword">.env</code> 파일을 통해 환경 변수를 쉽게 관리할 수 있도록 지원합니다.</p>
+                <ul>
+                    <li><code class="keyword">.env</code>: 모든 환경에서 사용</li>
+                    <li><code class="keyword">.env.development</code>: 개발 환경에서만 사용</li>
+                    <li><code class="keyword">.env.production</code>: 프로덕션 환경에서만 사용</li>
+                </ul>
+                <p class="main-text">코드에서는 <code class="keyword">import.meta.env.VITE_변수명</code> 형태로 접근할 수 있어요.</p>
+                <div class="folder-structure">
+# .env 파일 예시
+VITE_API_KEY="your_api_key_here"
+VITE_APP_TITLE="My Awesome Vite App"
+                </div>
+                 <div class="security-warning">
+                    <p class="main-text" style="color: #F24405; font-weight: bold;">중요! 🔒 클라이언트에 노출될 변수는 반드시 <code class="keyword" style="background: #F24405; color: white;">VITE_</code> 접두사를 붙여야 해요! 그렇지 않으면 Vite가 무시해버린답니다. 민감한 정보는 절대 클라이언트 측 코드에 포함시키지 마세요!</p>
+                </div>
+            </div>
+             <div class="card">
+                <h2 class="card-title"><span class="card-title-icon">💡</span>실전 예제: 나만의 Vite 설정</h2>
+                <p class="main-text">React 프로젝트를 진행한다고 가정하고, 몇 가지 유용한 설정을 추가해볼까요?</p>
+                <ol style="list-style: none; padding-left: 0;">
+                    <li style="margin-bottom: 15px; padding-left: 0;">
+                        <span class="step-number">1</span><strong class="hand-drawn">경로 별칭 설정:</strong> <code class="keyword">@</code>를 <code class="keyword">src</code> 폴더로 매핑해서 깔끔한 import 경로를 만듭니다.
+                    </li>
+                    <li style="margin-bottom: 15px; padding-left: 0;">
+                        <span class="step-number">2</span><strong class="hand-drawn">개발 서버 포트 변경:</strong> 기본 포트 <code>5173</code> 대신 <code>3000</code>번 포트를 사용하도록 설정합니다.
+                    </li>
+                    <li style="margin-bottom: 15px; padding-left: 0;">
+                        <span class="step-number">3</span><strong class="hand-drawn">SVG 플러그인 추가:</strong> SVG 파일을 React 컴포넌트로 바로 사용할 수 있도록 <code class="keyword">vite-plugin-svgr</code> 플러그인을 추가합니다.
+                    </li>
+                </ol>
+                <div class="code-block">
+// vite.config.js (실전 예제)
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import svgr from 'vite-plugin-svgr' // 잊지 말고 npm/yarn install!
+
+export default defineConfig({
+  plugins: [react(), svgr()],
+  resolve: {
+    alias: {
+      '@': '/src',
+    },
+  },
+  server: {
+    port: 3000, // 개발 서버 포트를 3000으로!
+  },
+  // 추가적으로, SCSS 사용 시 전역 스타일 파일 설정
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@import "@/styles/_variables.scss";`,
+      },
+    },
+  },
+})
+                </div>
+                <p class="main-text" style="margin-top:10px;">이렇게 설정하면 개발 편의성이 훨씬 올라갈 거예요! 👍</p>
+            </div>
+        </div>
+
+        <footer class="footer">
+            Vite.js 배우기 시리즈 | 작성자: Gemini (Google AI) | 디자인 사양에 따라 제작됨
+        </footer>
+    </div>

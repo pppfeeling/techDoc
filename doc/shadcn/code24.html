@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Toggle</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+        
+        /* Toggle 시각화 예시 */
+        .toggle-visual-example {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: rgba(242, 230, 61, 0.1); /* 패션-2의 연한 배경 */
+            border-radius: 8px;
+        }
+        .toggle-button-visual {
+            padding: 8px 12px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 6px;
+            background-color: white;
+            color: var(--color-fashion-1);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .toggle-button-visual.pressed {
+            background-color: var(--color-fashion-4);
+            color: white;
+            border-color: var(--color-fashion-4);
+        }
+        .toggle-button-visual.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .toggle-button-visual .icon { font-size: 16px; }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-toggle"></span><br>
+                정보 출처: <strong>Shadcn UI & Radix UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Toggle 컴포넌트 카드 시작 -->
+        <div class="component-card" id="toggle-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">🔘</span>
+                <h1 class="component-main-title">Toggle (토글)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Toggle 컴포넌트는 사용자가 <span class="highlight-keyword">두 가지 상태(눌림/안 눌림, on/off)</span>를 전환할 수 있는 버튼 형태의 컨트롤입니다. 👆↔️ 일반 버튼과 달리, 토글은 한 번 누르면 눌린 상태(pressed)를 유지하고, 다시 누르면 원래 상태로 돌아옵니다. 단일 옵션의 활성화/비활성화를 나타내는 데 사용됩니다.</p>
+                <p>주요 사용 사례:</p>
+                <ul>
+                    <li>텍스트 편집기의 서식 버튼 (예: 굵게, 기울임꼴, 밑줄)</li>
+                    <li>필터 옵션 켜고 끄기</li>
+                    <li>보기 모드 전환 (예: 목록 보기/카드 보기)</li>
+                    <li>단일 설정 항목의 활성화/비활성화 (Switch와 유사하지만 버튼 스타일)</li>
+                </ul>
+                <p>Shadcn UI의 Toggle은 Radix UI의 Toggle Primitive를 기반으로 하며, <code>aria-pressed</code> 속성을 통해 접근성을 지원합니다. <code>ToggleGroup</code> 컴포넌트와 함께 사용되어 여러 토글 버튼 중 하나 또는 여러 개를 선택하는 기능을 구현할 수도 있습니다 (다음 챕터에서 다룰 예정).</p>
+                <div class="toggle-visual-example">
+                    <button class="toggle-button-visual" onclick="this.classList.toggle('pressed')">
+                        <span class="icon">👍</span> 좋아요
+                    </button>
+                    <button class="toggle-button-visual pressed" onclick="this.classList.toggle('pressed')">
+                        <span class="icon">⭐</span> 즐겨찾기 (선택됨)
+                    </button>
+                    <button class="toggle-button-visual disabled">
+                        <span class="icon">🔒</span> 잠김 (비활성)
+                    </button>
+                </div>
+                <div class="speech-bubble">
+                    ✨ Toggle은 사용자에게 명확한 선택 상태를 버튼 형태로 제공하여 인터랙션을 직관적으로 만들어줍니다!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>Toggle (메인 컴포넌트) Props</h2>
+                <div class="text-content">
+                    <p><code>&lt;Toggle&gt;</code> 컴포넌트는 토글 버튼의 현재 상태(눌림/안 눌림)와 관련된 주요 Prop들을 가집니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">pressed</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td>-</td>
+                                <td>토글 버튼의 현재 눌림(<code>true</code>) 또는 안 눌림(<code>false</code>) 상태를 나타냅니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">onPressedChange</td>
+                                <td><span class="highlight-value">(pressed: boolean) =&gt; void</span></td>
+                                <td>-</td>
+                                <td>토글 상태가 변경될 때 호출되는 콜백 함수입니다. 새 상태값을 인자로 받습니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">defaultPressed</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>컴포넌트가 처음 마운트될 때의 기본 눌림 상태입니다. (비제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">disabled</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>토글 버튼을 비활성화합니다. 🚫</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">asChild</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>기본 렌더링 요소(<code>&lt;button type="button" role="switch"&gt;</code> 또는 <code>aria-pressed</code>를 가진 버튼) 대신 자식으로 전달된 컴포넌트를 렌더링합니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">className</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>토글 버튼에 적용할 CSS 클래스입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">variant</td>
+                                <td><span class="highlight-value">"default" | "outline"</span></td>
+                                <td><span class="highlight-value">"default"</span></td>
+                                <td>(shadcn/ui 제공) 토글 버튼의 시각적 스타일 변형입니다. "default"는 배경이 있는 스타일, "outline"은 테두리만 있는 스타일입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">size</td>
+                                <td><span class="highlight-value">"default" | "sm" | "lg"</span></td>
+                                <td><span class="highlight-value">"default"</span></td>
+                                <td>(shadcn/ui 제공) 토글 버튼의 크기입니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">aria-label</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>버튼 내부에 텍스트가 없을 경우 스크린 리더를 위한 레이블을 제공합니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-content">
+                    <p>💡 shadcn/ui의 Toggle은 기본 Button 컴포넌트와 유사한 <code>variant</code>와 <code>size</code> props를 제공하여 일관된 스타일링을 쉽게 적용할 수 있습니다.</p>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>서브 컴포넌트들</h2>
+                <div class="text-content">
+                    <p>Toggle 컴포넌트는 일반적으로 단일 컴포넌트(<code>&lt;Toggle /&gt;</code>)로 사용되며, 내부에 아이콘이나 텍스트를 자식으로 포함할 수 있습니다. 별도의 필수 서브 컴포넌트는 없습니다. 😊</p>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 텍스트 서식 옵션을 위한 Toggle 버튼 예시입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+"use client" // 상태 관리를 위해 클라이언트 컴포넌트로 사용
+
+import * as React from "react"
+import { Toggle } from "@/components/ui/toggle"
+import { Bold, Italic, Underline, AlignLeft, AlignCenter, AlignRight } from "lucide-react" // 아이콘 예시
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group" // 다음 챕터 내용 미리보기!
+
+function TextEditorToolbar() {
+  const [isBold, setIsBold] = React.useState(false)
+  const [isItalic, setIsItalic] = React.useState(true) // 기본값 true 예시
+  const [textAlign, setTextAlign] = React.useState("left")
+
+  return (
+    &lt;div className="flex flex-col space-y-4 items-start"&gt;
+      &lt;div className="flex items-center space-x-1 rounded-md border p-1"&gt;
+        &lt;Toggle
+          pressed={isBold}
+          onPressedChange={setIsBold}
+          aria-label="Toggle bold"
+          size="sm" // 작은 사이즈
+        &gt;
+          &lt;Bold className="h-4 w-4" /&gt;
+        &lt;/Toggle&gt;
+        &lt;Toggle
+          defaultPressed={isItalic} // 비제어 방식 예시
+          onPressedChange={(pressed) => console.log("Italic: ", pressed)}
+          aria-label="Toggle italic"
+          variant="outline" // 아웃라인 스타일
+          size="sm"
+        &gt;
+          &lt;Italic className="h-4 w-4" /&gt;
+        &lt;/Toggle&gt;
+        &lt;Toggle aria-label="Toggle underline" disabled size="sm"&gt;
+          &lt;Underline className="h-4 w-4" /&gt;
+        &lt;/Toggle&gt;
+      &lt;/div&gt;
+      
+      {/* ToggleGroup 예시 (다음 챕터에서 자세히 다룸) */}
+      &lt;ToggleGroup 
+        type="single" 
+        variant="outline" 
+        size="sm"
+        value={textAlign}
+        onValueChange={(value) => {
+          if (value) setTextAlign(value); // 빈 문자열이 올 수 있으므로 체크
+        }}
+      &gt;
+        &lt;ToggleGroupItem value="left" aria-label="Left aligned"&gt;
+          &lt;AlignLeft className="h-4 w-4" /&gt;
+        &lt;/ToggleGroupItem&gt;
+        &lt;ToggleGroupItem value="center" aria-label="Center aligned"&gt;
+          &lt;AlignCenter className="h-4 w-4" /&gt;
+        &lt;/ToggleGroupItem&gt;
+        &lt;ToggleGroupItem value="right" aria-label="Right aligned"&gt;
+          &lt;AlignRight className="h-4 w-4" /&gt;
+        &lt;/ToggleGroupItem&gt;
+      &lt;/ToggleGroup&gt;
+
+      &lt;p className="text-sm"&gt;
+        굵게: {isBold ? "켜짐" : "꺼짐"}, 
+        기울임꼴 (비제어): 눌러서 콘솔 확인,
+        정렬: {textAlign}
+      &lt;/p&gt;
+    &lt;/div&gt;
+  )
+}
+
+export default TextEditorToolbar;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> Toggle 버튼 내부에 아이콘(<code>lucide-react</code> 등)이나 텍스트를 함께 넣어 사용자에게 명확한 의미를 전달할 수 있습니다. <code>aria-label</code> prop은 아이콘만 있는 토글 버튼의 접근성을 위해 반드시 제공하는 것이 좋습니다. 상태에 따라 버튼의 시각적 스타일(예: 배경색, 테두리)이 변경되어 사용자에게 피드백을 줍니다.
+                </div>
+            </section>
+            
+        </div>
+        <!-- Toggle 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>다음은 여러 토글 버튼을 그룹으로 묶는 Toggle Group입니다! 🎛️</p>
+            <p>이 문서를 통해 shadcn UI로 <strong>직관적인 상태 전환 UI</strong>를 구현하시길 바랍니다. ✨</p>
+            <p>&copy; <span id="current-year-toggle"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-toggle').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-toggle').textContent = new Date().getFullYear();
+
+        // 시각화 예제 토글 버튼 클릭 (간단 버전)
+        document.querySelectorAll('.toggle-button-visual').forEach(button => {
+            if (!button.classList.contains('disabled')) {
+                button.addEventListener('click', function() {
+                    this.classList.toggle('pressed');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

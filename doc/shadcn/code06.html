@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Context Menu</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+
+        .subcomponent-card {
+            border: 2px solid var(--color-fashion-2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            background-color: rgba(242, 230, 61, 0.08);
+            position: relative;
+        }
+        .subcomponent-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .subcomponent-title .icon {
+            margin-right: 8px;
+            font-size: 20px;
+            color: var(--color-fashion-4);
+        }
+        .subcomponent-card::before {
+            content: '🧩';
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            font-size: 20px;
+            transform: rotate(10deg);
+        }
+
+        .parent-child-relation {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-fashion-5);
+            display: flex;
+            flex-direction: column; 
+            align-items: flex-start; 
+        }
+        .parent-child-relation .component-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .component-box {
+            background-color: var(--color-fashion-5);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin: 5px;
+        }
+        .arrow {
+            font-size: 28px;
+            color: var(--color-fashion-1);
+            margin: 0 8px;
+            font-family: 'Nanum Pen Script', cursive;
+        }
+        .indent {
+            margin-left: 30px;
+        }
+        
+        /* Context Menu 시각화 예시 */
+        .context-menu-trigger-area {
+            width: 100%;
+            height: 150px;
+            background-color: var(--color-fashion-2); /* 패션-2 */
+            border: 2px dashed var(--color-fashion-4); /* 패션-4 */
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--color-fashion-1); /* 패션-1 */
+            font-weight: bold;
+            text-align: center;
+            cursor: context-menu;
+            margin-top: 15px;
+            user-select: none; /* 텍스트 선택 방지 */
+        }
+        .context-menu-trigger-area p {
+            margin:0;
+            color: var(--color-fashion-1) !important;
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-contextmenu"></span><br>
+                정보 출처: <strong>Shadcn UI & Radix UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Context Menu 컴포넌트 카드 시작 -->
+        <div class="component-card" id="context-menu-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">🖱️</span>
+                <h1 class="component-main-title">Context Menu (컨텍스트 메뉴)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Context Menu는 사용자가 특정 UI 요소 위에서 <span class="highlight-keyword">마우스 오른쪽 버튼을 클릭</span> (또는 길게 누르기 등 특정 인터랙션)했을 때 나타나는 메뉴입니다. 팝업 형태로 현재 컨텍스트(상황)에 맞는 다양한 <span class="highlight-keyword">작업 옵션들을 제공</span>합니다. ⚙️</p>
+                <p>주요 특징 및 사용 사례:</p>
+                <ul>
+                    <li>파일 탐색기에서 파일/폴더 우클릭 시 나오는 메뉴 (복사, 붙여넣기, 삭제 등)</li>
+                    <li>웹 페이지의 특정 텍스트나 이미지 위에서 우클릭 시 관련 작업 제공</li>
+                    <li>테이블의 행(row)이나 특정 아이템에 대한 추가 액션 제공</li>
+                    <li>키보드 접근성 지원 (방향키, Enter, Esc 등)</li>
+                    <li>Radix UI의 Context Menu Primitive를 기반으로 하며, Dropdown Menu와 유사한 구조를 가집니다.</li>
+                </ul>
+                <div class="context-menu-trigger-area">
+                    <p>이 영역에서<br/>마우스 오른쪽 버튼을 클릭해보세요!<br/>(실제로는 컴포넌트가 렌더링되어야 동작합니다)</p>
+                </div>
+                <div class="speech-bubble">
+                    ✨ Context Menu는 사용자에게 숨겨진 강력한 기능을 제공하여 인터페이스를 더 효율적으로 사용할 수 있게 해줍니다!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>ContextMenu (루트 컴포넌트) Props</h2>
+                <div class="text-content">
+                    <p><code>&lt;ContextMenu&gt;</code> 루트 컴포넌트는 컨텍스트 메뉴의 전체적인 동작과 상태를 관리합니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">open</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td>-</td>
+                                <td>메뉴의 열림 상태를 제어합니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">onOpenChange</td>
+                                <td><span class="highlight-value">(open: boolean) =&gt; void</span></td>
+                                <td>-</td>
+                                <td>열림 상태가 변경될 때 호출되는 콜백입니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">defaultOpen</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>초기 열림 상태입니다. (비제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">modal</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">true</span></td>
+                                <td>모달 여부. <span class="highlight-value">true</span>이면 메뉴가 열렸을 때 외부 상호작용을 막습니다. 대부분의 컨텍스트 메뉴는 모달이 아닙니다. DropdownMenu와 이 prop의 기본값이 다릅니다. ContextMenu는 보통 <span class="highlight-value">false</span>로 사용합니다. (shadcn/ui에서는 이 prop이 직접 노출되지 않을 수 있으며, Radix 기본값을 따를 수 있습니다. 문서를 확인하세요.)</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">dir</td>
+                                <td><span class="highlight-value">"ltr" | "rtl"</span></td>
+                                <td>-</td>
+                                <td>메뉴의 텍스트 및 레이아웃 방향입니다. (국제화 지원)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                     <p class="text-content">Radix UI 기반이므로, <code>open</code>, <code>onOpenChange</code>, <code>defaultOpen</code> 등의 상태 관리 props가 핵심입니다.</p>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>서브 컴포넌트들</h2>
+                <div class="text-content">
+                    <p>Context Menu는 Dropdown Menu와 매우 유사한 구조의 서브 컴포넌트들을 사용합니다. 주요 서브 컴포넌트는 다음과 같습니다:</p>
+                </div>
+
+                <div class="parent-child-relation">
+                    <div class="component-group">
+                        <span class="component-box">ContextMenu</span>
+                    </div>
+                    <div class="component-group indent">
+                         <span class="arrow"> L </span> <span class="component-box">ContextMenuTrigger</span>
+                         <span style="font-size:12px; margin-left:5px;">(메뉴를 여는 대상 영역)</span>
+                    </div>
+                    <div class="component-group indent">
+                         <span class="arrow"> L </span> <span class="component-box">ContextMenuPortal</span>
+                         <span style="font-size:12px; margin-left:5px;">(DOM의 다른 곳으로 렌더링)</span>
+                    </div>
+                    <div class="component-group indent indent">
+                         <span class="arrow"> L </span> <span class="component-box">ContextMenuContent</span>
+                         <span style="font-size:12px; margin-left:5px;">(메뉴 아이템들을 담는 컨테이너)</span>
+                    </div>
+                    <div class="component-group indent indent indent">
+                        <span class="arrow"> L </span> <span class="component-box">ContextMenuItem</span> <span style="font-size:12px;">(일반 메뉴 항목)</span>
+                    </div>
+                    <div class="component-group indent indent indent">
+                        <span class="arrow"> L </span> <span class="component-box">ContextMenuCheckboxItem</span> <span style="font-size:12px;">(체크박스 메뉴 항목)</span>
+                    </div>
+                    <div class="component-group indent indent indent">
+                        <span class="arrow"> L </span> <span class="component-box">ContextMenuRadioGroup</span> &amp; <span class="component-box">ContextMenuRadioItem</span> <span style="font-size:12px;">(라디오 버튼 그룹)</span>
+                    </div>
+                    <div class="component-group indent indent indent">
+                        <span class="arrow"> L </span> <span class="component-box">ContextMenuLabel</span> <span style="font-size:12px;">(그룹 제목)</span>
+                    </div>
+                     <div class="component-group indent indent indent">
+                        <span class="arrow"> L </span> <span class="component-box">ContextMenuSeparator</span> <span style="font-size:12px;">(구분선)</span>
+                    </div>
+                    <div class="component-group indent indent indent">
+                        <span class="arrow"> L </span> <span class="component-box">ContextMenuShortcut</span> <span style="font-size:12px;">(단축키 표시)</span>
+                    </div>
+                    <div class="component-group indent indent indent">
+                        <span class="arrow"> L </span> <span class="component-box">ContextMenuSub</span> <span style="font-size:12px;">(하위 메뉴 컨테이너)</span>
+                    </div>
+                    <div class="component-group indent indent indent indent">
+                        <span class="arrow"> L </span> <span class="component-box">ContextMenuSubTrigger</span> <span style="font-size:12px;">(하위 메뉴를 여는 항목)</span>
+                    </div>
+                    <div class="component-group indent indent indent indent">
+                        <span class="arrow"> L </span> <span class="component-box">ContextMenuSubContent</span> <span style="font-size:12px;">(하위 메뉴 내용)</span>
+                    </div>
+                </div>
+                 <p class="text-content">대부분의 서브 컴포넌트들은 <code>asChild</code> prop을 지원하여 기본 렌더링 요소를 커스텀 컴포넌트로 대체할 수 있게 하며, <code>className</code>을 통해 스타일링이 가능합니다.</p>
+
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">🎯</span>ContextMenuTrigger</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 컨텍스트 메뉴를 활성화시키는 영역(Trigger)을 감싸는 컴포넌트입니다. 이 컴포넌트의 자식 요소에서 마우스 오른쪽 버튼을 클릭하면 메뉴가 나타납니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;ContextMenu&gt;</code>의 직접적인 자식입니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;ContextMenuTrigger&gt;&lt;div&gt;여기에 우클릭하세요&lt;/div&gt;&lt;/ContextMenuTrigger&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>asChild</code> (기본 <code>div</code> 대신 자식 요소를 트리거로 사용), <code>disabled</code></p>
+                    </div>
+                </div>
+                
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">🚪</span>ContextMenuPortal (DropdownMenuPortal과 유사)</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 메뉴 콘텐츠(<code>ContextMenuContent</code>)를 DOM 트리의 다른 위치 (기본적으로 <code>document.body</code>)로 렌더링(포탈링)합니다. z-index 문제나 스타일링 충돌을 방지하는 데 도움이 됩니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;ContextMenu&gt;</code>의 자식이며, <code>ContextMenuContent</code>를 감쌉니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;ContextMenuPortal&gt;&lt;ContextMenuContent&gt;...&lt;/ContextMenuContent&gt;&lt;/ContextMenuPortal&gt;</code> (shadcn/ui에서는 <code>ContextMenuContent</code>가 내부적으로 포탈링을 처리할 수 있습니다.)</p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>container</code> (포탈 대상 DOM 요소), <code>forceMount</code></p>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">📜</span>ContextMenuContent</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 실제 메뉴 아이템들이 들어가는 컨테이너입니다. 사용자가 트리거를 활성화했을 때 화면에 나타납니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;ContextMenuPortal&gt;</code>의 자식 (또는 <code>&lt;ContextMenu&gt;</code>의 자식으로 직접 사용될 수도 있음)입니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;ContextMenuContent className="w-64"&gt;...&lt;/ContextMenuContent&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props (Radix UI 기반):</span></p>
+                        <div class="prop-table-wrapper">
+                            <table class="prop-table">
+                                <thead><tr><th>Prop</th><th>설명</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="prop-name">onCloseAutoFocus</td><td>메뉴가 닫힐 때 포커스를 어디로 옮길지 제어합니다.</td></tr>
+                                    <tr><td class="prop-name">onEscapeKeyDown</td><td>ESC 키를 눌렀을 때의 동작을 제어합니다.</td></tr>
+                                    <tr><td class="prop-name">onPointerDownOutside</td><td>메뉴 외부를 클릭했을 때의 동작을 제어합니다.</td></tr>
+                                    <tr><td class="prop-name">loop</td><td>방향키로 메뉴 아이템 탐색 시 처음/마지막 아이템에서 순환할지 여부입니다.</td></tr>
+                                    <tr><td class="prop-name">sideOffset</td><td>트리거 기준으로 메뉴가 표시될 때의 거리(offset)입니다.</td></tr>
+                                    <tr><td class="prop-name">alignOffset</td><td>트리거 기준으로 메뉴 정렬 시의 거리(offset)입니다.</td></tr>
+                                    <tr><td class="prop-name">avoidCollisions</td><td>화면 경계와 충돌을 피할지 여부입니다. (기본 true)</td></tr>
+                                    <tr><td class="prop-name">asChild</td><td>기본 렌더링 요소 대신 자식으로 렌더링합니다.</td></tr>
+                                    <tr><td class="prop-name">forceMount</td><td>숨겨져 있을 때도 DOM에 강제 마운트합니다.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">➡️</span>ContextMenuItem</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 컨텍스트 메뉴 내의 각 실행 가능한 항목입니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;ContextMenuContent&gt;</code> 또는 <code>&lt;ContextMenuSubContent&gt;</code>의 자식입니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;ContextMenuItem onSelect={() => alert("실행!")}&gt;액션 실행&lt;/ContextMenuItem&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>disabled</code> (항목 비활성화), <code>onSelect</code> (항목 선택 시 실행될 함수), <code>textValue</code> (타이핑으로 항목 검색 시 사용될 텍스트 값), <code>asChild</code></p>
+                        <p class="text-content"><code>inset</code> prop을 사용하여 아이콘 공간을 확보하고 텍스트를 정렬할 수 있습니다 (shadcn/ui 스타일).</p>
+                    </div>
+                </div>
+
+                <p class="text-content" style="text-align:center; font-weight:bold; margin-top:25px; margin-bottom:25px;">
+                    ⬇️ 아래 서브 컴포넌트들은 Dropdown Menu와 매우 유사하며, 동일한 Props 구조를 많이 공유합니다. ⬇️
+                </p>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">☑️</span>ContextMenuCheckboxItem & ContextMenuRadioGroup/Item</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 메뉴 내에서 선택/해제 상태를 가지는 항목들입니다. <code>ContextMenuCheckboxItem</code>은 개별 선택, <code>ContextMenuRadioGroup</code>과 <code>ContextMenuRadioItem</code>은 그룹 내 단일 선택을 구현합니다.</p>
+                        <p><span class="highlight-keyword">주요 Props (CheckboxItem):</span> <code>checked</code>, <code>onCheckedChange</code>, <code>disabled</code></p>
+                        <p><span class="highlight-keyword">주요 Props (RadioGroup):</span> <code>value</code> (선택된 RadioItem의 값), <code>onValueChange</code></p>
+                        <p><span class="highlight-keyword">주요 Props (RadioItem):</span> <code>value</code> (해당 아이템의 값), <code>disabled</code></p>
+                         <p class="text-content">모두 내부에 <code>&lt;ContextMenuPrimitive.ItemIndicator&gt;</code> (shadcn/ui에서는 <code>&lt;ContextMenuItemIndicator&gt;</code>)를 사용하여 체크 표시를 나타냅니다.</p>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">🏷️</span>ContextMenuLabel & ContextMenuSeparator</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">ContextMenuLabel:</span> 메뉴 아이템 그룹에 제목을 붙일 때 사용합니다. 클릭은 되지 않습니다.</p>
+                        <p><span class="highlight-keyword">ContextMenuSeparator:</span> 메뉴 아이템들 사이에 시각적인 구분선을 추가합니다.</p>
+                    </div>
+                </div>
+                
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">⌨️</span>ContextMenuShortcut</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 메뉴 아이템 옆에 해당 작업의 단축키를 표시하는 데 사용됩니다. (예: "⌘S")</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;ContextMenuItem&gt;저장 &lt;ContextMenuShortcut&gt;⌘S&lt;/ContextMenuShortcut&gt;&lt;/ContextMenuItem&gt;</code></p>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">📂</span>ContextMenuSub, ContextMenuSubTrigger, ContextMenuSubContent</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 계층적인 하위 메뉴(Submenu)를 만들 때 사용됩니다.</p>
+                        <ul>
+                            <li><code>&lt;ContextMenuSub&gt;</code>: 하위 메뉴 전체를 감싸는 컨테이너.</li>
+                            <li><code>&lt;ContextMenuSubTrigger&gt;</code>: 하위 메뉴를 여는 상위 메뉴의 아이템.</li>
+                            <li><code>&lt;ContextMenuSubContent&gt;</code>: 실제 하위 메뉴 아이템들이 들어가는 컨테이너.</li>
+                        </ul>
+                        <p class="text-content"><code>ContextMenuSubContent</code>는 <code>ContextMenuContent</code>와 유사한 positioning props (<code>sideOffset</code>, <code>alignOffset</code> 등)를 가집니다.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 기본적인 컨텍스트 메뉴 사용 예시입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+import {
+  ContextMenu,
+  ContextMenuCheckboxItem,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuLabel,
+  ContextMenuRadioGroup,
+  ContextMenuRadioItem,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu"
+import React from "react"
+
+function MyFileExplorerItem({ fileName }: { fileName: string }) {
+  const [showGrid, setShowGrid] = React.useState(true);
+  const [sortOrder, setSortOrder] = React.useState("name");
+
+  const handleCopy = () => alert(`'${fileName}' 복사됨!`);
+  const handleDelete = () => alert(`'${fileName}' 삭제됨!`);
+
+  return (
+    &lt;ContextMenu&gt;
+      &lt;ContextMenuTrigger className="flex h-[150px] w-full items-center justify-center rounded-md border border-dashed text-sm hover:bg-accent hover:text-accent-foreground"&gt;
+        &lt;div className="text-center"&gt;
+            &lt;p className="font-bold"&gt;{fileName}&lt;/p&gt;
+            &lt;p className="text-xs text-muted-foreground"&gt;여기를 우클릭하세요.&lt;/p&gt;
+        &lt;/div&gt;
+      &lt;/ContextMenuTrigger&gt;
+      &lt;ContextMenuContent className="w-64"&gt;
+        &lt;ContextMenuItem inset onSelect={() => alert('새 탭에서 열기')}&gt;
+          새 탭에서 열기
+          &lt;ContextMenuShortcut&gt;⌘T&lt;/ContextMenuShortcut&gt;
+        &lt;/ContextMenuItem&gt;
+        &lt;ContextMenuItem inset disabled&gt;
+          새 창에서 열기
+        &lt;/ContextMenuItem&gt;
+        &lt;ContextMenuSeparator /&gt;
+        &lt;ContextMenuSub&gt;
+          &lt;ContextMenuSubTrigger inset&gt;공유하기&lt;/ContextMenuSubTrigger&gt;
+          &lt;ContextMenuSubContent className="w-48"&gt;
+            &lt;ContextMenuItem&gt;이메일&lt;/ContextMenuItem&gt;
+            &lt;ContextMenuItem&gt;메시지&lt;/ContextMenuItem&gt;
+            &lt;ContextMenuSeparator /&gt;
+            &lt;ContextMenuItem&gt;링크 복사&lt;/ContextMenuItem&gt;
+          &lt;/ContextMenuSubContent&gt;
+        &lt;/ContextMenuSub&gt;
+        &lt;ContextMenuSeparator /&gt;
+        &lt;ContextMenuCheckboxItem
+          checked={showGrid}
+          onCheckedChange={setShowGrid}
+        &gt;
+          격자 보기
+          &lt;ContextMenuShortcut&gt;⇧⌘G&lt;/ContextMenuShortcut&gt;
+        &lt;/ContextMenuCheckboxItem&gt;
+        &lt;ContextMenuLabel inset&gt;정렬 기준&lt;/ContextMenuLabel&gt;
+        &lt;ContextMenuRadioGroup value={sortOrder} onValueChange={setSortOrder}&gt;
+          &lt;ContextMenuRadioItem value="name"&gt;이름&lt;/ContextMenuRadioItem&gt;
+          &lt;ContextMenuRadioItem value="date"&gt;날짜&lt;/ContextMenuRadioItem&gt;
+          &lt;ContextMenuRadioItem value="size"&gt;크기&lt;/ContextMenuRadioItem&gt;
+        &lt;/ContextMenuRadioGroup&gt;
+        &lt;ContextMenuSeparator /&gt;
+        &lt;ContextMenuItem onSelect={handleCopy}&gt;
+          복사
+          &lt;ContextMenuShortcut&gt;⌘C&lt;/ContextMenuShortcut&gt;
+        &lt;/ContextMenuItem&gt;
+        &lt;ContextMenuItem className="text-red-600 focus:bg-red-50 focus:text-red-600" onSelect={handleDelete}&gt;
+          삭제
+          &lt;ContextMenuShortcut&gt;⌘D&lt;/ContextMenuShortcut&gt;
+        &lt;/ContextMenuItem&gt;
+      &lt;/ContextMenuContent&gt;
+    &lt;/ContextMenu&gt;
+  )
+}
+
+export default function ContextMenuDemo() {
+    return &lt;MyFileExplorerItem fileName="MyDocument.docx" /&gt;
+}
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> Context Menu는 Dropdown Menu와 구조 및 사용법이 매우 유사하므로, Dropdown Menu를 이미 알고 있다면 쉽게 적응할 수 있습니다. <code>ContextMenuItem</code>에 <code>inset</code> prop을 주면 왼쪽에 아이콘이나 체크 표시를 위한 공간을 확보할 수 있어 일관된 UI를 만드는 데 도움이 됩니다. 또한, <code>ContextMenuShortcut</code>으로 단축키를 표시하여 고급 사용자를 위한 편의성을 높일 수 있습니다.
+                </div>
+            </section>
+            
+        </div>
+        <!-- Context Menu 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>점점 더 흥미로운 컴포넌트들이 기다리고 있어요! 🤩</p>
+            <p>이 문서는 shadcn UI 학습을 위해 <strong>정교하게</strong> 만들어졌습니다. 🛠️</p>
+            <p>&copy; <span id="current-year-contextmenu"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-contextmenu').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-contextmenu').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

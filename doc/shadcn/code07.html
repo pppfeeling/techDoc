@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Dialog</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+
+        .subcomponent-card {
+            border: 2px solid var(--color-fashion-2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            background-color: rgba(242, 230, 61, 0.08);
+            position: relative;
+        }
+        .subcomponent-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .subcomponent-title .icon {
+            margin-right: 8px;
+            font-size: 20px;
+            color: var(--color-fashion-4);
+        }
+        .subcomponent-card::before {
+            content: '🧩';
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            font-size: 20px;
+            transform: rotate(10deg);
+        }
+
+        .parent-child-relation {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-fashion-5);
+            display: flex;
+            flex-direction: column; 
+            align-items: flex-start; 
+        }
+        .parent-child-relation .component-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .component-box {
+            background-color: var(--color-fashion-5);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin: 5px;
+        }
+        .arrow {
+            font-size: 28px;
+            color: var(--color-fashion-1);
+            margin: 0 8px;
+            font-family: 'Nanum Pen Script', cursive;
+        }
+        .indent {
+            margin-left: 30px;
+        }
+        
+        /* Dialog 시각화 예시 */
+        .dialog-trigger-button-visual {
+            background-color: var(--color-fashion-4);
+            color: white;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Sunflower', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.2s;
+        }
+        .dialog-trigger-button-visual:hover {
+            background-color: var(--color-fashion-5);
+        }
+        .dialog-mockup-overlay {
+            position: fixed; /* 실제 컴포넌트는 Radix Portal을 사용 */
+            top:0; left:0; width:100%; height:100%;
+            background-color: rgba(0,0,0,0.5);
+            display: none; /* 실제로는 JS로 제어 */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .dialog-mockup-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            width: 80%;
+            max-width: 500px;
+        }
+        .dialog-mockup-content h3 {
+            font-family: 'Poor Story', cursive;
+            font-size: 22px;
+            color: var(--color-fashion-1);
+            margin-top:0;
+            margin-bottom:10px;
+        }
+        .dialog-mockup-content p {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .dialog-mockup-content .close-button-visual {
+            background-color: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            float: right;
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-dialog"></span><br>
+                정보 출처: <strong>Shadcn UI & Radix UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Dialog 컴포넌트 카드 시작 -->
+        <div class="component-card" id="dialog-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">💬</span>
+                <h1 class="component-main-title">Dialog (대화상자)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Dialog 컴포넌트는 현재 페이지의 흐름을 <span class="highlight-keyword">일시적으로 중단</span>시키고, 사용자에게 중요한 정보, 옵션, 또는 입력 필드를 제공하는 <span class="highlight-keyword">모달 창</span>입니다. 🗨️ 사용자는 Dialog와 상호작용한 후 (예: 확인, 취소, 정보 입력) 다시 원래 페이지로 돌아갈 수 있습니다.</p>
+                <p>주요 특징 및 사용 사례:</p>
+                <ul>
+                    <li>사용자 정보 입력 폼 (예: 프로필 수정, 새 항목 추가)</li>
+                    <li>설정 변경 인터페이스</li>
+                    <li>중요 알림 또는 확인 메시지 (Alert Dialog보다는 덜 강제적일 수 있음)</li>
+                    <li>콘텐츠 미리보기 또는 상세 정보 표시</li>
+                    <li>키보드 접근성 (포커스 트랩, ESC로 닫기 등) 및 스크린 리더 지원 우수</li>
+                    <li>Radix UI의 Dialog Primitive를 기반으로 합니다.</li>
+                </ul>
+                <div style="margin-top: 15px; text-align: center;">
+                     <button class="dialog-trigger-button-visual" onclick="showDialogMockup()">Dialog 열기 (시각화 예시)</button>
+                </div>
+                <div class="dialog-mockup-overlay" id="dialogMockup">
+                    <div class="dialog-mockup-content">
+                        <h3>📝 프로필 수정</h3>
+                        <p>여기에 이름, 이메일 등 프로필 정보를 수정할 수 있는 폼이 들어갈 수 있습니다.</p>
+                        <button class="dialog-mockup-content close-button-visual" onclick="hideDialogMockup()">닫기</button>
+                    </div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ Dialog는 사용자의 작업을 방해하지 않으면서 추가적인 상호작용을 유도하는 좋은 방법이에요!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>Dialog (루트 컴포넌트) Props</h2>
+                <div class="text-content">
+                    <p><code>&lt;Dialog&gt;</code> 루트 컴포넌트는 대화상자의 열림/닫힘 상태와 모달 여부 등을 관리합니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">open</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td>-</td>
+                                <td>Dialog의 열림 상태를 제어합니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">onOpenChange</td>
+                                <td><span class="highlight-value">(open: boolean) =&gt; void</span></td>
+                                <td>-</td>
+                                <td>열림 상태가 변경될 때 호출되는 콜백 함수입니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">defaultOpen</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>초기 마운트 시 Dialog의 열림 상태를 설정합니다. (비제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">modal</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">true</span> (Radix 기본값)</td>
+                                <td>Dialog가 모달(modal) 형식으로 동작할지 여부입니다. <span class="highlight-value">true</span>이면 Dialog 외부의 상호작용을 막고 포커스를 Dialog 내부에 가둡니다. 대부분의 Dialog는 모달로 사용됩니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>서브 컴포넌트들</h2>
+                <div class="text-content">
+                    <p>Dialog는 여러 서브 컴포넌트들로 구성되어 완전한 대화상자 기능을 제공합니다. Alert Dialog와 유사한 구조를 가집니다.</p>
+                </div>
+
+                <div class="parent-child-relation">
+                    <div class="component-group">
+                        <span class="component-box">Dialog</span>
+                    </div>
+                    <div class="component-group indent">
+                         <span class="arrow"> L </span> <span class="component-box">DialogTrigger</span>
+                         <span style="font-size:12px; margin-left:5px;">(Dialog를 여는 요소)</span>
+                    </div>
+                    <div class="component-group indent">
+                         <span class="arrow"> L </span> <span class="component-box">DialogPortal</span>
+                         <span style="font-size:12px; margin-left:5px;">(DOM의 다른 곳으로 렌더링)</span>
+                    </div>
+                    <div class="component-group indent indent">
+                         <span class="arrow"> L </span> <span class="component-box">DialogOverlay</span>
+                         <span style="font-size:12px; margin-left:5px;">(배경 오버레이)</span>
+                    </div>
+                    <div class="component-group indent indent">
+                        <span class="arrow"> L </span> <span class="component-box">DialogContent</span>
+                         <span style="font-size:12px; margin-left:5px;">(실제 내용 컨테이너)</span>
+                    </div>
+                    <div class="component-group indent indent indent">
+                        <span class="arrow"> L </span> <span class="component-box">DialogHeader</span>
+                    </div>
+                    <div class="component-group indent indent indent indent">
+                        <span class="arrow"> L </span> <span class="component-box">DialogTitle</span>
+                    </div>
+                    <div class="component-group indent indent indent indent">
+                        <span class="arrow"> L </span> <span class="component-box">DialogDescription</span>
+                    </div>
+                     <div class="component-group indent indent indent">
+                        <span class="arrow"> L </span> <span class="component-box">DialogFooter</span> <span style="font-size:12px;">(버튼 등 푸터 내용)</span>
+                    </div>
+                    <div class="component-group indent indent indent">
+                         <span class="arrow"> L </span> <span class="component-box">DialogClose</span> <span style="font-size:12px;">(Dialog를 닫는 버튼)</span>
+                    </div>
+                </div>
+                <p class="text-content">모든 서브 컴포넌트는 <code>className</code>을 통해 스타일링이 가능하며, <code>asChild</code> prop을 통해 렌더링되는 기본 HTML 요소를 커스텀 컴포넌트로 대체할 수 있습니다.</p>
+
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">🖱️</span>DialogTrigger</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> Dialog를 열기 위한 버튼이나 클릭 가능한 요소입니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;Dialog&gt;</code>의 자식으로 사용됩니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;DialogTrigger asChild&gt;&lt;Button&gt;프로필 수정&lt;/Button&gt;&lt;/DialogTrigger&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>asChild</code></p>
+                    </div>
+                </div>
+                
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">🚪</span>DialogPortal</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> Dialog의 내용을 DOM 트리의 다른 부분(기본적으로 <code>document.body</code>)으로 텔레포트 시킵니다. 스타일링 충돌 및 모달 구현의 복잡성을 줄여줍니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;Dialog&gt;</code>의 자식이며, <code>DialogOverlay</code>와 <code>DialogContent</code>를 감쌉니다. (shadcn/ui에서는 <code>DialogContent</code>가 내부적으로 이를 처리할 수 있습니다.)</p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>container</code>, <code>forceMount</code></p>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">🌫️</span>DialogOverlay</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> Dialog가 열렸을 때 화면의 나머지 부분을 덮는 반투명한 배경입니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> 보통 <code>&lt;DialogPortal&gt;</code> 내부에, <code>&lt;DialogContent&gt;</code>와 형제 요소로 위치합니다.</p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>asChild</code>, <code>forceMount</code> (Radix)</p>
+                    </div>
+                </div>
+                
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">📦</span>DialogContent</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> Dialog의 실제 내용(텍스트, 폼, 버튼 등)이 담기는 컨테이너입니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;DialogPortal&gt;</code> (또는 <code>&lt;Dialog&gt;</code>)의 자식입니다.</p>
+                        <p><span class="highlight-keyword">주요 Props (Radix UI 기반):</span></p>
+                        <div class="prop-table-wrapper">
+                            <table class="prop-table">
+                                <thead><tr><th>Prop</th><th>설명</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="prop-name">onEscapeKeyDown</td><td>ESC 키를 눌렀을 때 Dialog를 닫을지 제어하는 이벤트 핸들러입니다.</td></tr>
+                                    <tr><td class="prop-name">onPointerDownOutside</td><td>Dialog 외부를 클릭했을 때 Dialog를 닫을지 제어하는 이벤트 핸들러입니다.</td></tr>
+                                    <tr><td class="prop-name">onOpenAutoFocus</td><td>Dialog가 열릴 때 특정 요소에 자동으로 포커스를 줄지 설정합니다.</td></tr>
+                                    <tr><td class="prop-name">onCloseAutoFocus</td><td>Dialog가 닫힐 때 이전에 포커스된 요소로 포커스를 돌려줄지 설정합니다.</td></tr>
+                                    <tr><td class="prop-name">asChild</td><td>기본 렌더링 요소 대신 자식으로 렌더링합니다.</td></tr>
+                                    <tr><td class="prop-name">forceMount</td><td>컴포넌트가 숨겨져 있을 때도 DOM에 강제로 마운트시킵니다.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">🏷️</span>DialogHeader</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> Dialog의 상단 영역으로, 주로 제목(<code>DialogTitle</code>)과 설명(<code>DialogDescription</code>)을 포함합니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;DialogContent&gt;</code>의 자식입니다.</p>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">📌</span>DialogTitle</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> Dialog의 제목입니다. 스크린 리더 사용자를 위해 <code>DialogDescription</code>과 연결됩니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;DialogHeader&gt;</code>의 자식으로 사용됩니다.</p>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">🗒️</span>DialogDescription</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> Dialog의 추가적인 설명 텍스트입니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;DialogHeader&gt;</code>의 자식으로 사용됩니다.</p>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">🎬</span>DialogFooter</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> Dialog의 하단 영역으로, 주로 액션 버튼들(예: 저장, 취소)을 포함합니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;DialogContent&gt;</code>의 자식입니다.</p>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">✖️</span>DialogClose</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> Dialog를 닫는 버튼입니다. 보통 Dialog의 오른쪽 상단(X 버튼)이나 Footer에 위치합니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;DialogContent&gt;</code>, <code>&lt;DialogHeader&gt;</code>, 또는 <code>&lt;DialogFooter&gt;</code> 등 Dialog 내부 어디든 위치할 수 있습니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;DialogClose asChild&gt;&lt;Button variant="outline"&gt;닫기&lt;/Button&gt;&lt;/DialogClose&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>asChild</code></p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 프로필 편집 기능을 위한 Dialog 예시입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogClose, // DialogClose 추가
+} from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input" // Input, Label은 예시용
+import { Label } from "@/components/ui/label"
+
+function EditProfileDialog() {
+  const handleSubmit = (event: React.FormEvent&lt;HTMLFormElement&gt;) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    const name = formData.get("name");
+    const username = formData.get("username");
+    console.log("저장:", { name, username });
+    // 실제 저장 로직 후 Dialog 닫기 (onOpenChange를 통해 상태 변경)
+    // 또는 DialogClose 버튼이 form 내부에 type="submit"이 아닌 경우,
+    // DialogClose 클릭 시 자동으로 닫힘.
+  };
+
+  return (
+    &lt;Dialog&gt;
+      &lt;DialogTrigger asChild&gt;
+        &lt;Button variant="outline"&gt;프로필 수정 ✏️&lt;/Button&gt;
+      &lt;/DialogTrigger&gt;
+      &lt;DialogContent className="sm:max-w-[425px]"&gt;
+        &lt;form onSubmit={handleSubmit}&gt;
+          &lt;DialogHeader&gt;
+            &lt;DialogTitle&gt;프로필 편집&lt;/DialogTitle&gt;
+            &lt;DialogDescription&gt;
+              여기에 프로필 정보를 입력하세요. 변경 사항은 저장 버튼을 누르면 반영됩니다.
+            &lt;/DialogDescription&gt;
+          &lt;/DialogHeader&gt;
+          &lt;div className="grid gap-4 py-4"&gt;
+            &lt;div className="grid grid-cols-4 items-center gap-4"&gt;
+              &lt;Label htmlFor="name" className="text-right"&gt;
+                이름
+              &lt;/Label&gt;
+              &lt;Input id="name" name="name" defaultValue="홍길동" className="col-span-3" /&gt;
+            &lt;/div&gt;
+            &lt;div className="grid grid-cols-4 items-center gap-4"&gt;
+              &lt;Label htmlFor="username" className="text-right"&gt;
+                사용자명
+              &lt;/Label&gt;
+              &lt;Input id="username" name="username" defaultValue="@gildong" className="col-span-3" /&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;DialogFooter&gt;
+            &lt;DialogClose asChild&gt;
+              &lt;Button type="button" variant="outline"&gt;취소&lt;/Button&gt;
+            &lt;/DialogClose&gt;
+            {/* 
+              폼 내부에 DialogClose를 넣고 싶지 않다면,
+              type="submit" 버튼 클릭 후 handleSubmit에서 수동으로 Dialog 닫아야 함 (open 상태 변경)
+            */}
+            &lt;Button type="submit"&gt;변경사항 저장&lt;/Button&gt; 
+          &lt;/DialogFooter&gt;
+        &lt;/form&gt;
+      &lt;/DialogContent&gt;
+    &lt;/Dialog&gt;
+  )
+}
+
+export default EditProfileDialog;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> <code>DialogContent</code> 내부에 폼(<code>&lt;form&gt;</code>)을 넣고, <code>DialogFooter</code>에 제출 버튼과 <code>DialogClose</code>를 사용한 취소 버튼을 배치하는 것이 일반적인 패턴입니다. <code>DialogClose</code> 컴포넌트는 클릭 시 가장 가까운 <code>Dialog</code>를 닫아주므로 편리합니다. 복잡한 상태 관리 없이도 닫기 기능을 쉽게 구현할 수 있어요!
+                </div>
+            </section>
+            
+        </div>
+        <!-- Dialog 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>다음은 어떤 메뉴가 펼쳐질까요? Dropdown Menu를 기대해주세요! 🚁</p>
+            <p>이 문서는 shadcn UI 학습을 위한 <strong>가이드라인</strong>이 되길 바랍니다. 🗺️</p>
+            <p>&copy; <span id="current-year-dialog"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-dialog').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-dialog').textContent = new Date().getFullYear();
+
+        // Dialog 시각화 예제용 스크립트
+        const dialogMockup = document.getElementById('dialogMockup');
+        function showDialogMockup() {
+            if(dialogMockup) dialogMockup.style.display = 'flex';
+        }
+        function hideDialogMockup() {
+            if(dialogMockup) dialogMockup.style.display = 'none';
+        }
+        // 외부 클릭 시 닫기 (간단 버전)
+        if(dialogMockup) {
+            dialogMockup.addEventListener('click', function(event) {
+                if (event.target === dialogMockup) {
+                    hideDialogMockup();
+                }
+            });
+        }
+    </script>
+</body>
+</html>

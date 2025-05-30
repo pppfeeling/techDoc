@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 가이드 - Drawer (Sheet 활용)</title>
+    <style>
+        
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+         .text-content li > code { /* li 내부 코드 스타일 */
+             font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+
+        .subcomponent-card { /* Sheet와 동일한 스타일 사용 */
+            border: 2px solid var(--color-fashion-2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            background-color: rgba(242, 230, 61, 0.08);
+            position: relative;
+        }
+        .subcomponent-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .subcomponent-title .icon {
+            margin-right: 8px;
+            font-size: 20px;
+            color: var(--color-fashion-4);
+        }
+        .subcomponent-card::before {
+            content: '🧩';
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            font-size: 20px;
+            transform: rotate(10deg);
+        }
+
+        .parent-child-relation { /* Sheet와 동일한 스타일 사용 */
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-fashion-5);
+            display: flex;
+            flex-direction: column; 
+            align-items: flex-start; 
+        }
+        .parent-child-relation .component-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .component-box {
+            background-color: var(--color-fashion-5);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin: 5px;
+        }
+        .arrow {
+            font-size: 28px;
+            color: var(--color-fashion-1);
+            margin: 0 8px;
+            font-family: 'Nanum Pen Script', cursive;
+        }
+        .indent {
+            margin-left: 30px;
+        }
+        
+        /* Drawer 시각화 예시 (Sheet와 동일) */
+        .drawer-trigger-button-visual {
+            background-color: var(--color-fashion-4);
+            color: white;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Sunflower', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.2s;
+            margin-right: 10px; /* 버튼 간 간격 */
+        }
+        .drawer-trigger-button-visual:hover {
+            background-color: var(--color-fashion-5);
+        }
+        .drawer-mockup-container {
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background-color: rgba(0,0,0,0.3);
+            display: none; 
+            align-items: stretch;
+            z-index: 1000;
+        }
+        .drawer-mockup-container.left { justify-content: flex-start; }
+        .drawer-mockup-container.right { justify-content: flex-end; }
+        .drawer-mockup-content {
+            width: 280px; /* 드로어 너비 */
+            background-color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .drawer-mockup-container.left .drawer-mockup-content { box-shadow: 5px 0 15px rgba(0,0,0,0.2); }
+        .drawer-mockup-container.right .drawer-mockup-content { box-shadow: -5px 0 15px rgba(0,0,0,0.2); }
+
+         .drawer-mockup-content h3 {
+            font-family: 'Poor Story', cursive;
+            font-size: 22px;
+            color: var(--color-fashion-1);
+            margin-top:0; margin-bottom:15px;
+        }
+        .drawer-mockup-content .close-button-visual {
+            background-color: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            align-self: flex-end;
+            margin-top: auto;
+        }
+        .drawer-mockup-content ul { list-style: '➡️ '; padding-left: 20px; }
+        .drawer-mockup-content ul li { margin-bottom: 8px; cursor:pointer; }
+        .drawer-mockup-content ul li:hover { color: var(--color-fashion-4); }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-drawer"></span><br>
+                정보 출처: <strong>Shadcn UI 공식 문서 (Sheet 컴포넌트)</strong>
+            </div>
+        </header>
+
+        <!-- Drawer (Sheet 활용) 컴포넌트 카드 시작 -->
+        <div class="component-card" id="drawer-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">🚪</span>
+                <h1 class="component-main-title">Drawer (Sheet 컴포넌트 활용)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Drawer(드로어)는 화면의 가장자리, 주로 <span class="highlight-keyword">왼쪽 또는 오른쪽</span>에서 슬라이드되어 나오는 패널형 UI입니다. ↔️ 이는 모바일 환경에서 햄버거 버튼을 눌렀을 때 나타나는 네비게이션 메뉴나, 데스크톱에서 필터 옵션, 설정 패널 등을 표시하는 데 자주 사용됩니다. 사용자의 현재 컨텍스트를 유지하면서 추가적인 정보나 기능을 제공할 수 있습니다.</p>
+                <p>Shadcn UI에서는 별도의 "Drawer" 컴포넌트 대신, 앞서 다룬 <span class="highlight-keyword"><code>Sheet</code> 컴포넌트</span>를 사용하여 이러한 Drawer UI를 구현합니다. <code>SheetContent</code>의 <code>side</code> prop을 <code>"left"</code> 또는 <code>"right"</code>로 설정하면 일반적인 Drawer의 동작과 모양을 만들 수 있습니다.</p>
+                <p>주요 사용 사례 (Sheet를 Drawer로 활용 시):</p>
+                <ul>
+                    <li>모바일/태블릿에서의 숨김형 네비게이션 메뉴</li>
+                    <li>복잡한 필터 옵션을 담는 사이드 패널</li>
+                    <li>알림 센터 또는 사용자 활동 피드</li>
+                    <li>상세 정보 표시 또는 간단한 입력 폼</li>
+                </ul>
+                <div style="margin-top: 15px; text-align: center;">
+                     <button class="drawer-trigger-button-visual" onclick="showDrawerMockup('left')">왼쪽 Drawer 열기</button>
+                     <button class="drawer-trigger-button-visual" onclick="showDrawerMockup('right')">오른쪽 Drawer 열기</button>
+                </div>
+                <div class="drawer-mockup-container left" id="drawerMockupLeft">
+                    <div class="drawer-mockup-content">
+                        <h3>☰ 메뉴 (왼쪽)</h3>
+                        <ul><li>홈</li><li>제품</li><li>소개</li><li>연락처</li></ul>
+                        <button class="drawer-mockup-content close-button-visual" onclick="hideDrawerMockup('left')">닫기</button>
+                    </div>
+                </div>
+                 <div class="drawer-mockup-container right" id="drawerMockupRight">
+                    <div class="drawer-mockup-content">
+                        <h3>⚙️ 필터 (오른쪽)</h3>
+                        <p>필터 옵션들이 여기에 표시됩니다.</p>
+                        <button class="drawer-mockup-content close-button-visual" onclick="hideDrawerMockup('right')">닫기</button>
+                    </div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ <code>Sheet</code> 컴포넌트의 <code>side</code> prop 하나로 강력한 Drawer UI를 손쉽게 구현할 수 있습니다!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>Sheet (루트 컴포넌트) Props 복습</h2>
+                <div class="text-content">
+                    <p>Drawer를 구현하기 위해 사용하는 <code>&lt;Sheet&gt;</code> 루트 컴포넌트의 주요 Props는 다음과 같습니다 (Dialog와 동일):</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr><th>Prop 이름</th><th>타입</th><th>기본값</th><th>설명</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="prop-name">open</td><td><span class="highlight-value">boolean</span></td><td>-</td><td>열림 상태 제어 (제어)</td></tr>
+                            <tr><td class="prop-name">onOpenChange</td><td><span class="highlight-value">(open: boolean) =&gt; void</span></td><td>-</td><td>열림 상태 변경 콜백 (제어)</td></tr>
+                            <tr><td class="prop-name">defaultOpen</td><td><span class="highlight-value">boolean</span></td><td>false</td><td>초기 열림 상태 (비제어)</td></tr>
+                            <tr><td class="prop-name">modal</td><td><span class="highlight-value">boolean</span></td><td>true</td><td>모달 여부 (외부 상호작용 차단)</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>Sheet 서브 컴포넌트 (Drawer 구현 시)</h2>
+                <div class="text-content">
+                    <p>Drawer UI를 구성하기 위해 사용되는 <code>Sheet</code>의 서브 컴포넌트들은 다음과 같습니다 (Dialog의 서브 컴포넌트와 이름만 다르고 기능은 동일):</p>
+                </div>
+
+                <div class="parent-child-relation">
+                    <div class="component-group"> <span class="component-box">Sheet</span> </div>
+                    <div class="component-group indent"> <span class="arrow"> L </span> <span class="component-box">SheetTrigger</span> </div>
+                    <div class="component-group indent"> <span class="arrow"> L </span> <span class="component-box">SheetPortal</span> <span style="font-size:12px;">(선택적)</span> </div>
+                    <div class="component-group indent indent"> <span class="arrow"> L </span> <span class="component-box">SheetOverlay</span> </div>
+                    <div class="component-group indent indent"> <span class="arrow"> L </span> <span class="component-box">SheetContent</span> <span style="font-size:12px; margin-left:5px;">(핵심! <code>side</code> prop 사용)</span> </div>
+                    <div class="component-group indent indent indent"> <span class="arrow"> L </span> <span class="component-box">SheetHeader</span> </div>
+                    <div class="component-group indent indent indent indent"> <span class="arrow"> L </span> <span class="component-box">SheetTitle</span> &amp; <span class="component-box">SheetDescription</span> </div>
+                    <div class="component-group indent indent indent"> <span class="arrow"> L </span> <span class="component-box">SheetFooter</span> </div>
+                    <div class="component-group indent indent indent"> <span class="arrow"> L </span> <span class="component-box">SheetClose</span> </div>
+                </div>
+                <p class="text-content">이 컴포넌트들의 역할과 Props는 앞서 다룬 <span class="highlight-keyword">Sheet 챕터</span> 또는 <span class="highlight-keyword">Dialog 챕터</span>의 설명을 참고하시면 됩니다.</p>
+
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">↔️</span>SheetContent (Drawer의 핵심)</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> Drawer의 실제 내용을 담는 패널입니다. <code>side</code> prop을 통해 어느 가장자리에서 나올지 결정합니다.</p>
+                        <p><span class="highlight-keyword">Drawer 구현 시 <code>side</code> Prop 값:</span></p>
+                        <ul>
+                            <li><code>side="left"</code>: 화면 왼쪽에서 나오는 드로어 (일반적인 네비게이션 드로어)</li>
+                            <li><code>side="right"</code>: 화면 오른쪽에서 나오는 드로어 (필터, 장바구니, 알림 등)</li>
+                            <li>(<code>side="top"</code> 또는 <code>side="bottom"</code>도 가능하지만, 일반적인 Drawer 형태는 아님)</li>
+                        </ul>
+                        <p><span class="highlight-keyword">주요 Props 복습:</span></p>
+                        <div class="prop-table-wrapper">
+                             <table class="prop-table">
+                                <thead><tr><th>Prop</th><th>타입</th><th>기본값</th><th>설명</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="prop-name required-prop">side</td><td><span class="highlight-value">"top" | "bottom" | "left" | "right"</span></td><td>"right"</td><td>Sheet가 나타날 화면 가장자리</td></tr>
+                                    <tr><td class="prop-name">className</td><td><span class="highlight-value">string</span></td><td>-</td><td><code>SheetContent</code>에 적용할 CSS 클래스. 너비/높이, 패딩 등을 조절합니다.</td></tr>
+                                    {/* DialogContent와 동일한 나머지 Props 생략 */}
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-content">shadcn/ui는 <code>side</code> 값에 따라 적절한 애니메이션과 기본 스타일(너비 등)을 제공합니다. 예를 들어, <code>side="left"</code>일 경우 <code>w-full sm:max-w-sm</code> (모바일에서는 전체 너비, sm 이상에서는 최대 너비 sm)과 같은 클래스가 기본으로 적용될 수 있습니다.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 화면 왼쪽에 나타나는 네비게이션 Drawer 예시입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input" // 예시용
+import { Label } from "@/components/ui/label" // 예시용
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import { MenuIcon, HomeIcon, SettingsIcon, UserIcon, LogOutIcon } from "lucide-react" // 아이콘 예시
+
+function NavigationDrawer() {
+  const navItems = [
+    { label: "홈", icon: &lt;HomeIcon className="mr-2 h-4 w-4" /&gt;, href: "/" },
+    { label: "프로필", icon: &lt;UserIcon className="mr-2 h-4 w-4" /&gt;, href: "/profile" },
+    { label: "설정", icon: &lt;SettingsIcon className="mr-2 h-4 w-4" /&gt;, href: "/settings" },
+  ];
+
+  return (
+    &lt;Sheet&gt;
+      &lt;SheetTrigger asChild&gt;
+        &lt;Button variant="outline" size="icon" className="sm:hidden"&gt; {/* 모바일에서만 보이도록 예시 */}
+          &lt;MenuIcon className="h-5 w-5" /&gt;
+          &lt;span className="sr-only"&gt;메뉴 열기&lt;/span&gt;
+        &lt;/Button&gt;
+      &lt;/SheetTrigger&gt;
+      &lt;SheetContent side="left" className="w-[300px]"&gt; {/* 왼쪽에서, 너비 300px */}
+        &lt;SheetHeader&gt;
+          &lt;SheetTitle&gt;앱 탐색 🧭&lt;/SheetTitle&gt;
+          &lt;SheetDescription&gt;
+            원하는 페이지로 빠르게 이동하세요.
+          &lt;/SheetDescription&gt;
+        &lt;/SheetHeader&gt;
+        &lt;nav className="flex flex-col space-y-2 mt-4 flex-grow"&gt; {/* flex-grow로 남은 공간 채우기 */}
+          {navItems.map((item) => (
+            &lt;SheetClose asChild key={item.label}&gt; {/* 링크 클릭 시 Drawer 닫기 */}
+              &lt;a 
+                href={item.href} 
+                className="flex items-center p-2 rounded-md hover:bg-accent"
+              &gt;
+                {item.icon}
+                {item.label}
+              &lt;/a&gt;
+            &lt;/SheetClose&gt;
+          ))}
+        &lt;/nav&gt;
+        &lt;SheetFooter className="mt-auto border-t pt-4"&gt; {/* mt-auto로 푸터를 아래에 고정 */}
+          &lt;SheetClose asChild&gt;
+            &lt;Button variant="destructive" className="w-full"&gt;
+              &lt;LogOutIcon className="mr-2 h-4 w-4" /&gt; 로그아웃
+            &lt;/Button&gt;
+          &lt;/SheetClose&gt;
+        &lt;/SheetFooter&gt;
+      &lt;/SheetContent&gt;
+    &lt;/Sheet&gt;
+  )
+}
+
+export default NavigationDrawer;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> Drawer 내의 네비게이션 링크를 클릭했을 때 Drawer가 자동으로 닫히도록 하려면, 각 링크(<code>&lt;a&gt;</code> 또는 Next.js의 <code>&lt;Link&gt;</code>)를 <code>&lt;SheetClose asChild&gt;</code>로 감싸주면 편리합니다. Drawer의 너비나 높이는 <code>SheetContent</code>의 <code>className</code>을 통해 Tailwind CSS로 쉽게 조절할 수 있습니다.
+                </div>
+            </section>
+            
+        </div>
+        <!-- Drawer (Sheet 활용) 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>🎉 Drawer (Sheet 활용)까지 완벽 마스터! 이제 반응형 UI의 핵심 기능을 갖추셨습니다! 🎉</p>
+            <p>정말 많은 내용을 함께 학습했습니다. 이 지식들이 실제 프로젝트에서 빛을 발하기를 응원합니다! 🌟</p>
+            <p>&copy; <span id="current-year-drawer"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-drawer').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-drawer').textContent = new Date().getFullYear();
+
+        // Drawer 시각화 예제용 스크립트 (Sheet와 동일)
+        function showDrawerMockup(side) {
+            const drawerMockup = document.getElementById(side === 'left' ? 'drawerMockupLeft' : 'drawerMockupRight');
+            if (drawerMockup) {
+                drawerMockup.style.display = 'flex';
+            }
+        }
+        function hideDrawerMockup(side) {
+             const drawerMockup = document.getElementById(side === 'left' ? 'drawerMockupLeft' : 'drawerMockupRight');
+            if (drawerMockup) {
+                drawerMockup.style.display = 'none';
+            }
+        }
+        // 외부 클릭 시 닫기 (간단 버전)
+        document.querySelectorAll('.drawer-mockup-container').forEach(container => {
+            container.addEventListener('click', function(event) {
+                if (event.target === container) { 
+                    hideDrawerMockup(container.id.includes('Left') ? 'left' : 'right');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

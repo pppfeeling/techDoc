@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 가이드 - Command 컴포넌트</title>
+    <style>
+        
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+         .text-content li > code { /* li 내부 코드 스타일 */
+             font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+        
+        /* Command 시각화 예시 */
+        .command-visual-example {
+            width: 100%;
+            max-width: 500px; /* 너무 커지지 않게 */
+            margin: 20px auto;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 8px 24px rgba(89, 59, 70, 0.15);
+            overflow: hidden;
+        }
+        .command-input-visual {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--color-fashion-3);
+        }
+        .command-input-visual .icon {
+            color: var(--color-text-subtle);
+            margin-right: 8px;
+            font-size: 16px;
+        }
+        .command-input-visual input {
+            flex-grow: 1;
+            border: none;
+            outline: none;
+            font-size: 14px;
+            background: transparent;
+            color: var(--color-text-default);
+        }
+        .command-list-visual {
+            max-height: 250px; /* 스크롤 가능하도록 */
+            overflow-y: auto;
+            padding: 8px 0;
+        }
+        .command-item-visual {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .command-item-visual:hover, .command-item-visual.selected {
+            background-color: rgba(242, 196, 61, 0.15); /* 호버/선택 배경 */
+        }
+        .command-item-visual .icon {
+            color: var(--color-text-subtle);
+            font-size: 16px;
+        }
+        .command-group-label-visual {
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--color-text-subtle);
+            text-transform: uppercase;
+        }
+        .command-empty-visual {
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+        }
+        .command-separator-visual {
+            height: 1px;
+            background-color: var(--color-fashion-3);
+            margin: 8px 0;
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-command"></span><br>
+                정보 출처: <strong>cmdk & Shadcn UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Command 컴포넌트 카드 시작 -->
+        <div class="component-card" id="command-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">⌨️</span>
+                <h1 class="component-main-title">Command (명령 팔레트)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Command 컴포넌트는 사용자가 <span class="highlight-keyword">키보드 입력</span>을 통해 애플리케이션 내의 다양한 명령, 페이지, 파일, 설정 등을 빠르게 <span class="highlight-keyword">검색하고 실행</span>할 수 있도록 하는 인터페이스입니다. ⚡️ 일반적으로 모달 대화상자(Dialog) 내에 표시되며, 입력 필드와 검색 결과 목록으로 구성됩니다.</p>
+                <p>주요 특징:</p>
+                <ul>
+                    <li>빠른 검색 및 실행: 키보드 중심의 효율적인 사용자 경험 제공</li>
+                    <li>높은 구성 가능성: 아이템, 그룹, 로딩 상태, 빈 상태 등 자유로운 구성</li>
+                    <li>접근성: 키보드 네비게이션 및 ARIA 속성 지원</li>
+                    <li><code>cmdk</code> 라이브러리 기반: 가볍고 성능이 우수함</li>
+                </ul>
+                <p>Shadcn UI는 <code>cmdk</code>의 각 부분을 스타일링된 컴포넌트 (<code>Command</code>, <code>CommandInput</code>, <code>CommandList</code>, <code>CommandItem</code>, <code>CommandGroup</code>, <code>CommandSeparator</code>, <code>CommandEmpty</code>, <code>CommandLoading</code>, <code>CommandDialog</code>, <code>CommandShortcut</code>)로 제공합니다.</p>
+                <div class="command-visual-example">
+                    <div class="command-input-visual">
+                        <span class="icon">🔍</span>
+                        <input type="text" placeholder="명령 검색 또는 입력..." />
+                    </div>
+                    <div class="command-list-visual">
+                        <div class="command-group-label-visual">제안</div>
+                        <div class="command-item-visual selected"><span class="icon">📅</span> 캘린더</div>
+                        <div class="command-item-visual"><span class="icon">😊</span> 이모티콘 검색</div>
+                        <div class="command-item-visual"><span class="icon">🧮</span> 계산기</div>
+                        <div class="command-separator-visual"></div>
+                        <div class="command-group-label-visual">설정</div>
+                         <div class="command-item-visual"><span class="icon">⚙️</span> 프로필 설정</div>
+                         <div class="command-item-visual"><span class="icon">🔔</span> 알림 설정</div>
+                        {/* <div class="command-empty-visual">결과 없음</div> */}
+                    </div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ Command 컴포넌트는 "파워 유저"를 위한 최고의 기능 중 하나이며, 애플리케이션의 사용성을 한 단계 끌어올립니다!
+                </div>
+            </section>
+
+            <section class="setup-section">
+                <h2 class="section-heading"><span class="icon">⚙️</span>기본 설정 및 설치</h2>
+                <div class="text-content">
+                    <p><code>cmdk</code> 라이브러리가 필요합니다. shadcn UI의 Command 컴포넌트를 설치하면 자동으로 의존성으로 추가될 수 있지만, 명시적으로 설치할 수도 있습니다:</p>
+                    <div class="code-block-wrapper">
+                        <pre><code>
+npm install cmdk
+# 또는
+yarn add cmdk
+                        </code></pre>
+                    </div>
+                    <p>그리고 shadcn UI의 Command 관련 컴포넌트들을 CLI를 통해 프로젝트에 추가합니다.</p>
+                </div>
+            </section>
+
+            <section class="core-components">
+                <h2 class="section-heading"><span class="icon">🧩</span>주요 서브 컴포넌트 및 역할</h2>
+                <div class="text-content">
+                    <p>Shadcn UI의 Command는 여러 서브 컴포넌트의 조합으로 구성됩니다:</p>
+                    <ul>
+                        <li><strong><code>&lt;Command&gt;</code> (루트):</strong> 전체 명령 팔레트의 컨테이너. 필터링 로직, 값 관리 등을 담당합니다.
+                            <ul><li>Props: <code>filter</code> (커스텀 필터 함수), <code>value</code> (선택된 아이템 값 - 제어), <code>onValueChange</code>, <code>defaultValue</code>, <code>shouldFilter</code> (기본 필터링 사용 여부, 기본 true), <code>loop</code>, <code>className</code> 등.</li></ul>
+                        </li>
+                        <li><strong><code>&lt;CommandInput&gt;</code>:</strong> 사용자가 검색어를 입력하는 <code>&lt;input&gt;</code> 필드입니다. (<code>cmdk</code>의 <code>Command.Input</code> 기반)</li>
+                        <li><strong><code>&lt;CommandList&gt;</code>:</strong> 검색 결과를 보여주는 스크롤 가능한 목록 영역입니다. (<code>cmdk</code>의 <code>Command.List</code> 기반)</li>
+                        <li><strong><code>&lt;CommandEmpty&gt;</code>:</strong> 검색 결과가 없을 때 표시될 내용을 담습니다. (<code>cmdk</code>의 <code>Command.Empty</code> 기반)</li>
+                        <li><strong><code>&lt;CommandGroup&gt;</code>:</strong> 관련된 <code>CommandItem</code>들을 그룹화하고, 그룹 제목(<code>heading</code> prop)을 표시할 수 있습니다. (<code>cmdk</code>의 <code>Command.Group</code> 기반)</li>
+                        <li><strong><code>&lt;CommandItem&gt;</code>:</strong> 목록에 표시되는 각 실행 가능한 명령 또는 항목입니다. (<code>cmdk</code>의 <code>Command.Item</code> 기반)
+                            <ul><li>Props: <code>value</code> (항목 식별값), <code>onSelect</code> (항목 선택 시 실행될 함수), <code>disabled</code>, <code>className</code> 등.</li></ul>
+                        </li>
+                        <li><strong><code>&lt;CommandSeparator&gt;</code>:</strong> <code>CommandGroup</code>이나 <code>CommandItem</code> 사이에 시각적인 구분선을 추가합니다. (<code>cmdk</code>의 <code>Command.Separator</code> 기반)</li>
+                        <li><strong><code>&lt;CommandLoading&gt;</code>:</strong> 비동기 검색 등 로딩 상태일 때 표시될 내용을 담습니다. (<code>cmdk</code>의 <code>Command.Loading</code> 기반 - 조건부 렌더링 필요)</li>
+                         <li><strong><code>&lt;CommandShortcut&gt;</code>:</strong> <code>CommandItem</code> 오른쪽에 해당 명령의 단축키를 표시합니다. (shadcn/ui 추가 컴포넌트)</li>
+                        <li><strong><code>&lt;CommandDialog&gt;</code>:</strong> <code>Command</code> 컴포넌트를 <code>Dialog</code> 내부에 미리 구성해 놓은 편리한 래퍼 컴포넌트입니다. (shadcn/ui 추가 컴포넌트)</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 기본적인 Command 인터페이스를 <code>CommandDialog</code>를 사용하여 구현한 예시입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+"use client"
+
+import * as React from "react"
+import {
+  CalendarIcon,
+  SmileIcon,
+  CalculatorIcon,
+  SettingsIcon,
+  UserIcon,
+  CreditCardIcon,
+  LogOutIcon,
+  SearchIcon, // cmdk 기본 돋보기 아이콘 대신 사용 예시
+} from "lucide-react" // 아이콘 예시
+
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  CommandSeparator,
+  CommandShortcut,
+} from "@/components/ui/command"
+import { Button } from "@/components/ui/button" // Dialog 열기 위한 버튼
+
+export function CommandPaletteDemo() {
+  const [open, setOpen] = React.useState(false)
+
+  React.useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        setOpen((prevOpen) => !prevOpen)
+      }
+    }
+    document.addEventListener("keydown", down)
+    return () => document.removeEventListener("keydown", down)
+  }, [])
+
+  const runCommand = React.useCallback((command: () => unknown) => {
+    setOpen(false)
+    command()
+  }, [])
+
+  return (
+    &lt;&gt;
+      &lt;Button onClick={() => setOpen(true)} variant="outline" size="sm" className="text-sm text-muted-foreground"&gt;
+        명령 검색... &lt;kbd className="ml-2 pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100"&gt;&lt;span className="text-xs"&gt;⌘&lt;/span&gt;K&lt;/kbd&gt;
+      &lt;/Button&gt;
+      &lt;CommandDialog open={open} onOpenChange={setOpen}&gt;
+        &lt;CommandInput placeholder="명령어 또는 검색어를 입력하세요..." /&gt;
+        &lt;CommandList&gt;
+          &lt;CommandEmpty&gt;검색 결과가 없습니다.&lt;/CommandEmpty&gt;
+          &lt;CommandGroup heading="제안"&gt;
+            &lt;CommandItem value="calendar" onSelect={() => runCommand(() => console.log("Calendar selected"))}&gt;
+              &lt;CalendarIcon className="mr-2 h-4 w-4" /&gt;
+              &lt;span&gt;캘린더&lt;/span&gt;
+            &lt;/CommandItem&gt;
+            &lt;CommandItem value="search-emoji" onSelect={() => runCommand(() => console.log("Search Emoji selected"))}&gt;
+              &lt;SmileIcon className="mr-2 h-4 w-4" /&gt;
+              &lt;span&gt;이모티콘 검색&lt;/span&gt;
+            &lt;/CommandItem&gt;
+            &lt;CommandItem value="calculator" onSelect={() => runCommand(() => console.log("Calculator selected"))}&gt;
+              &lt;CalculatorIcon className="mr-2 h-4 w-4" /&gt;
+              &lt;span&gt;계산기&lt;/span&gt;
+            &lt;/CommandItem&gt;
+          &lt;/CommandGroup&gt;
+          &lt;CommandSeparator /&gt;
+          &lt;CommandGroup heading="설정"&gt;
+            &lt;CommandItem value="profile" onSelect={() => runCommand(() => console.log("Profile selected"))}&gt;
+              &lt;UserIcon className="mr-2 h-4 w-4" /&gt;
+              &lt;span&gt;프로필&lt;/span&gt;
+              &lt;CommandShortcut&gt;⌘P&lt;/CommandShortcut&gt;
+            &lt;/CommandItem&gt;
+            &lt;CommandItem value="billing" onSelect={() => runCommand(() => console.log("Billing selected"))}&gt;
+              &lt;CreditCardIcon className="mr-2 h-4 w-4" /&gt;
+              &lt;span&gt;결제 정보&lt;/span&gt;
+              &lt;CommandShortcut&gt;⌘B&lt;/CommandShortcut&gt;
+            &lt;/CommandItem&gt;
+            &lt;CommandItem value="settings" onSelect={() => runCommand(() => console.log("Settings selected"))}&gt;
+              &lt;SettingsIcon className="mr-2 h-4 w-4" /&gt;
+              &lt;span&gt;설정&lt;/span&gt;
+              &lt;CommandShortcut&gt;⌘S&lt;/CommandShortcut&gt;
+            &lt;/CommandItem&gt;
+          &lt;/CommandGroup&gt;
+          &lt;CommandItem value="logout" onSelect={() => runCommand(() => console.log("Logout!"))} className="[&_[cmdk-icon]]:text-red-500 text-red-500"&gt;
+            &lt;LogOutIcon className="mr-2 h-4 w-4" /&gt;
+            &lt;span&gt;로그아웃&lt;/span&gt;
+          &lt;/CommandItem&gt;
+        &lt;/CommandList&gt;
+      &lt;/CommandDialog&gt;
+    &lt;/&gt;
+  )
+}
+
+export default CommandPaletteDemo;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> <code>CommandDialog</code>는 <code>Dialog</code>를 기반으로 하므로, <code>Dialog</code>의 <code>open</code>, <code>onOpenChange</code> props를 사용하여 상태를 제어합니다. 키보드 단축키(예: ⌘K)로 Command Palette를 여는 기능을 추가하면 사용자 경험이 훨씬 향상됩니다. <code>CommandItem</code>의 <code>onSelect</code> 핸들러 내에서 <code>setOpen(false)</code>를 호출하여 아이템 선택 시 팔레트가 닫히도록 하는 것이 일반적입니다.
+                </div>
+            </section>
+            
+            <section class="advanced-usage">
+                 <h2 class="section-heading"><span class="icon">🚀</span>고급 활용법</h2>
+                 <div class="text-content">
+                    <p><code>cmdk</code>와 shadcn UI Command 컴포넌트는 매우 유연하여 다양한 고급 시나리오에 활용될 수 있습니다:</p>
+                    <ul>
+                        <li><strong>비동기 검색:</strong> 사용자가 입력할 때마다 API를 호출하여 동적으로 검색 결과를 가져와 <code>CommandItem</code>으로 표시할 수 있습니다. 이 경우 <code>CommandLoading</code> 컴포넌트가 유용합니다.</li>
+                        <li><strong>다단계 커맨드:</strong> 하나의 <code>CommandItem</code>을 선택하면 다른 <code>CommandGroup</code>이나 새로운 페이지로 이동하는 것처럼, 여러 단계의 명령 흐름을 만들 수 있습니다. (<code>value</code>와 <code>onValueChange</code>를 활용하여 현재 페이지/상태를 관리)</li>
+                        <li><strong>커스텀 필터링:</strong> <code>Command</code>의 <code>filter</code> prop에 직접 필터링 함수를 제공하여 기본 검색 로직을 재정의할 수 있습니다. (예: 한글 초성 검색, 퍼지 검색 라이브러리 연동)</li>
+                        <li><strong>동적 아이템 및 그룹:</strong> 외부 데이터 소스에 따라 <code>CommandItem</code>과 <code>CommandGroup</code>을 동적으로 렌더링할 수 있습니다.</li>
+                    </ul>
+                 </div>
+            </section>
+
+        </div>
+        <!-- Command 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>🎉 Command 컴포넌트까지 정복! 이제 애플리케이션에 강력한 검색 및 실행 기능을 추가할 수 있습니다! 🎉</p>
+            <p>이 긴 여정에 함께해주셔서 다시 한번 감사드립니다. 이 가이드가 개발 여정에 큰 도움이 되기를 바랍니다! 🥳</p>
+            <p>&copy; <span id="current-year-command"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-command').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-command').textContent = new Date().getFullYear();
+
+        // 시각화 예제용 간단한 상호작용 (실제 cmdk와는 다름)
+        const commandInputVisual = document.querySelector('.command-input-visual input');
+        const commandItemsVisual = document.querySelectorAll('.command-item-visual');
+        const commandEmptyVisual = document.querySelector('.command-empty-visual');
+
+        if (commandInputVisual) {
+            commandInputVisual.addEventListener('keyup', function() {
+                const searchTerm = this.value.toLowerCase();
+                let visibleItems = 0;
+                commandItemsVisual.forEach(item => {
+                    const itemText = item.textContent.toLowerCase();
+                    if (itemText.includes(searchTerm)) {
+                        item.style.display = 'flex';
+                        visibleItems++;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+                if (commandEmptyVisual) {
+                    commandEmptyVisual.style.display = visibleItems === 0 ? 'block' : 'none';
+                }
+            });
+        }
+        commandItemsVisual.forEach(item => {
+            item.addEventListener('click', function() {
+                commandItemsVisual.forEach(i => i.classList.remove('selected'));
+                this.classList.add('selected');
+                // 실제 동작은 onSelect 핸들러에서 처리
+            });
+        });
+
+    </script>
+</body>
+</html>

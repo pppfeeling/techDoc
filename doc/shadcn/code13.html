@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Popover</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+
+        .subcomponent-card {
+            border: 2px solid var(--color-fashion-2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            background-color: rgba(242, 230, 61, 0.08);
+            position: relative;
+        }
+        .subcomponent-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .subcomponent-title .icon {
+            margin-right: 8px;
+            font-size: 20px;
+            color: var(--color-fashion-4);
+        }
+        .subcomponent-card::before {
+            content: '🧩';
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            font-size: 20px;
+            transform: rotate(10deg);
+        }
+
+        .parent-child-relation {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-fashion-5);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .component-box {
+            background-color: var(--color-fashion-5);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin: 5px;
+        }
+        .arrow {
+            font-size: 28px;
+            color: var(--color-fashion-1);
+            margin: 0 10px;
+            font-family: 'Nanum Pen Script', cursive;
+        }
+        
+        /* Popover 시각화 예시 */
+        .popover-trigger-button-visual {
+            background-color: var(--color-fashion-4);
+            color: white;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Sunflower', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.2s;
+        }
+        .popover-trigger-button-visual:hover {
+            background-color: var(--color-fashion-5);
+        }
+        .popover-content-visual-container {
+            position: relative; 
+            display: inline-block;
+        }
+        .popover-content-visual {
+            width: 280px; /* 예시 너비 */
+            background-color: white;
+            border: 1px solid var(--color-fashion-3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 8px; /* 트리거와의 간격 */
+            font-size: 14px;
+        }
+        .popover-content-visual h4 {
+            font-family: 'Poor Story', cursive;
+            font-size: 18px;
+            color: var(--color-fashion-1);
+            margin-top:0; margin-bottom: 10px;
+        }
+         .popover-content-visual p {
+            margin-bottom: 15px;
+         }
+         .popover-content-visual .input-visual { /* Label 예제에서 가져옴 */
+            width: calc(100% - 18px); /* padding 고려 */
+            margin-bottom: 10px;
+         }
+         .popover-content-visual .button-group-visual {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+         }
+         .popover-content-visual .button-visual {
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            font-size: 13px;
+         }
+         .popover-content-visual .button-visual.primary {
+            background-color: var(--color-fashion-4);
+            color: white;
+         }
+         .popover-content-visual .button-visual.secondary {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+         }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-popover"></span><br>
+                정보 출처: <strong>Shadcn UI & Radix UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Popover 컴포넌트 카드 시작 -->
+        <div class="component-card" id="popover-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">🎈</span>
+                <h1 class="component-main-title">Popover (팝오버)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Popover는 사용자가 특정 UI 요소(트리거)를 <span class="highlight-keyword">클릭</span>했을 때 나타나는, 부유하는(floating) 컨테이너입니다. 💬 이 컨테이너 안에는 텍스트, 폼 요소, 버튼 등 <span class="highlight-keyword">다양한 콘텐츠</span>를 담을 수 있습니다. </p>
+                <p>주요 사용 사례:</p>
+                <ul>
+                    <li>간단한 설정 변경 (예: 알림 설정, 표시 옵션)</li>
+                    <li>날짜 선택기(Date Picker)나 색상 선택기(Color Picker)의 컨테이너</li>
+                    <li>사용자에게 추가적인 액션이나 정보를 제공하는 작은 패널</li>
+                    <li>댓글 달기, 공유 옵션 등</li>
+                </ul>
+                <p>Radix UI의 Popover Primitive를 기반으로 하며, Dialog나 Dropdown Menu와 유사하게 포커스 관리 및 키보드 접근성을 지원합니다.</p>
+                <div style="margin-top: 15px; text-align:center;">
+                     <button class="popover-trigger-button-visual">설정 변경 (예시)</button>
+                     <div class="popover-content-visual-container">
+                        <div class="popover-content-visual" style="display: block; /* 시각화 위해 표시 */">
+                             <h4>알림 설정</h4>
+                             <p>어떤 알림을 받으시겠어요?</p>
+                             <label for="email-noti-visual" style="font-size:13px; display:block; margin-bottom:5px;">
+                                <input type="checkbox" id="email-noti-visual" checked> 이메일 알림
+                             </label>
+                             <label for="push-noti-visual" style="font-size:13px; display:block; margin-bottom:15px;">
+                                <input type="checkbox" id="push-noti-visual"> 푸시 알림
+                             </label>
+                             <div class="button-group-visual">
+                                <button class="button-visual secondary">취소</button>
+                                <button class="button-visual primary">저장</button>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ Popover는 사용자의 현재 작업 흐름을 크게 방해하지 않으면서, 필요한 상호작용을 깔끔하게 제공할 수 있어요!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>Popover (루트 컴포넌트) Props</h2>
+                <div class="text-content">
+                    <p><code>&lt;Popover&gt;</code> 루트 컴포넌트는 팝오버의 열림/닫힘 상태 및 모달 여부를 관리합니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">open</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td>-</td>
+                                <td>Popover의 열림 상태를 제어합니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">onOpenChange</td>
+                                <td><span class="highlight-value">(open: boolean) =&gt; void</span></td>
+                                <td>-</td>
+                                <td>열림 상태가 변경될 때 호출되는 콜백 함수입니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">defaultOpen</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>초기 마운트 시 Popover의 열림 상태를 설정합니다. (비제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">modal</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span> (Radix 기본)</td>
+                                <td>Popover가 모달(modal) 형식으로 동작할지 여부입니다. <span class="highlight-value">true</span>이면 외부 상호작용을 막고 포커스를 Popover 내부에 가둡니다. 대부분의 Popover는 <span class="highlight-value">false</span> (non-modal)로 사용되어, Popover가 열린 상태에서도 다른 UI 요소와 상호작용이 가능합니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>서브 컴포넌트들</h2>
+                <div class="text-content">
+                    <p>Popover는 세 가지 주요 서브 컴포넌트로 구성됩니다: <code>PopoverTrigger</code>, <code>PopoverContent</code>. 필요에 따라 <code>PopoverAnchor</code>와 <code>PopoverClose</code>, <code>PopoverPortal</code>도 사용됩니다.</p>
+                </div>
+
+                <div class="parent-child-relation">
+                    <span class="component-box">Popover</span> <span class="arrow">➡️</span>
+                    ( <span class="component-box">PopoverTrigger</span> &amp; <span class="component-box">PopoverPortal</span> <span class="arrow">➡️</span> <span class="component-box">PopoverContent</span> (내부에 <span class="component-box">PopoverClose</span>, <span class="component-box">PopoverAnchor</span> 가능) )
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">👆</span>PopoverTrigger</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> Popover를 열기 위한 클릭 가능한 요소(예: 버튼)를 감싸는 컴포넌트입니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;Popover&gt;</code>의 직접적인 자식입니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;PopoverTrigger asChild&gt;&lt;Button&gt;열기&lt;/Button&gt;&lt;/PopoverTrigger&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>asChild</code> (기본 <code>button</code> 대신 자식 요소를 트리거로 사용)</p>
+                    </div>
+                </div>
+                
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">🚪</span>PopoverPortal (선택적)</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> <code>PopoverContent</code>를 DOM 트리의 다른 위치(기본적으로 <code>document.body</code>)로 렌더링(포탈링)합니다. z-index 문제나 스타일링 충돌을 방지합니다. (shadcn/ui에서는 <code>PopoverContent</code>가 내부적으로 포탈링을 처리할 수 있습니다.)</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;Popover&gt;</code>의 자식이며, <code>PopoverContent</code>를 감쌀 수 있습니다.</p>
+                         <p><span class="highlight-keyword">주요 Props:</span> <code>container</code>, <code>forceMount</code></p>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">📄</span>PopoverContent</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> Popover 트리거를 클릭했을 때 나타나는 실제 내용 부분입니다. 이 안에는 자유롭게 HTML 요소나 다른 React 컴포넌트를 배치할 수 있습니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;PopoverPortal&gt;</code>의 자식 (또는 <code>&lt;Popover&gt;</code>의 자식으로 직접 사용)입니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;PopoverContent className="w-80 p-4"&gt;...내용...&lt;/PopoverContent&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props (DropdownMenuContent/HoverCardContent와 유사):</span></p>
+                        <div class="prop-table-wrapper">
+                            <table class="prop-table">
+                                <thead><tr><th>Prop</th><th>타입</th><th>기본값</th><th>설명</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="prop-name">side</td><td><span class="highlight-value">"top" | "right" | "bottom" | "left"</span></td><td>"bottom"</td><td>트리거 기준 Popover 표시 방향</td></tr>
+                                    <tr><td class="prop-name">align</td><td><span class="highlight-value">"start" | "center" | "end"</span></td><td>"center"</td><td>트리거 기준 Popover 정렬</td></tr>
+                                    <tr><td class="prop-name">sideOffset</td><td><span class="highlight-value">number</span></td><td>0 (shadcn: 4)</td><td><code>side</code> 방향으로의 거리</td></tr>
+                                    <tr><td class="prop-name">alignOffset</td><td><span class="highlight-value">number</span></td><td>0</td><td><code>align</code> 방향으로의 거리</td></tr>
+                                    <tr><td class="prop-name">avoidCollisions</td><td><span class="highlight-value">boolean</span></td><td>true</td><td>화면 경계와 충돌 방지 여부</td></tr>
+                                    <tr><td class="prop-name">collisionPadding</td><td><span class="highlight-value">number | Partial&lt;Record&lt;Side, number&gt;&gt;</span></td><td>0 (shadcn: 8)</td><td>충돌 방지 시 여백</td></tr>
+                                    <tr><td class="prop-name">sticky</td><td><span class="highlight-value">"partial" | "always"</span></td><td>"partial"</td><td>스크롤 시 Popover 고정 방식</td></tr>
+                                    <tr><td class="prop-name">hideWhenDetached</td><td><span class="highlight-value">boolean</span></td><td>false</td><td>트리거가 DOM에서 제거되면 Popover 숨김 여부</td></tr>
+                                    <tr><td class="prop-name">onOpenAutoFocus</td><td><span class="highlight-value">(event: Event) =&gt; void</span></td><td>-</td><td>Popover가 열릴 때 포커스 동작 제어</td></tr>
+                                    <tr><td class="prop-name">onCloseAutoFocus</td><td><span class="highlight-value">(event: Event) =&gt; void</span></td><td>-</td><td>Popover가 닫힐 때 포커스 동작 제어</td></tr>
+                                    <tr><td class="prop-name">onEscapeKeyDown</td><td><span class="highlight-value">(event: KeyboardEvent) =&gt; void</span></td><td>-</td><td>ESC 키를 눌렀을 때의 동작 제어</td></tr>
+                                    <tr><td class="prop-name">onPointerDownOutside</td><td><span class="highlight-value">(event: Event) =&gt; void</span></td><td>-</td><td>Popover 외부를 클릭했을 때의 동작 제어</td></tr>
+                                    <tr><td class="prop-name">asChild</td><td><span class="highlight-value">boolean</span></td><td>false</td><td>기본 렌더링 요소 대신 자식 사용</td></tr>
+                                    <tr><td class="prop-name">forceMount</td><td><span class="highlight-value">boolean</span></td><td>-</td><td>숨김 시에도 DOM에 강제 마운트</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">⚓</span>PopoverAnchor (선택적)</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> <code>PopoverContent</code>의 위치를 결정할 때, <code>PopoverTrigger</code> 대신 이 <code>PopoverAnchor</code>를 기준으로 삼도록 할 수 있습니다. Popover 콘텐츠의 위치를 보다 세밀하게 제어하고 싶을 때 사용합니다. 일반적으로 <code>PopoverContent</code> 내부에 위치하며, 보이지 않는 요소일 수 있습니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;PopoverContent&gt;</code> 내부 또는 <code>&lt;Popover&gt;</code>의 자식으로 사용 가능합니다.</p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>asChild</code>, <code>virtualRef</code> (가상의 DOM 요소를 기준으로 위치 지정)</p>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">✖️</span>PopoverClose (선택적)</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> Popover를 닫는 역할을 하는 버튼입니다. <code>PopoverContent</code> 내부에 자유롭게 배치할 수 있습니다. (예: 닫기 아이콘 버튼)</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;PopoverContent&gt;</code> 내부에 위치합니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;PopoverClose asChild&gt;&lt;Button variant="ghost" size="icon"&gt;&lt;XIcon /&gt;&lt;/Button&gt;&lt;/PopoverClose&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>asChild</code></p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 간단한 설정 변경 폼을 담은 Popover 예시입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  PopoverClose, // Close 버튼 사용 예시
+} from "@/components/ui/popover"
+import { Settings2 } from "lucide-react" // 아이콘 예시
+
+function SettingsPopover() {
+  return (
+    &lt;Popover&gt;
+      &lt;PopoverTrigger asChild&gt;
+        &lt;Button variant="outline" size="icon"&gt;
+          &lt;Settings2 className="h-4 w-4" /&gt;
+          &lt;span className="sr-only"&gt;설정 열기&lt;/span&gt;
+        &lt;/Button&gt;
+      &lt;/PopoverTrigger&gt;
+      &lt;PopoverContent className="w-80"&gt;
+        &lt;div className="grid gap-4"&gt;
+          &lt;div className="space-y-2"&gt;
+            &lt;h4 className="font-medium leading-none"&gt;크기 설정&lt;/h4&gt;
+            &lt;p className="text-sm text-muted-foreground"&gt;
+              컴포넌트의 최대 너비와 높이를 설정하세요.
+            &lt;/p&gt;
+          &lt;/div&gt;
+          &lt;div className="grid gap-2"&gt;
+            &lt;div className="grid grid-cols-3 items-center gap-4"&gt;
+              &lt;Label htmlFor="width"&gt;너비&lt;/Label&gt;
+              &lt;Input
+                id="width"
+                defaultValue="100%"
+                className="col-span-2 h-8"
+              /&gt;
+            &lt;/div&gt;
+            &lt;div className="grid grid-cols-3 items-center gap-4"&gt;
+              &lt;Label htmlFor="maxWidth"&gt;최대 너비&lt;/Label&gt;
+              &lt;Input
+                id="maxWidth"
+                defaultValue="300px"
+                className="col-span-2 h-8"
+              /&gt;
+            &lt;/div&gt;
+            &lt;div className="grid grid-cols-3 items-center gap-4"&gt;
+              &lt;Label htmlFor="height"&gt;높이&lt;/Label&gt;
+              &lt;Input
+                id="height"
+                defaultValue="25px"
+                className="col-span-2 h-8"
+              /&gt;
+            &lt;/div&gt;
+            &lt;div className="grid grid-cols-3 items-center gap-4"&gt;
+              &lt;Label htmlFor="maxHeight"&gt;최대 높이&lt;/Label&gt;
+              &lt;Input
+                id="maxHeight"
+                defaultValue="none"
+                className="col-span-2 h-8"
+              /&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          &lt;div className="flex justify-end space-x-2"&gt;
+            &lt;PopoverClose asChild&gt;
+              &lt;Button variant="outline" size="sm"&gt;취소&lt;/Button&gt;
+            &lt;/PopoverClose&gt;
+            &lt;Button size="sm" onClick={() => alert("설정 저장됨!")}&gt;저장&lt;/Button&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/PopoverContent&gt;
+    &lt;/Popover&gt;
+  )
+}
+
+export default SettingsPopover;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> Popover는 <code>modal</code> prop의 기본값이 <code>false</code>이므로, 열려 있는 상태에서도 다른 UI와 상호작용이 가능합니다. 만약 Dialog처럼 다른 부분의 상호작용을 막고 싶다면 <code>modal={true}</code>로 설정할 수 있습니다. <code>PopoverContent</code>의 위치는 <code>side</code>, <code>align</code> 등의 props로 세밀하게 조정하여 트리거 요소 주변의 최적의 위치에 표시할 수 있습니다.
+                </div>
+            </section>
+            
+        </div>
+        <!-- Popover 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>다음은 작업 진행 상태를 보여주는 Progress 컴포넌트입니다! 📊</p>
+            <p>이 문서를 통해 shadcn UI의 <strong>유연한 팝업 기능</strong>을 마스터하시길 바랍니다. 🚀</p>
+            <p>&copy; <span id="current-year-popover"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-popover').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-popover').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

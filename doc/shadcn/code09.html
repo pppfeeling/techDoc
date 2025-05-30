@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Hover Card</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+
+        .subcomponent-card {
+            border: 2px solid var(--color-fashion-2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            background-color: rgba(242, 230, 61, 0.08);
+            position: relative;
+        }
+        .subcomponent-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .subcomponent-title .icon {
+            margin-right: 8px;
+            font-size: 20px;
+            color: var(--color-fashion-4);
+        }
+        .subcomponent-card::before {
+            content: '🧩';
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            font-size: 20px;
+            transform: rotate(10deg);
+        }
+
+        .parent-child-relation {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-fashion-5);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .component-box {
+            background-color: var(--color-fashion-5);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin: 5px;
+        }
+        .arrow {
+            font-size: 28px;
+            color: var(--color-fashion-1);
+            margin: 0 10px;
+            font-family: 'Nanum Pen Script', cursive;
+        }
+        
+        /* Hover Card 시각화 예시 */
+        .hover-card-trigger-visual {
+            display: inline-block;
+            padding: 8px 12px;
+            background-color: var(--color-fashion-4);
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            user-select: none;
+        }
+        .hover-card-content-visual-container {
+            position: relative; /* 실제로는 Portal을 통해 body에 붙음 */
+            display: inline-block; /* 컨테이너 크기만큼만 차지 */
+        }
+        .hover-card-content-visual {
+            /* 이 예시에서는 실제 hover로 동작시키지 않으므로, 보이도록 처리 */
+            /* 실제로는 Radix에 의해 동적으로 표시/숨김 처리됨 */
+            width: 250px;
+            background-color: white;
+            border: 1px solid var(--color-fashion-3);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 8px; /* 트리거와의 간격 */
+            font-size: 14px;
+        }
+        .hover-card-content-visual h4 {
+            font-family: 'Poor Story', cursive;
+            font-size: 18px;
+            color: var(--color-fashion-1);
+            margin-top:0; margin-bottom: 8px;
+        }
+         .hover-card-content-visual p {
+            margin-bottom: 5px;
+         }
+        .hover-card-content-visual .avatar-placeholder {
+            width: 40px; height: 40px; border-radius: 50%;
+            background-color: var(--color-fashion-1);
+            display: inline-block; margin-right:10px; vertical-align: middle;
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-hovercard"></span><br>
+                정보 출처: <strong>Shadcn UI & Radix UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Hover Card 컴포넌트 카드 시작 -->
+        <div class="component-card" id="hover-card-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">👆ℹ️</span>
+                <h1 class="component-main-title">Hover Card (호버 카드)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Hover Card는 사용자가 특정 UI 요소(트리거) 위에 <span class="highlight-keyword">마우스 커서를 올렸을 때</span> (hover) 나타나는 정보 카드입니다. 🖱️➡️📄 Tooltip이 간단한 텍스트 정보를 제공하는 데 비해, Hover Card는 이미지, 버튼, 링크 등 <span class="highlight-keyword">더 풍부하고 구조화된 콘텐츠</span>를 담을 수 있습니다.</p>
+                <p>주요 사용 사례:</p>
+                <ul>
+                    <li>사용자 프로필 아바타에 마우스 오버 시 간략한 프로필 정보 표시</li>
+                    <li>제품 목록에서 제품명에 마우스 오버 시 이미지와 간략한 설명 표시</li>
+                    <li>텍스트 내의 특정 용어나 링크에 마우스 오버 시 추가 설명이나 미리보기 제공</li>
+                </ul>
+                <p>Radix UI의 Hover Card Primitive를 기반으로 하며, 접근성과 사용자 경험을 고려한 다양한 옵션(딜레이 등)을 제공합니다.</p>
+                <div style="text-align: center;">
+                    <div class="hover-card-trigger-visual">@shadcn에 마우스 올리기 (예시)</div>
+                    <div class="hover-card-content-visual-container">
+                        <div class="hover-card-content-visual">
+                             <div style="display: flex; align-items: center;">
+                                <div class="avatar-placeholder"></div>
+                                <div>
+                                    <h4>shadcn</h4>
+                                    <p style="color: var(--color-text-subtle); font-size: 13px;">UI Engineer & Creator</p>
+                                 </div>
+                             </div>
+                            <p style="margin-top:10px; font-size: 13px;">아름답고 접근성 높은 UI 컴포넌트를 만듭니다. React, Tailwind CSS, Radix UI를 좋아합니다.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ Hover Card는 사용자에게 필요한 정보를 적시에, 방해 없이 제공하는 세련된 방법이에요!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>HoverCard (루트 컴포넌트) Props</h2>
+                <div class="text-content">
+                    <p><code>&lt;HoverCard&gt;</code> 루트 컴포넌트는 호버 카드의 전체적인 동작과 상태, 특히 열리고 닫히는 딜레이를 관리합니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">open</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td>-</td>
+                                <td>호버 카드의 열림 상태를 제어합니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">onOpenChange</td>
+                                <td><span class="highlight-value">(open: boolean) =&gt; void</span></td>
+                                <td>-</td>
+                                <td>열림 상태가 변경될 때 호출되는 콜백입니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">defaultOpen</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>초기 열림 상태입니다. (비제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">openDelay</td>
+                                <td><span class="highlight-value">number</span></td>
+                                <td><span class="highlight-value">700</span> (ms)</td>
+                                <td>마우스가 트리거 위에 올라간 후 카드가 열리기까지의 지연 시간(밀리초)입니다. ⏱️</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">closeDelay</td>
+                                <td><span class="highlight-value">number</span></td>
+                                <td><span class="highlight-value">300</span> (ms)</td>
+                                <td>마우스가 트리거 또는 카드에서 벗어난 후 카드가 닫히기까지의 지연 시간(밀리초)입니다. ⏱️</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>서브 컴포넌트들</h2>
+                <div class="text-content">
+                    <p>Hover Card는 세 가지 주요 서브 컴포넌트로 구성됩니다: <code>HoverCardTrigger</code>, <code>HoverCardContent</code>. 경우에 따라 <code>HoverCardPortal</code>도 사용될 수 있습니다.</p>
+                </div>
+
+                <div class="parent-child-relation">
+                    <span class="component-box">HoverCard</span> <span class="arrow">➡️</span>
+                    ( <span class="component-box">HoverCardTrigger</span> &amp; <span class="component-box">HoverCardPortal</span> <span class="arrow">➡️</span> <span class="component-box">HoverCardContent</span> )
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">👆</span>HoverCardTrigger</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 호버 카드를 활성화시키는 UI 요소(예: 텍스트, 버튼, 아바타)를 감싸는 컴포넌트입니다. 이 컴포넌트의 자식 요소에 마우스를 올리면 <code>HoverCardContent</code>가 나타납니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;HoverCard&gt;</code>의 직접적인 자식입니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;HoverCardTrigger asChild&gt;&lt;Button variant="link"&gt;@username&lt;/Button&gt;&lt;/HoverCardTrigger&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>asChild</code> (기본 <code>span</code> 대신 자식 요소를 트리거로 사용)</p>
+                    </div>
+                </div>
+                
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">🚪</span>HoverCardPortal (선택적)</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> <code>HoverCardContent</code>를 DOM 트리의 다른 위치(기본적으로 <code>document.body</code>)로 렌더링(포탈링)합니다. 이는 z-index 문제나 상위 요소의 <code>overflow: hidden</code> 등으로 인해 카드가 잘리는 현상을 방지하는 데 유용합니다. (shadcn/ui에서는 <code>HoverCardContent</code>가 내부적으로 포탈링을 처리할 수 있습니다.)</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;HoverCard&gt;</code>의 자식이며, <code>HoverCardContent</code>를 감쌀 수 있습니다.</p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>container</code> (포탈 대상 DOM 요소), <code>forceMount</code></p>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">📄</span>HoverCardContent</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 실제 호버 시 나타나는 정보 카드의 내용 부분입니다. 이미지, 텍스트, 버튼 등 다양한 React 노드를 포함할 수 있습니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;HoverCardPortal&gt;</code>의 자식 (또는 <code>&lt;HoverCard&gt;</code>의 자식으로 직접 사용)입니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;HoverCardContent className="w-80"&gt;...내용...&lt;/HoverCardContent&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props (DropdownMenuContent와 유사):</span></p>
+                        <div class="prop-table-wrapper">
+                            <table class="prop-table">
+                                <thead><tr><th>Prop</th><th>타입</th><th>기본값</th><th>설명</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="prop-name">side</td><td><span class="highlight-value">"top" | "right" | "bottom" | "left"</span></td><td>"bottom"</td><td>트리거 기준 카드 표시 방향</td></tr>
+                                    <tr><td class="prop-name">align</td><td><span class="highlight-value">"start" | "center" | "end"</span></td><td>"center"</td><td>트리거 기준 카드 정렬</td></tr>
+                                    <tr><td class="prop-name">sideOffset</td><td><span class="highlight-value">number</span></td><td>0 (shadcn: 4)</td><td><code>side</code> 방향으로의 거리</td></tr>
+                                    <tr><td class="prop-name">alignOffset</td><td><span class="highlight-value">number</span></td><td>0</td><td><code>align</code> 방향으로의 거리</td></tr>
+                                    <tr><td class="prop-name">avoidCollisions</td><td><span class="highlight-value">boolean</span></td><td>true</td><td>화면 경계와 충돌 방지 여부</td></tr>
+                                    <tr><td class="prop-name">collisionPadding</td><td><span class="highlight-value">number | Partial&lt;Record&lt;Side, number&gt;&gt;</span></td><td>0 (shadcn: 8)</td><td>충돌 방지 시 여백</td></tr>
+                                    <tr><td class="prop-name">sticky</td><td><span class="highlight-value">"partial" | "always"</span></td><td>"partial"</td><td>스크롤 시 카드 고정 방식</td></tr>
+                                    <tr><td class="prop-name">hideWhenDetached</td><td><span class="highlight-value">boolean</span></td><td>false</td><td>트리거가 DOM에서 제거되면 카드 숨김 여부</td></tr>
+                                    <tr><td class="prop-name">asChild</td><td><span class="highlight-value">boolean</span></td><td>false</td><td>기본 렌더링 요소 대신 자식 사용</td></tr>
+                                    <tr><td class="prop-name">forceMount</td><td><span class="highlight-value">boolean</span></td><td>-</td><td>숨김 시에도 DOM에 강제 마운트</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-content">shadcn/ui는 Radix UI 위에 스타일링을 추가하므로, <code>sideOffset</code>이나 <code>collisionPadding</code> 같은 일부 props의 기본값이 다를 수 있습니다. 공식 문서를 참고하는 것이 좋습니다.</p>
+                    </div>
+                </div>
+                <p class="text-content">💡 <strong>참고:</strong> <code>HoverCardArrow</code>라는 서브 컴포넌트도 Radix UI에 존재하며, 카드에 작은 화살표(꼬리)를 추가할 수 있게 해줍니다. shadcn/ui에서는 필요에 따라 직접 구현하거나 스타일링으로 처리할 수 있습니다.</p>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 사용자 아바타에 마우스를 올리면 프로필 요약 정보를 보여주는 Hover Card 예시입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+import { CalendarDays } from "lucide-react"
+
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
+
+function UserProfileHoverCard() {
+  return (
+    &lt;HoverCard openDelay={200} closeDelay={100}&gt;
+      &lt;HoverCardTrigger asChild&gt;
+        &lt;Button variant="link" className="px-0"&gt;@nextjs&lt;/Button&gt;
+      &lt;/HoverCardTrigger&gt;
+      &lt;HoverCardContent className="w-80"&gt;
+        &lt;div className="flex justify-between space-x-4"&gt;
+          &lt;Avatar&gt;
+            &lt;AvatarImage src="https://github.com/vercel.png" /&gt;
+            &lt;AvatarFallback&gt;VC&lt;/AvatarFallback&gt;
+          &lt;/Avatar&gt;
+          &lt;div className="space-y-1"&gt;
+            &lt;h4 className="text-sm font-semibold"&gt;@nextjs&lt;/h4&gt;
+            &lt;p className="text-sm"&gt;
+              The React Framework – created and maintained by @vercel.
+            &lt;/p&gt;
+            &lt;div className="flex items-center pt-2"&gt;
+              &lt;CalendarDays className="mr-2 h-4 w-4 opacity-70" /&gt;{" "}
+              &lt;span className="text-xs text-muted-foreground"&gt;
+                2016년 10월 가입
+              &lt;/span&gt;
+            &lt;/div&gt;
+            &lt;div className="flex items-center space-x-2 pt-1"&gt;
+                &lt;span className="text-xs text-muted-foreground"&gt;<strong>1.5M</strong> Followers&lt;/span&gt;
+                &lt;span className="text-xs text-muted-foreground"&gt;<strong>28</strong> Following&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/HoverCardContent&gt;
+    &lt;/HoverCard&gt;
+  )
+}
+
+export default UserProfileHoverCard;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> <code>openDelay</code>와 <code>closeDelay</code> prop을 적절히 조절하여 사용자 경험을 최적화할 수 있습니다. 딜레이가 너무 짧으면 의도치 않게 카드가 자주 나타나거나 사라져 불편할 수 있고, 너무 길면 반응이 느리다고 느껴질 수 있습니다. <code>HoverCardContent</code>의 위치는 <code>side</code>, <code>align</code>, <code>sideOffset</code> 등의 props로 세밀하게 조정 가능합니다.
+                </div>
+            </section>
+            
+        </div>
+        <!-- Hover Card 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>다음은 폼(Form) 요소의 핵심, Label 컴포넌트를 살펴볼 차례입니다! 🏷️</p>
+            <p>이 문서는 shadcn UI를 <strong>더 깊이 이해</strong>하는 데 도움이 되기를 바랍니다. 🧠</p>
+            <p>&copy; <span id="current-year-hovercard"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-hovercard').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-hovercard').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

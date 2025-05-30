@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Menubar</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+
+        .subcomponent-card {
+            border: 2px solid var(--color-fashion-2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            background-color: rgba(242, 230, 61, 0.08);
+            position: relative;
+        }
+        .subcomponent-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .subcomponent-title .icon {
+            margin-right: 8px;
+            font-size: 20px;
+            color: var(--color-fashion-4);
+        }
+        .subcomponent-card::before {
+            content: '🧩';
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            font-size: 20px;
+            transform: rotate(10deg);
+        }
+
+        .parent-child-relation {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-fashion-5);
+            display: flex;
+            flex-direction: column; 
+            align-items: flex-start; 
+        }
+        .parent-child-relation .component-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .component-box {
+            background-color: var(--color-fashion-5);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin: 5px;
+        }
+        .arrow {
+            font-size: 28px;
+            color: var(--color-fashion-1);
+            margin: 0 8px;
+            font-family: 'Nanum Pen Script', cursive;
+        }
+        .indent {
+            margin-left: 30px;
+        }
+        
+        /* Menubar 시각화 예시 */
+        .menubar-visual-example {
+            background-color: var(--color-fashion-1); /* Menubar 배경색 */
+            border-radius: 6px;
+            padding: 4px 8px; /* 내부 여백 */
+            display: flex;
+            gap: 4px; /* 메뉴 간 간격 */
+            margin-top: 15px;
+        }
+        .menubar-item-visual {
+            color: var(--color-fashion-2); /* 메뉴 아이템 텍스트 색상 */
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+        .menubar-item-visual:hover {
+            background-color: rgba(242, 230, 61, 0.2); /* 호버 시 배경색 */
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-menubar"></span><br>
+                정보 출처: <strong>Shadcn UI & Radix UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Menubar 컴포넌트 카드 시작 -->
+        <div class="component-card" id="menubar-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">🧭</span>
+                <h1 class="component-main-title">Menubar (메뉴바)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Menubar는 일반적으로 애플리케이션 창 상단에 위치하는 <span class="highlight-keyword">수평 막대 형태의 메뉴 시스템</span>입니다. 🗺️ 사용자는 메뉴바의 각 최상위 항목(예: "파일", "편집", "보기")을 클릭하여 관련된 하위 작업 목록(드롭다운 메뉴)을 열 수 있습니다. 이는 복잡한 애플리케이션의 <span class="highlight-keyword">기능들을 체계적으로 그룹화</span>하고 쉽게 접근할 수 있도록 돕습니다.</p>
+                <p>주요 특징:</p>
+                <ul>
+                    <li>데스크톱 애플리케이션과 유사한 사용자 경험 제공</li>
+                    <li>키보드만으로 모든 메뉴 항목 탐색 및 실행 가능 (접근성 우수)</li>
+                    <li>하위 메뉴(Submenu), 체크박스/라디오 항목, 구분선 등 다양한 메뉴 아이템 지원</li>
+                    <li>Radix UI의 Menubar Primitive를 기반으로 하며, Dropdown Menu와 매우 유사한 API를 가집니다.</li>
+                </ul>
+                <div class="menubar-visual-example">
+                    <div class="menubar-item-visual">파일</div>
+                    <div class="menubar-item-visual">편집</div>
+                    <div class="menubar-item-visual">보기</div>
+                    <div class="menubar-item-visual">도움말</div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ Menubar는 특히 기능이 많은 웹 애플리케이션에서 사용자에게 친숙하고 강력한 네비게이션 수단을 제공해요!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>Menubar (루트 컴포넌트) Props</h2>
+                <div class="text-content">
+                    <p><code>&lt;Menubar&gt;</code> 루트 컴포넌트는 전체 메뉴바의 컨테이너 역할을 하며, 현재 열려 있는 메뉴를 관리합니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">value</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>현재 열려있는 최상위 메뉴(<code>MenubarMenu</code>)의 <code>value</code>를 제어합니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">onValueChange</td>
+                                <td><span class="highlight-value">(value: string) =&gt; void</span></td>
+                                <td>-</td>
+                                <td>열려있는 최상위 메뉴가 변경될 때 호출되는 콜백입니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">defaultValue</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>초기에 열려있을 최상위 메뉴의 <code>value</code>입니다. (비제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">loop</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">true</span> (Radix 기본)</td>
+                                <td>방향키로 최상위 메뉴 탐색 시 처음/마지막 메뉴에서 순환할지 여부입니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">dir</td>
+                                <td><span class="highlight-value">"ltr" | "rtl"</span></td>
+                                <td>-</td>
+                                <td>메뉴의 텍스트 및 레이아웃 방향입니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">asChild</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>기본 렌더링 요소(<code>&lt;div role="menubar"&gt;</code>) 대신 자식으로 전달된 컴포넌트를 렌더링합니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>서브 컴포넌트들</h2>
+                <div class="text-content">
+                    <p>Menubar는 여러 계층의 서브 컴포넌트로 구성됩니다. 각 <code>MenubarMenu</code>는 하나의 최상위 메뉴(예: "파일")를 나타내며, 그 안에는 Dropdown Menu와 동일한 구조의 아이템들이 들어갑니다.</p>
+                </div>
+
+                <div class="parent-child-relation">
+                    <div class="component-group">
+                        <span class="component-box">Menubar</span>
+                    </div>
+                    <div class="component-group indent">
+                         <span class="arrow"> L </span> <span class="component-box">MenubarMenu</span>
+                         <span style="font-size:12px; margin-left:5px;">(각 최상위 메뉴, 예: "파일")</span>
+                    </div>
+                    <div class="component-group indent indent">
+                         <span class="arrow"> L </span> <span class="component-box">MenubarTrigger</span>
+                         <span style="font-size:12px; margin-left:5px;">(최상위 메뉴 이름 표시 버튼)</span>
+                    </div>
+                     <div class="component-group indent indent">
+                         <span class="arrow"> L </span> <span class="component-box">MenubarPortal</span>
+                    </div>
+                    <div class="component-group indent indent indent">
+                         <span class="arrow"> L </span> <span class="component-box">MenubarContent</span>
+                         <span style="font-size:12px; margin-left:5px;">(드롭다운 메뉴 내용)</span>
+                    </div>
+                    <div class="component-group indent indent indent indent">
+                        <span class="arrow"> L </span> (<code>MenubarItem</code>, <code>MenubarCheckboxItem</code>, <code>MenubarRadioGroup/Item</code>, <code>MenubarSeparator</code>, <code>MenubarLabel</code>, <code>MenubarShortcut</code>, <code>MenubarSub/*</code> 등 DropdownMenu와 동일한 구조)
+                    </div>
+                </div>
+                 <p class="text-content"><code>MenubarContent</code> 이하의 구조와 컴포넌트들은 <strong>Dropdown Menu의 서브 컴포넌트들과 거의 동일</strong>합니다. 이름만 <code>DropdownMenu...</code>에서 <code>Menubar...</code>로 변경되었다고 생각하시면 됩니다.</p>
+
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">📂</span>MenubarMenu</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 메뉴바 내의 각 개별 최상위 메뉴(예: "파일", "편집")를 나타내는 컨테이너입니다. 각 <code>MenubarMenu</code>는 고유한 <code>value</code>를 가질 수 있습니다 (제어 컴포넌트 시 사용).</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;Menubar&gt;</code>의 직접적인 자식입니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;MenubarMenu value="file"&gt;...&lt;/MenubarMenu&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>value</code> (해당 메뉴를 식별하는 값), <code>open</code> (해당 메뉴의 열림 상태 제어), <code>onOpenChange</code> (열림 상태 변경 콜백)</p>
+                    </div>
+                </div>
+                
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">👆</span>MenubarTrigger</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> <code>MenubarMenu</code>의 드롭다운 내용을 열기 위한 클릭 가능한 버튼입니다. 보통 최상위 메뉴의 이름(예: "파일")을 표시합니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;MenubarMenu&gt;</code>의 자식입니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;MenubarTrigger&gt;파일&lt;/MenubarTrigger&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>asChild</code>, <code>disabled</code></p>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">📜</span>MenubarContent</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> <code>MenubarTrigger</code>를 클릭했을 때 나타나는 드롭다운 메뉴의 내용 부분입니다. 이 안에는 <code>MenubarItem</code>, <code>MenubarCheckboxItem</code> 등 다양한 메뉴 항목들이 들어갑니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;MenubarPortal&gt;</code>의 자식 (또는 <code>&lt;MenubarMenu&gt;</code>의 자식으로 직접 사용)입니다.</p>
+                        <p><span class="highlight-keyword">주요 Props:</span> DropdownMenuContent와 동일한 positioning props (<code>side</code>, <code>align</code>, <code>sideOffset</code>, <code>alignOffset</code>, <code>avoidCollisions</code> 등) 및 동작 관련 props (<code>onCloseAutoFocus</code>, <code>loop</code> 등)를 가집니다.</p>
+                         <p class="text-content">기본적으로 <code>MenubarTrigger</code> 아래에 나타나도록 <code>side="bottom"</code>, <code>align="start"</code>로 설정되는 경우가 많습니다.</p>
+                    </div>
+                </div>
+
+                <p class="text-content" style="text-align:center; font-weight:bold; margin-top:25px; margin-bottom:25px;">
+                ➡️ <code>MenubarItem</code>, <code>MenubarCheckboxItem</code>, <code>MenubarRadioGroup/Item</code>, <code>MenubarLabel</code>, <code>MenubarSeparator</code>, <code>MenubarShortcut</code>, <code>MenubarSub/*</code>, <code>MenubarPortal</code>, <code>MenubarGroup</code> 등은 <strong>Dropdown Menu의 해당 컴포넌트들과 기능 및 Props가 거의 동일</strong>합니다. (예: <code>MenubarItem</code>은 <code>DropdownMenuItem</code>과 유사)
+                </p>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 기본적인 "파일", "편집", "보기" 메뉴를 가진 메뉴바 예시입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+import {
+  Menubar,
+  MenubarCheckboxItem,
+  MenubarContent,
+  MenubarItem,
+  MenubarLabel,
+  MenubarMenu,
+  MenubarRadioGroup,
+  MenubarRadioItem,
+  MenubarSeparator,
+  MenubarShortcut,
+  MenubarSub,
+  MenubarSubContent,
+  MenubarSubTrigger,
+  MenubarTrigger,
+} from "@/components/ui/menubar"
+import React from "react"
+
+function MyDesktopAppMenubar() {
+  const [showStatusBar, setShowStatusBar] = React.useState(true);
+  const [theme, setTheme] = React.useState("light");
+
+  return (
+    &lt;Menubar className="rounded-none border-b border-none px-2 lg:px-4"&gt; {/* shadcn 예제 스타일 참고 */}
+      &lt;MenubarMenu value="file"&gt;
+        &lt;MenubarTrigger&gt;파일&lt;/MenubarTrigger&gt;
+        &lt;MenubarContent&gt;
+          &lt;MenubarItem&gt;
+            새 탭 &lt;MenubarShortcut&gt;⌘T&lt;/MenubarShortcut&gt;
+          &lt;/MenubarItem&gt;
+          &lt;MenubarItem&gt;
+            새 창 &lt;MenubarShortcut&gt;⌘N&lt;/MenubarShortcut&gt;
+          &lt;/MenubarItem&gt;
+          &lt;MenubarItem disabled&gt;새 시크릿 창&lt;/MenubarItem&gt;
+          &lt;MenubarSeparator /&gt;
+          &lt;MenubarSub&gt;
+            &lt;MenubarSubTrigger&gt;공유&lt;/MenubarSubTrigger&gt;
+            &lt;MenubarSubContent&gt;
+              &lt;MenubarItem&gt;이메일로 링크 보내기&lt;/MenubarItem&gt;
+              &lt;MenubarItem&gt;메시지&lt;/MenubarItem&gt;
+              &lt;MenubarItem&gt;메모&lt;/MenubarItem&gt;
+            &lt;/MenubarSubContent&gt;
+          &lt;/MenubarSub&gt;
+          &lt;MenubarSeparator /&gt;
+          &lt;MenubarItem onSelect={() => window.print()}&gt;
+            인쇄... &lt;MenubarShortcut&gt;⌘P&lt;/MenubarShortcut&gt;
+          &lt;/MenubarItem&gt;
+        &lt;/MenubarContent&gt;
+      &lt;/MenubarMenu&gt;
+
+      &lt;MenubarMenu value="edit"&gt;
+        &lt;MenubarTrigger&gt;편집&lt;/MenubarTrigger&gt;
+        &lt;MenubarContent&gt;
+          &lt;MenubarItem&gt;
+            실행 취소 &lt;MenubarShortcut&gt;⌘Z&lt;/MenubarShortcut&gt;
+          &lt;/MenubarItem&gt;
+          &lt;MenubarItem&gt;
+            다시 실행 &lt;MenubarShortcut&gt;⇧⌘Z&lt;/MenubarShortcut&gt;
+          &lt;/MenubarItem&gt;
+          &lt;MenubarSeparator /&gt;
+          &lt;MenubarSub&gt;
+            &lt;MenubarSubTrigger&gt;찾기&lt;/MenubarSubTrigger&gt;
+            &lt;MenubarSubContent&gt;
+              &lt;MenubarItem&gt;문서에서 검색&lt;/MenubarItem&gt;
+              &lt;MenubarItem&gt;찾아 바꾸기&lt;/MenubarItem&gt;
+            &lt;/MenubarSubContent&gt;
+          &lt;/MenubarSub&gt;
+          &lt;MenubarSeparator /&gt;
+          &lt;MenubarItem&gt;잘라내기&lt;/MenubarItem&gt;
+          &lt;MenubarItem&gt;복사&lt;/MenubarItem&gt;
+          &lt;MenubarItem&gt;붙여넣기&lt;/MenubarItem&gt;
+        &lt;/MenubarContent&gt;
+      &lt;/MenubarMenu&gt;
+
+      &lt;MenubarMenu value="view"&gt;
+        &lt;MenubarTrigger&gt;보기&lt;/MenubarTrigger&gt;
+        &lt;MenubarContent&gt;
+          &lt;MenubarCheckboxItem
+            checked={showStatusBar}
+            onCheckedChange={setShowStatusBar}
+          &gt;
+            상태 표시줄 보이기
+          &lt;/MenubarCheckboxItem&gt;
+          &lt;MenubarSeparator /&gt;
+          &lt;MenubarRadioGroup value={theme} onValueChange={setTheme}&gt;
+            &lt;MenubarLabel inset&gt;테마&lt;/MenubarLabel&gt;
+            &lt;MenubarRadioItem value="light"&gt;라이트&lt;/MenubarRadioItem&gt;
+            &lt;MenubarRadioItem value="dark"&gt;다크&lt;/MenubarRadioItem&gt;
+            &lt;MenubarRadioItem value="system"&gt;시스템 기본값&lt;/MenubarRadioItem&gt;
+          &lt;/MenubarRadioGroup&gt;
+          &lt;MenubarSeparator /&gt;
+          &lt;MenubarItem inset onSelect={() => alert("전체 화면 모드")}&gt;
+            전체 화면
+          &lt;/MenubarItem&gt;
+        &lt;/MenubarContent&gt;
+      &lt;/MenubarMenu&gt;
+      
+      &lt;MenubarMenu value="profiles"&gt;
+        &lt;MenubarTrigger className="hidden md:block"&gt;프로필&lt;/MenubarTrigger&gt; {/* 반응형 표시 */}
+        &lt;MenubarContent forceMount&gt;
+          &lt;MenubarLabel inset&gt;전환 대상&lt;/MenubarLabel&gt;
+          &lt;MenubarSeparator/&gt;
+          &lt;MenubarRadioGroup value="benoit"&gt;
+            &lt;MenubarRadioItem value="andy"&gt;Andy&lt;/MenubarRadioItem&gt;
+            &lt;MenubarRadioItem value="benoit"&gt;Benoit&lt;/MenubarRadioItem&gt;
+            &lt;MenubarRadioItem value="Luis"&gt;Luis&lt;/MenubarRadioItem&gt;
+          &lt;/MenubarRadioGroup&gt;
+          &lt;MenubarSeparator/&gt;
+          &lt;MenubarItem inset&gt;프로필 수정...&lt;/MenubarItem&gt;
+          &lt;MenubarSeparator/&gt;
+          &lt;MenubarItem inset&gt;프로필 추가...&lt;/MenubarItem&gt;
+        &lt;/MenubarContent&gt;
+      &lt;/MenubarMenu&gt;
+    &lt;/Menubar&gt;
+  )
+}
+
+export default MyDesktopAppMenubar;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> Menubar는 Dropdown Menu의 집합과 유사하므로, Dropdown Menu에서 사용했던 다양한 아이템(체크박스, 라디오, 하위 메뉴 등)들을 동일하게 활용할 수 있습니다. <code>MenubarShortcut</code>을 사용하여 각 기능의 단축키를 표시하면 사용 편의성을 더욱 높일 수 있습니다.
+                </div>
+            </section>
+            
+        </div>
+        <!-- Menubar 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>다음은 웹사이트의 주요 탐색을 담당하는 Navigation Menu입니다! 🗺️✈️</p>
+            <p>이 문서를 통해 shadcn UI와 <strong>더욱 가까워지시길</strong> 바랍니다. 🤗</p>
+            <p>&copy; <span id="current-year-menubar"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-menubar').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-menubar').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 가이드 - Resizable Panels</title>
+    <style>
+        
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+         .text-content li > code { /* li 내부 코드 스타일 */
+             font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+        
+        /* Resizable 시각화 예시 */
+        .resizable-visual-example {
+            display: flex;
+            width: 100%;
+            height: 250px; /* 예시 높이 */
+            border: 2px solid var(--color-fashion-3);
+            border-radius: 8px;
+            margin: 20px auto;
+            overflow: hidden; /* 내부 패널이 벗어나지 않도록 */
+        }
+        .resizable-panel-visual {
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--color-text-default);
+            text-align: center;
+        }
+        .resizable-panel-visual.left {
+            background-color: rgba(242, 196, 61, 0.2); /* 패션-3 연하게 */
+            /* width: 30%; */ /* JS로 제어됨 */
+        }
+        .resizable-panel-visual.right {
+            background-color: rgba(242, 91, 4, 0.2); /* 패션-4 연하게 */
+            /* flex-grow: 1; */ /* JS로 제어됨 */
+        }
+        .resizable-handle-visual {
+            width: 8px; /* 핸들 너비 */
+            background-color: var(--color-fashion-1);
+            opacity: 0.3;
+            cursor: col-resize; /* 가로 크기 조절 커서 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+         .resizable-handle-visual:hover, .resizable-handle-visual.active {
+            opacity: 0.6;
+            background-color: var(--color-fashion-4);
+        }
+        .resizable-handle-visual::before { /* 핸들 내부 점선 효과 */
+            content: '⋮';
+            color: white;
+            font-size: 18px;
+            line-height: 0;
+        }
+        .resizable-handle-visual.vertical {
+            height: 8px;
+            width: 100%;
+            cursor: row-resize;
+        }
+        .resizable-handle-visual.vertical::before {
+            content: '⋯';
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-resizable"></span><br>
+                정보 출처: <strong>react-resizable-panels & Shadcn UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Resizable 컴포넌트 카드 시작 -->
+        <div class="component-card" id="resizable-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">↔️</span>
+                <h1 class="component-main-title">Resizable Panels (크기 조절 가능 패널)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Resizable Panels 기능은 사용자가 레이아웃 내의 <span class="highlight-keyword">패널들 사이의 경계선을 드래그</span>하여 각 패널의 크기를 동적으로 조절할 수 있게 합니다. 📐 이는 복잡한 정보를 여러 영역에 나누어 보여주고, 사용자가 필요에 따라 각 영역의 크기를 최적화할 수 있도록 하여 <span class="highlight-keyword">유연한 레이아웃 경험</span>을 제공합니다.</p>
+                <p>주요 사용 사례:</p>
+                <ul>
+                    <li>IDE의 코드 편집기, 파일 탐색기, 터미널 등의 레이아웃</li>
+                    <li>메일 클라이언트의 메일 목록, 메일 내용 보기 패널</li>
+                    <li>대시보드에서 여러 차트나 위젯 영역의 크기 조절</li>
+                    <li>문서 편집기의 사이드바와 메인 콘텐츠 영역</li>
+                </ul>
+                <p>Shadcn UI는 이 기능을 위해 <code>react-resizable-panels</code> 라이브러리를 사용하며, 이를 위한 스타일링된 컴포넌트 (<code>ResizablePanelGroup</code>, <code>ResizablePanel</code>, <code>ResizableHandle</code>)를 제공합니다.</p>
+                <div class="resizable-visual-example" id="resizableVisualHorizontal">
+                    <div class="resizable-panel-visual left" style="width: 30%;">패널 1 (30%)</div>
+                    <div class="resizable-handle-visual" id="handleH"></div>
+                    <div class="resizable-panel-visual right" style="width: 70%;">패널 2 (70%)</div>
+                </div>
+                 <div class="resizable-visual-example" style="flex-direction: column; height: 300px; margin-top:10px;" id="resizableVisualVertical">
+                    <div class="resizable-panel-visual" style="height: 40%; width:100%; background-color: rgba(242, 196, 61, 0.2);">패널 A (40%)</div>
+                    <div class="resizable-handle-visual vertical" id="handleV"></div>
+                    <div class="resizable-panel-visual" style="height: 60%; width:100%; background-color: rgba(242, 91, 4, 0.2);">패널 B (60%)</div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ Resizable Panels는 사용자에게 레이아웃 제어권을 부여하여 개인화된 작업 환경을 만들 수 있게 해줍니다!
+                </div>
+            </section>
+
+            <section class="setup-section">
+                <h2 class="section-heading"><span class="icon">⚙️</span>기본 설정 및 설치</h2>
+                <div class="text-content">
+                    <p>먼저 <code>react-resizable-panels</code> 라이브러리를 설치해야 합니다:</p>
+                    <div class="code-block-wrapper">
+                        <pre><code>
+npm install react-resizable-panels
+# 또는
+yarn add react-resizable-panels
+                        </code></pre>
+                    </div>
+                    <p>그리고 shadcn UI에서 제공하는 Resizable 관련 컴포넌트들 (<code>ResizablePanelGroup</code>, <code>ResizablePanel</code>, <code>ResizableHandle</code>)을 CLI를 통해 프로젝트에 추가합니다.</p>
+                </div>
+            </section>
+
+            <section class="core-components">
+                <h2 class="section-heading"><span class="icon">🧩</span>주요 컴포넌트 및 역할</h2>
+                <div class="text-content">
+                    <p>Shadcn UI의 Resizable 기능은 세 가지 주요 컴포넌트로 구성됩니다:</p>
+                    <ul>
+                        <li><strong><code>&lt;ResizablePanelGroup&gt;</code> (루트):</strong> 크기 조절이 가능한 패널들의 전체 그룹 컨테이너입니다. 패널들의 정렬 방향(수평/수직)과 전체적인 동작을 제어합니다.
+                            <ul><li>주요 Props: <code>direction</code> ("horizontal" | "vertical"), <code>autoSaveId</code> (레이아웃 상태 자동 저장 ID), <code>onLayout</code> (레이아웃 변경 시 콜백), <code>className</code> 등.</li></ul>
+                        </li>
+                        <li><strong><code>&lt;ResizablePanel&gt;</code>:</strong> 그룹 내의 개별 패널입니다. 각 패널은 초기 크기, 최소/최대 크기 등을 가질 수 있습니다.
+                            <ul><li>주요 Props: <code>defaultSize</code> (초기 크기, % 단위 숫자), <code>minSize</code>, <code>maxSize</code>, <code>collapsible</code> (접기 가능 여부), <code>collapsedSize</code> (접혔을 때 크기), <code>onCollapse</code>, <code>onExpand</code>, <code>order</code> (패널 순서), <code>id</code> (패널 식별자), <code>className</code> 등.</li></ul>
+                        </li>
+                        <li><strong><code>&lt;ResizableHandle&gt;</code>:</strong> 두 <code>ResizablePanel</code> 사이에 위치하여 사용자가 드래그하여 크기를 조절할 수 있는 핸들(경계선)입니다.
+                            <ul><li>주요 Props: <code>withHandle</code> (핸들 내부에 시각적 요소를 추가할지 여부), <code>disabled</code>, <code>id</code>, <code>onDragging</code> (드래그 중 콜백), <code>className</code> 등.</li></ul>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 수평 및 수직으로 크기 조절이 가능한 패널 레이아웃 예제입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+import {
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from "@/components/ui/resizable" // shadcn UI 컴포넌트
+
+export function ResizableLayoutDemo() {
+  return (
+    &lt;ResizablePanelGroup
+      direction="horizontal" // 수평으로 패널 배치
+      className="max-w-full h-[500px] rounded-lg border" // 전체 크기 및 스타일
+      onLayout={(sizes: number[]) => { // 레이아웃 변경 시 크기 값 (비율)
+        console.log("Layout changed (horizontal):", sizes)
+      }}
+    &gt;
+      &lt;ResizablePanel defaultSize={25} minSize={15}&gt;
+        &lt;div className="flex h-full items-center justify-center p-6"&gt;
+          &lt;span className="font-semibold"&gt;사이드바&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/ResizablePanel&gt;
+      &lt;ResizableHandle withHandle /&gt; {/* 핸들 중앙에 아이콘 표시 */}
+      &lt;ResizablePanel defaultSize={75}&gt;
+        &lt;ResizablePanelGroup direction="vertical" onLayout={(sizes: number[]) => {
+          console.log("Layout changed (vertical):", sizes)
+        }}&gt;
+          &lt;ResizablePanel defaultSize={25} minSize={20}&gt;
+            &lt;div className="flex h-full items-center justify-center p-6"&gt;
+              &lt;span className="font-semibold"&gt;헤더 영역&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ResizablePanel&gt;
+          &lt;ResizableHandle /&gt; {/* 아이콘 없이 기본 핸들 */}
+          &lt;ResizablePanel defaultSize={75}&gt;
+            &lt;div className="flex h-full items-center justify-center p-6"&gt;
+              &lt;span className="font-semibold"&gt;메인 콘텐츠&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/ResizablePanel&gt;
+        &lt;/ResizablePanelGroup&gt;
+      &lt;/ResizablePanel&gt;
+    &lt;/ResizablePanelGroup&gt;
+  )
+}
+
+export default ResizableLayoutDemo;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> <code>ResizablePanel</code>의 <code>defaultSize</code>는 백분율(0-100 사이 숫자)로 지정합니다. 그룹 내 패널들의 <code>defaultSize</code> 합이 100이 되도록 설정하는 것이 일반적입니다. <code>minSize</code>와 <code>maxSize</code>를 사용하여 각 패널의 최소/최대 크기를 제한할 수 있습니다. <code>ResizablePanelGroup</code>은 중첩하여 복잡한 다단 레이아웃도 구성할 수 있습니다. <code>autoSaveId</code> prop을 사용하면 사용자가 조절한 레이아웃 크기를 로컬 스토리지에 자동으로 저장하고 다음에 불러올 수 있습니다!
+                </div>
+            </section>
+            
+        </div>
+        <!-- Resizable 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>🎉 Resizable Panels까지 정복! 이제 사용자가 직접 레이아웃을 조절하는 동적인 UI도 만들 수 있게 되었습니다! 🎉</p>
+            <p>정말 많은 내용을 학습하셨습니다. 이 지식들이 실제 프로젝트에서 유용하게 활용되기를 바랍니다! 🥳</p>
+            <p>&copy; <span id="current-year-resizable"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-resizable').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-resizable').textContent = new Date().getFullYear();
+
+        // Resizable 시각화 예제 스크립트 (매우 간략화된 버전, 실제 라이브러리 동작과 다름)
+        // 가로 핸들러
+        const handleH = document.getElementById('handleH');
+        const panelHLeft = document.querySelector('#resizableVisualHorizontal .left');
+        const panelHRight = document.querySelector('#resizableVisualHorizontal .right');
+        let isDraggingH = false;
+        let startXH, startLeftWidth, startRightWidth;
+
+        if (handleH && panelHLeft && panelHRight) {
+            handleH.addEventListener('mousedown', (e) => {
+                isDraggingH = true;
+                startXH = e.clientX;
+                startLeftWidth = panelHLeft.offsetWidth;
+                startRightWidth = panelHRight.offsetWidth;
+                handleH.classList.add('active');
+                document.body.style.cursor = 'col-resize'; // 전체 페이지 커서 변경
+            });
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDraggingH || !panelHLeft || !panelHRight) return;
+            const dx = e.clientX - startXH;
+            const totalWidth = startLeftWidth + startRightWidth;
+            let newLeftWidth = startLeftWidth + dx;
+            let newRightWidth = startRightWidth - dx;
+
+            // 최소 너비 제한 (예시)
+            const minPixelWidth = 50; 
+            if (newLeftWidth < minPixelWidth) {
+                newLeftWidth = minPixelWidth;
+                newRightWidth = totalWidth - newLeftWidth;
+            }
+            if (newRightWidth < minPixelWidth) {
+                newRightWidth = minPixelWidth;
+                newLeftWidth = totalWidth - newRightWidth;
+            }
+            
+            panelHLeft.style.width = `${(newLeftWidth / totalWidth) * 100}%`;
+            panelHRight.style.width = `${(newRightWidth / totalWidth) * 100}%`;
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (isDraggingH) {
+                isDraggingH = false;
+                handleH?.classList.remove('active');
+                document.body.style.cursor = 'default';
+            }
+        });
+
+        // 세로 핸들러 (위와 유사하게 구현 가능, 여기서는 생략)
+        // const handleV = document.getElementById('handleV'); ...
+
+    </script>
+</body>
+</html>

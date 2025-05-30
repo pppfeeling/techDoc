@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Toast</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+
+        .subcomponent-card {
+            border: 2px solid var(--color-fashion-2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            background-color: rgba(242, 230, 61, 0.08);
+            position: relative;
+        }
+        .subcomponent-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .subcomponent-title .icon {
+            margin-right: 8px;
+            font-size: 20px;
+            color: var(--color-fashion-4);
+        }
+        .subcomponent-card::before {
+            content: '🧩';
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            font-size: 20px;
+            transform: rotate(10deg);
+        }
+
+        .parent-child-relation {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-fashion-5);
+            display: flex;
+            flex-direction: column; 
+            align-items: flex-start; 
+        }
+        .parent-child-relation .component-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .component-box {
+            background-color: var(--color-fashion-5);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin: 5px;
+        }
+        .arrow {
+            font-size: 28px;
+            color: var(--color-fashion-1);
+            margin: 0 8px;
+            font-family: 'Nanum Pen Script', cursive;
+        }
+        .indent {
+            margin-left: 30px;
+        }
+        
+        /* Toast 시각화 예시 */
+        .toast-visual-example {
+            position: fixed; /* 화면에 고정된 위치 (예시) */
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 9999;
+        }
+        .toast-item-visual {
+            background-color: var(--color-fashion-1);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 250px;
+        }
+        .toast-item-visual .icon {
+            font-size: 20px;
+        }
+        .toast-item-visual.success {
+            background-color: var(--color-fashion-4); /* 성공 시 색상 */
+        }
+        .toast-item-visual.error {
+            background-color: var(--color-fashion-5); /* 오류 시 색상 */
+        }
+        .toast-content-visual {
+            flex-grow: 1;
+        }
+        .toast-content-visual p { margin:0; font-size: 14px; }
+        .toast-content-visual .title { font-weight: bold; margin-bottom: 3px; font-size: 15px;}
+        .toast-close-button-visual {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0;
+            opacity: 0.7;
+        }
+        .toast-close-button-visual:hover { opacity: 1; }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-toast"></span><br>
+                정보 출처: <strong>Shadcn UI & react-hot-toast/Sonner</strong>
+            </div>
+        </header>
+
+        <!-- Toast 컴포넌트 카드 시작 -->
+        <div class="component-card" id="toast-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">🍞🔔</span>
+                <h1 class="component-main-title">Toast (토스트)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Toast는 사용자에게 <span class="highlight-keyword">짧고 간결한 피드백 메시지</span>를 화면의 특정 위치(주로 가장자리)에 일시적으로 표시하는 UI 요소입니다. 📢 사용자의 현재 작업을 방해하지 않으면서 중요한 정보나 작업의 결과를 알려주는 데 사용됩니다.</p>
+                <p>주요 사용 사례:</p>
+                <ul>
+                    <li>작업 성공 알림 (예: "저장되었습니다.", "메시지 전송 완료")</li>
+                    <li>오류 또는 경고 메시지 (예: "입력값을 확인해주세요.", "네트워크 연결 실패")</li>
+                    <li>간단한 정보 알림 (예: "새로운 알림이 도착했습니다.")</li>
+                </ul>
+                <p>Shadcn UI의 Toast는 기본적으로 <code>react-hot-toast</code> 또는 <code>Sonner</code>와 같은 라이브러리를 기반으로 하며, 이를 shadcn/ui 스타일로 감싼 형태로 제공됩니다. 여기서는 <code>Sonner</code> 기반의 사용법을 중심으로 설명합니다 (shadcn/ui의 최근 권장 사항).</p>
+                <div class="toast-visual-example" id="toast-visual-area">
+                    {/* JS로 토스트 추가/제거 */}
+                </div>
+                <button onclick="showVisualToast('success', '성공!', '작업이 성공적으로 완료되었습니다.')" style="background-color: var(--color-fashion-4); color:white; padding:8px 12px; border:none; border-radius:6px; cursor:pointer; margin-top:15px; margin-right:10px;">성공 토스트 띄우기</button>
+                <button onclick="showVisualToast('error', '오류!', '문제가 발생했습니다. 다시 시도해주세요.')" style="background-color: var(--color-fashion-5); color:white; padding:8px 12px; border:none; border-radius:6px; cursor:pointer; margin-top:15px;">오류 토스트 띄우기</button>
+                <div class="speech-bubble">
+                    ✨ Toast는 사용자에게 적절한 피드백을 제공하여 애플리케이션의 사용성을 높이는 데 큰 도움이 됩니다!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>Toaster (메인 컨테이너) Props</h2>
+                <div class="text-content">
+                    <p>실제 토스트 메시지를 표시하기 위해서는 먼저 <code>&lt;Toaster /&gt;</code> 컴포넌트를 애플리케이션의 루트 레벨(보통 <code>Layout</code>이나 <code>App</code> 컴포넌트)에 한 번만 렌더링해야 합니다. 이 컴포넌트는 모든 토스트 메시지가 나타날 위치와 전반적인 스타일을 관리합니다.</p>
+                    <p><code>Sonner</code> 기반 <code>Toaster</code>의 주요 Props:</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">position</td>
+                                <td><span class="highlight-value">"top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right"</span></td>
+                                <td><span class="highlight-value">"bottom-right"</span></td>
+                                <td>토스트가 나타날 화면상의 위치입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">richColors</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>성공, 오류, 경고 등의 상태에 따라 다른 배경색을 사용하는 리치 컬러 스타일을 활성화합니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">theme</td>
+                                <td><span class="highlight-value">"light" | "dark" | "system"</span></td>
+                                <td><span class="highlight-value">"light"</span></td>
+                                <td>토스트의 테마를 설정합니다. "system"은 사용자의 시스템 설정을 따릅니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">closeButton</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>모든 토스트에 닫기 버튼을 표시할지 여부입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">duration</td>
+                                <td><span class="highlight-value">number</span></td>
+                                <td><span class="highlight-value">4000</span> (ms)</td>
+                                <td>토스트가 자동으로 사라지기까지의 기본 지속 시간입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">visibleToasts</td>
+                                <td><span class="highlight-value">number</span></td>
+                                <td><span class="highlight-value">3</span></td>
+                                <td>동시에 화면에 표시될 수 있는 최대 토스트 개수입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">expand</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>토스트가 쌓일 때 너비를 확장할지 여부입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">offset</td>
+                                <td><span class="highlight-value">string | number</span></td>
+                                <td><span class="highlight-value">"16px"</span></td>
+                                <td>화면 가장자리로부터의 간격입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">className</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>Toaster 컨테이너에 적용할 CSS 클래스입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">toastOptions</td>
+                                <td><span class="highlight-value">object</span></td>
+                                <td>-</td>
+                                <td>모든 토스트에 적용될 기본 옵션입니다. (예: <code>{ classNames: { toast: 'my-toast-class' } }</code>)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🚀</span>Toast 사용 함수 (<code>toast()</code>)</h2>
+                <div class="text-content">
+                    <p>실제 토스트 메시지를 띄우는 것은 <code>toast()</code> 함수 또는 이와 유사한 유틸리티 함수(<code>toast.success()</code>, <code>toast.error()</code> 등)를 호출하여 이루어집니다. 이 함수들은 <code>sonner</code> 라이브러리에서 제공되며, shadcn/ui는 이를 사용하는 <code>useToast</code> 훅 또는 직접 임포트하는 방식을 안내할 수 있습니다.</p>
+                    <p><code>toast()</code> 함수에 전달하는 인자/옵션:</p>
+                </div>
+                 <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>옵션 이름</th>
+                                <th>타입</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">첫 번째 인자</td>
+                                <td><span class="highlight-value">string | React.ReactNode</span></td>
+                                <td>토스트에 표시될 주요 메시지 또는 React 요소입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">두 번째 인자 (객체)</td>
+                                <td><span class="highlight-value">object</span></td>
+                                <td>개별 토스트에 대한 추가 옵션입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name indent">description</td>
+                                <td><span class="highlight-value">string | React.ReactNode</span></td>
+                                <td>주요 메시지 아래에 표시될 추가 설명입니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name indent">action</td>
+                                <td><span class="highlight-value">{ label: string; onClick: () => void; } | React.ReactNode</span></td>
+                                <td>토스트 내부에 표시될 액션 버튼입니다. (예: "실행 취소")</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name indent">cancel</td>
+                                <td><span class="highlight-value">{ label: string; onClick: () => void; } | React.ReactNode</span></td>
+                                <td>(Sonner 특정) 취소 버튼 옵션입니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name indent">duration</td>
+                                <td><span class="highlight-value">number</span></td>
+                                <td>이 특정 토스트의 지속 시간입니다. <code>Toaster</code>의 기본값을 덮어씁니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name indent">icon</td>
+                                <td><span class="highlight-value">React.ReactNode</span></td>
+                                <td>토스트 왼쪽에 표시될 커스텀 아이콘입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name indent">className</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>이 특정 토스트에 적용할 CSS 클래스입니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name indent">...기타 Sonner 옵션</td>
+                                <td></td><td><code>id</code>, <code>onDismiss</code>, <code>onAutoClose</code>, <code>style</code>, <code>unstyled</code> 등 다양한 옵션이 있습니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-content">일반적으로 <code>toast("메시지")</code>, <code>toast.success("성공!")</code>, <code>toast.error("오류 발생", { description: "..." })</code>, <code>toast.promise(myPromise, { loading: '로딩중...', success: '성공!', error: '실패!' })</code> 와 같이 사용됩니다.</p>
+
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 <code>Sonner</code> 기반의 Toast를 사용하는 예시입니다. 먼저 <code>Layout.tsx</code> 같은 곳에 <code>&lt;Toaster /&gt;</code>를 추가해야 합니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+// 1. app/layout.tsx (또는 최상위 컴포넌트)
+import { Toaster } from "@/components/ui/sonner" // shadcn/ui가 제공하는 Sonner Toaster
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    &lt;html lang="ko"&gt;
+      &lt;body&gt;
+        {children}
+        &lt;Toaster richColors position="top-right" /&gt; {/* Toaster 설정 */}
+      &lt;/body&gt;
+    &lt;/html&gt;
+  )
+}
+
+// 2. 실제 Toast를 사용하는 컴포넌트
+"use client"
+
+import { toast } from "sonner" // sonner에서 직접 toast 함수 가져오기
+import { Button } from "@/components/ui/button"
+
+function ToastDemo() {
+  return (
+    &lt;div className="space-x-2"&gt;
+      &lt;Button
+        variant="outline"
+        onClick={() => toast("일반 토스트 메시지입니다. ✨")}
+      &gt;
+        일반 토스트
+      &lt;/Button&gt;
+
+      &lt;Button
+        variant="outline"
+        onClick={() =>
+          toast.success("성공! 이벤트가 예약되었습니다.", {
+            description: "일요일, 2023년 12월 24일 오후 2시",
+            action: {
+              label: "실행 취소",
+              onClick: () => console.log("실행 취소됨"),
+            },
+            duration: 5000, // 5초 동안 표시
+          })
+        }
+      &gt;
+        성공 토스트 (설명 &amp; 액션)
+      &lt;/Button&gt;
+
+      &lt;Button
+        variant="destructive"
+        onClick={() => toast.error("오류 발생!", {
+            description: "파일 업로드에 실패했습니다. 다시 시도해주세요.",
+            icon: &lt;span&gt;🚨&lt;/span&gt; // 커스텀 아이콘
+        })}
+      &gt;
+        오류 토스트
+      &lt;/Button&gt;
+
+      &lt;Button
+        variant="outline"
+        onClick={() => {
+            const promise = () => new Promise((resolve) => setTimeout(() => resolve({ name: '데이터 로딩' }), 2000));
+            toast.promise(promise, {
+                loading: '데이터를 불러오는 중입니다...',
+                success: (data) => {
+                return `${(data as {name: string}).name} 완료!`;
+                },
+                error: '오류: 데이터를 불러올 수 없습니다.',
+            });
+        }}
+      &gt;
+        Promise 토스트
+      &lt;/Button&gt;
+    &lt;/div&gt;
+  )
+}
+
+export default ToastDemo;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> <code>toast.promise()</code> 함수를 사용하면 비동기 작업의 로딩, 성공, 실패 상태에 따라 자동으로 다른 토스트를 보여줄 수 있어 매우 편리합니다. <code>Toaster</code>의 <code>richColors</code> prop을 사용하면 <code>toast.success()</code>, <code>toast.error()</code>, <code>toast.warning()</code>, <code>toast.info()</code> 호출 시 자동으로 적절한 아이콘과 배경색이 적용된 토스트가 나타납니다.
+                </div>
+            </section>
+            
+        </div>
+        <!-- Toast 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>다음은 버튼처럼 누를 수 있는 토글(Toggle) 컴포넌트입니다! 🔘</p>
+            <p>이 문서를 통해 shadcn UI로 <strong>효과적인 사용자 피드백</strong>을 제공하는 방법을 익히시길 바랍니다. 👍</p>
+            <p>&copy; <span id="current-year-toast"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-toast').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-toast').textContent = new Date().getFullYear();
+
+        // Toast 시각화 예제 스크립트
+        function showVisualToast(type, title, description) {
+            const toastArea = document.getElementById('toast-visual-area');
+            if (!toastArea) return;
+
+            const toastId = 'toast-' + Date.now();
+            const toastItem = document.createElement('div');
+            toastItem.classList.add('toast-item-visual');
+            toastItem.id = toastId;
+            if (type === 'success') toastItem.classList.add('success');
+            if (type === 'error') toastItem.classList.add('error');
+
+            let iconContent = '🔔'; // 기본 아이콘
+            if (type === 'success') iconContent = '✅';
+            if (type === 'error') iconContent = '❌';
+
+            toastItem.innerHTML = `
+                <span class="icon">${iconContent}</span>
+                <div class="toast-content-visual">
+                    <p class="title">${title}</p>
+                    <p>${description}</p>
+                </div>
+                <button class="toast-close-button-visual" onclick="removeVisualToast('${toastId}')">&times;</button>
+            `;
+            toastArea.appendChild(toastItem);
+
+            // 일정 시간 후 자동 제거
+            setTimeout(() => {
+                removeVisualToast(toastId);
+            }, 4000); // 4초 후 제거
+        }
+
+        function removeVisualToast(toastId) {
+            const toastToRemove = document.getElementById(toastId);
+            if (toastToRemove) {
+                toastToRemove.remove();
+            }
+        }
+    </script>
+</body>
+</html>

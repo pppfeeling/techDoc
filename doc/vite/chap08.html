@@ -1,0 +1,140 @@
+ <div class="container">
+        <header class="header">
+            <h1 class="title">Vite.js 핵심 파헤치기</h1>
+            <div class="date" id="currentDateDisplay"></div>
+        </header>
+
+        <section id="chapter-paths-alias" class="full-width">
+            <div class="card" style="background: linear-gradient(135deg, rgba(255,255,255,1) 0%, rgba(242,230,61,0.1) 100%);">
+                <h2 class="card-title"><span class="icon" style="font-size:1.5em; color:#593C47;">🧩</span> `tsconfig.json`의 `paths` vs `vite.config.ts`의 `alias` - <span class="hand-drawn">왜 둘 다 필요할까요?</span></h2>
+                <p>Vite와 TypeScript를 함께 사용할 때, `@/components/MyComponent`처럼 <span class="keyword">경로 별칭(Path Alias)</span>을 사용하면 코드가 훨씬 깔끔해지죠! 하지만 이 별칭을 사용하려면 `tsconfig.json` 파일과 `vite.config.ts` 파일 두 군데에 설정을 추가해야 할 때가 많아요. "어휴, 귀찮게 왜 두 번이나..." 😩 라고 생각하실 수 있지만, 여기에는 <span class="emphasize">아주 중요한 이유</span>가 있답니다!</p>
+            </div>
+
+            <div class="content-grid">
+                <div class="card">
+                    <h3 class="card-title icon-text"><span class="icon">📜</span> `tsconfig.json`의 <code style="color:#F25C05;">paths</code> 역할</h3>
+                    <p>이 설정은 주로 <span class="keyword">TypeScript 컴파일러(TSC)</span>와 <span class="keyword">IDE(예: VSCode)</span>를 위한 거예요.</p>
+                    <ul>
+                        <li><strong>타입 체킹 & 지능형 코드 완성:</strong> IDE가 `@/components` 같은 경로를 이해하고, 해당 경로에 있는 모듈의 타입을 정확히 추론해서 <span class="emphasize">타입 오류를 미리 잡아주거나 코드를 자동으로 완성</span>해주는 데 사용돼요. 👩‍💻</li>
+                        <li><strong>컴파일 시 경로 인식:</strong> TypeScript 컴파일러가 소스 코드를 분석할 때 이 `paths` 정보를 참조해서 모듈 간의 의존성을 파악해요.</li>
+                    </ul>
+                    <p><strong style="color:#593C47;">하지만!</strong> `tsconfig.json`의 `paths` 설정만으로는 <span class="emphasize">실제 실행 환경(브라우저 또는 Node.js)에서 모듈을 불러올 때</span> 이 별칭 경로가 실제 파일 경로로 자동 변환되지는 않아요. TypeScript는 언어적인 측면에서 경로를 이해할 뿐, 번들러나 실행 환경이 이해하도록 경로를 바꿔주지는 않거든요.</p>
+                    <p class="config-file-title">예시: tsconfig.json</p>
+                    <div class="code-block">
+{
+  "compilerOptions": {
+    "baseUrl": ".", // paths 옵션의 기준 경로
+    "paths": {
+      "@/*": ["src/*"] // "@"로 시작하면 "src/" 폴더를 보라는 의미
+    }
+    // ... 다른 옵션들
+  }
+}
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title icon-text"><span class="icon">🛠️</span> `vite.config.ts`의 <code style="color:#F25C05;">resolve.alias</code> 역할</h3>
+                    <p>이 설정은 <span class="keyword">Vite 개발 서버</span> 및 <span class="keyword">프로덕션 빌드 과정</span>에서 사용돼요.</p>
+                    <ul>
+                        <li><strong>모듈 해석(Resolution):</strong> Vite는 개발 서버를 실행하거나 프로덕션용으로 빌드할 때, `import Button from '@/components/Button'`과 같은 코드를 만나면, 이 `@/components/Button`이라는 <span class="emphasize">별칭 경로를 실제 파일 시스템의 경로(예: `/프로젝트경로/src/components/Button.tsx`)로 변환</span>해줘야 해요. `resolve.alias`가 바로 이 역할을 담당합니다! 🗺️</li>
+                        <li><strong>번들링 시 경로 처리:</strong> Vite는 내부적으로 Rollup(그리고 esbuild)을 사용하여 코드를 번들링하는데, 이 과정에서도 `alias` 설정이 올바른 모듈을 찾는 데 사용돼요.</li>
+                    </ul>
+                    <p><strong style="color:#593C47;">만약 이 설정이 없다면?</strong> Vite는 `@/components`가 도대체 어디를 가리키는지 알 수 없어서 "모듈을 찾을 수 없습니다 (Cannot find module)" 오류를 뿜뿜! 💥 하게 될 거예요.</p>
+                    <p class="config-file-title">예시: vite.config.ts</p>
+                    <div class="code-block">
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import path from 'path' // Node.js 'path' 모듈
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: [ // 배열 형태로 설정 가능
+      { 
+        find: '@', // 찾을 문자열 (별칭)
+        replacement: path.resolve(__dirname, 'src') // 실제 경로
+      }
+      // { find: '@components', replacement: path.resolve(__dirname, 'src/components') } // 더 구체적인 별칭도 가능
+    ]
+    // 또는 객체 형태로도 가능:
+    // alias: {
+    //   '@': path.resolve(__dirname, 'src')
+    // }
+  }
+})
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box full-width">
+                <h3 class="card-title icon-text"><span class="icon" style="color: #593C47;">🔗</span> 그래서, <span class="keyword hand-drawn">왜 둘 다 필요할까요?</span></h3>
+                <p>각 설정은 <span class="emphasize">서로 다른 도구의 세계</span>를 담당하기 때문이에요!</p>
+                <div class="tool-flow">
+                    <div class="tool-box">
+                        <span class="icon">🧐</span>
+                        TypeScript 컴파일러 & IDE (코드 작성, 타입 체크)
+                    </div>
+                    <span class="tool-arrow">➡️</span>
+                    tsconfig.json (`paths`)
+                </div>
+                <div class="tool-flow" style="margin-top: 10px;">
+                     <div class="tool-box">
+                        <span class="icon">🚀</span>
+                        <span>Vite (개발 서버, 빌드)</span>
+                    </div>
+                    <div class="tool-box">
+                        <span class="icon">➡️</span>
+                        <span><code>vite.config.ts</code> (`resolve.alias`)</span>
+                    </div>
+                </div>
+                <p style="margin-top:15px;">
+                    <span class="keyword">TypeScript</span>는 우리가 코드를 작성하고 타입을 검사하는 <span class="emphasize">개발 시점</span>에 경로를 이해해야 하고, <span class="keyword">Vite</span>는 실제로 코드를 실행하고 빌드하는 <span class="emphasize">런타임 및 빌드 시점</span>에 경로를 해석해야 해요. 두 시점에서 모두 경로 별칭을 올바르게 이해시키려면 각각의 설정 파일에 명시해줘야 하는 거죠. 마치 서로 다른 언어를 사용하는 두 사람에게 각각 통역사가 필요한 것과 같아요! 🌐
+                </p>
+                <p><strong style="color:#593C47;">만약 하나만 설정하면 어떻게 될까요?</strong></p>
+                <ul>
+                    <li><code>tsconfig.json</code>에만 `paths` 설정: IDE에서는 경로를 잘 인식하고 타입 에러도 없지만, Vite 실행/빌드 시 <span class="emphasize">"모듈 찾을 수 없음" 오류 발생!</span> 😭</li>
+                    <li><code>vite.config.ts</code>에만 `alias` 설정: Vite는 잘 동작하지만, IDE에서 해당 경로를 인식 못해 <span class="emphasize">타입 에러처럼 보이거나 자동완성 기능 사용 불가!</span> 🙄</li>
+                </ul>
+            </div>
+            
+            <div class="plugin-card full-width">
+                <h3 class="card-title icon-text"><span class="icon" style="font-size:1.5em; color:#F24405;">💡</span> 꿀팁! <span class="hand-drawn">두 설정을 한 번에 관리하는 방법</span></h3>
+                <p>매번 두 파일을 수동으로 동기화하는 것은 번거롭고 실수를 유발할 수 있어요. 이럴 때 <a href="https://github.com/aleclarson/vite-tsconfig-paths" target="_blank" style="color:#F25C05; font-weight:bold;"><code>vite-tsconfig-paths</code></a> 같은 플러그인을 사용하면 편리해요! 이 플러그인은 `tsconfig.json` 파일의 `paths` 설정을 자동으로 읽어서 Vite의 `alias` 설정을 생성해준답니다. ✨</p>
+                <p>설치는 간단해요:</p>
+                <div class="code-block" style="font-size:12px;">
+# npm
+npm install --save-dev vite-tsconfig-paths
+# yarn
+# yarn add --dev vite-tsconfig-paths
+# pnpm
+# pnpm add -D vite-tsconfig-paths
+                </div>
+                <p>그리고 `vite.config.ts` 파일에 플러그인을 추가해주면 끝!</p>
+                <p class="config-file-title">vite.config.ts (vite-tsconfig-paths 사용)</p>
+                <div class="code-block" style="font-size:12px;">
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tsconfigPaths from 'vite-tsconfig-paths' // 플러그인 import
+
+export default defineConfig({
+  plugins: [
+    react(),
+    tsconfigPaths() // 플러그인 추가!
+  ]
+  // resolve.alias 설정은 이제 필요 없어요! (플러그인이 자동으로 해줌)
+})
+                </div>
+                <p>이렇게 하면 `tsconfig.json`의 `paths`만 잘 관리해주면 Vite 설정은 신경 쓰지 않아도 돼서 훨씬 편해져요! 😊</p>
+            </div>
+
+            <div class="feedback-section">
+                <p>이번 설명은 여기까지입니다! `tsconfig.json`의 `paths`와 `vite.config.ts`의 `alias`가 왜 각각 필요한지, 그리고 어떻게 함께 작동하는지에 대해 이해가 되셨나요?</p>
+                <p>혹시 <strong class="hand-drawn">이해가 안 되는 부분</strong>이나 <strong class="hand-drawn">더 궁금한 점</strong>이 있다면 언제든지 질문해주세요! 여러분의 피드백은 항상 환영입니다! 🙌</p>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>Vite.js 핵심 원리 학습 자료 | Crafted by AI Assistant | 날짜: <span id="currentDateFooter"></span></p>
+        </footer>
+    </div>

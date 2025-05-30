@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 가이드 - Carousel 컴포넌트</title>
+    <style>
+        
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+         .text-content li > code { /* li 내부 코드 스타일 */
+             font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+        
+        /* Carousel 시각화 예시 */
+        .carousel-visual-example {
+            margin: 20px auto;
+            width: 80%;
+            max-width: 500px; /* 너무 커지지 않게 */
+            position: relative; /* 버튼 위치 기준 */
+            overflow: hidden; /* 중요 */
+            border-radius: 8px;
+            border: 2px solid var(--color-fashion-3);
+            background-color: var(--color-fashion-1); /* 슬라이드 배경과 대비되도록 */
+        }
+        .carousel-viewport-visual {
+            display: flex; /* 슬라이드들을 가로로 배열 */
+            transition: transform 0.5s ease-in-out; /* 부드러운 이동 효과 */
+        }
+        .carousel-slide-visual {
+            min-width: 100%; /* 각 슬라이드가 뷰포트 너비 차지 */
+            height: 200px; /* 예시 높이 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+        }
+        .carousel-slide-visual:nth-child(1) { background-color: var(--color-fashion-4); }
+        .carousel-slide-visual:nth-child(2) { background-color: var(--color-fashion-5); }
+        .carousel-slide-visual:nth-child(3) { background-color: var(--color-fashion-2); color: var(--color-fashion-1);}
+
+        .carousel-nav-button-visual {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 20px;
+            color: var(--color-fashion-1);
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        .carousel-nav-button-visual.prev { left: 10px; }
+        .carousel-nav-button-visual.next { right: 10px; }
+        
+        .carousel-dots-visual {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+        }
+        .carousel-dot-visual {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.5);
+            cursor: pointer;
+        }
+        .carousel-dot-visual.active {
+            background-color: white;
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-carousel"></span><br>
+                정보 출처: <strong>embla-carousel-react & Shadcn UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Carousel 컴포넌트 카드 시작 -->
+        <div class="component-card" id="carousel-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">🎠</span>
+                <h1 class="component-main-title">Carousel (캐러셀)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Carousel(또는 슬라이더)은 여러 개의 콘텐츠(이미지, 카드, 텍스트 블록 등)를 <span class="highlight-keyword">가로 또는 세로로 순환</span>하며 보여주는 UI 컴포넌트입니다. 🔄 사용자는 네비게이션 버튼(이전/다음), 도트 인디케이터, 또는 드래그(터치)를 통해 슬라이드를 탐색할 수 있습니다.</p>
+                <p>주요 특징:</p>
+                <ul>
+                    <li>동적인 콘텐츠 표시: 여러 항목을 한 공간에 효과적으로 보여줌</li>
+                    <li>다양한 네비게이션 옵션: 버튼, 도트, 드래그, 자동 재생 등</li>
+                    <li>반응형 디자인: 화면 크기에 따라 슬라이드 개수나 레이아웃 조절 가능</li>
+                    <li>플러그인 시스템 (embla-carousel): 자동 재생, 페이드 효과 등 다양한 기능 확장 가능</li>
+                </ul>
+                <p>Shadcn UI는 <code>embla-carousel-react</code>라는 가볍고 유연한 캐러셀 라이브러리를 기반으로 스타일링된 예제를 제공합니다. <code>embla-carousel-react</code>는 핵심 로직만 제공하는 헤드리스 UI에 가까워, UI 구조와 스타일링은 사용자가 직접 구성해야 합니다. Shadcn UI는 이를 위한 기본 마크업과 스타일을 제공합니다.</p>
+                <div class="carousel-visual-example" id="carouselVisual">
+                    <div class="carousel-viewport-visual">
+                        <div class="carousel-slide-visual">슬라이드 1</div>
+                        <div class="carousel-slide-visual">슬라이드 2</div>
+                        <div class="carousel-slide-visual">슬라이드 3</div>
+                    </div>
+                    <button class="carousel-nav-button-visual prev" onclick="navigateCarouselVisual(-1)">❮</button>
+                    <button class="carousel-nav-button-visual next" onclick="navigateCarouselVisual(1)">❯</button>
+                    <div class="carousel-dots-visual" id="carouselDotsVisual">
+                        {/* JS로 도트 추가 */}
+                    </div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ Carousel은 콘텐츠를 매력적으로 보여주고 사용자 참여를 유도하는 데 효과적인 방법입니다!
+                </div>
+            </section>
+
+            <section class="setup-section">
+                <h2 class="section-heading"><span class="icon">⚙️</span>기본 설정 및 설치</h2>
+                <div class="text-content">
+                    <p>먼저 <code>embla-carousel-react</code> 라이브러리를 설치해야 합니다:</p>
+                    <div class="code-block-wrapper">
+                        <pre><code>
+npm install embla-carousel-react
+# 또는
+yarn add embla-carousel-react
+                        </code></pre>
+                    </div>
+                    <p>Shadcn UI에서 Carousel 예제를 사용하려면, 관련 컴포넌트(<code>Carousel</code>, <code>CarouselContent</code>, <code>CarouselItem</code>, <code>CarouselPrevious</code>, <code>CarouselNext</code>, <code>CarouselApi</code> 타입)를 CLI를 통해 프로젝트에 추가합니다.</p>
+                </div>
+            </section>
+
+            <section class="core-concepts">
+                <h2 class="section-heading"><span class="icon">🔗</span>핵심 개념 및 컴포넌트</h2>
+                <div class="text-content">
+                    <p>Shadcn UI의 Carousel은 <code>embla-carousel-react</code> 훅과 Context API를 사용하여 구성됩니다. 주요 컴포넌트와 역할은 다음과 같습니다:</p>
+                    <ul>
+                        <li><strong><code>&lt;Carousel&gt;</code> (루트):</strong> 캐러셀의 전체 컨테이너이자 Context Provider입니다. <code>embla-carousel-react</code>의 <code>useEmblaCarousel</code> 훅을 내부적으로 사용하며, 캐러셀 API와 상태를 하위 컴포넌트에 제공합니다.
+                            <ul>
+                                <li>주요 Props: <code>opts</code> (embla 옵션), <code>plugins</code> (embla 플러그인), <code>orientation</code> ("horizontal" | "vertical"), <code>setApi</code> (API 인스턴스 콜백)</li>
+                            </ul>
+                        </li>
+                        <li><strong><code>&lt;CarouselContent&gt;</code>:</strong> 실제 슬라이드 아이템들을 감싸는 뷰포트(viewport) 역할을 합니다. 이 요소에 <code>overflow: hidden</code>이 적용됩니다.</li>
+                        <li><strong><code>&lt;CarouselItem&gt;</code>:</strong> 개별 슬라이드 항목입니다. 이 안에 이미지, 카드 등 실제 콘텐츠가 들어갑니다.</li>
+                        <li><strong><code>&lt;CarouselPrevious&gt;</code>:</strong> 이전 슬라이드로 이동하는 버튼입니다. (shadcn Button 기반)</li>
+                        <li><strong><code>&lt;CarouselNext&gt;</code>:</strong> 다음 슬라이드로 이동하는 버튼입니다. (shadcn Button 기반)</li>
+                    </ul>
+                    <p><code>useCarousel</code> 훅을 사용하면 <code>&lt;Carousel&gt;</code> 컴포넌트 외부에서도 캐러셀 API에 접근하여 제어할 수 있습니다 (예: 커스텀 도트 인디케이터 구현).</p>
+                </div>
+            </section>
+
+             <section class="embla-options-plugins">
+                <h2 class="section-heading"><span class="icon">🛠️</span>Embla Carousel 옵션 및 플러그인</h2>
+                <div class="text-content">
+                    <p><code>embla-carousel-react</code>의 <code>useEmblaCarousel</code> 훅은 다양한 옵션을 제공하여 캐러셀의 동작을 세밀하게 제어할 수 있습니다. 이 옵션들은 <code>&lt;Carousel opts={...} /&gt;</code> prop을 통해 전달됩니다.</p>
+                    <ul>
+                        <li><code>align</code>: 슬라이드 정렬 방식 ("start", "center", "end" 또는 숫자).</li>
+                        <li><code>loop</code>: 무한 루프 여부 (boolean).</li>
+                        <li><code>startIndex</code>: 시작 슬라이드 인덱스 (number).</li>
+                        <li><code>draggable</code>: 마우스/터치 드래그 가능 여부 (boolean).</li>
+                        <li><code>slidesToScroll</code>: 한 번 스크롤 시 이동할 슬라이드 개수 (number 또는 "auto").</li>
+                        <li>... 등 다양한 옵션이 있습니다. (공식 문서 참고)</li>
+                    </ul>
+                    <p>또한, <strong>플러그인</strong>을 사용하여 기본 기능 외의 동작을 추가할 수 있습니다. <code>&lt;Carousel plugins={[...]} /&gt;</code> prop을 사용합니다.</p>
+                    <ul>
+                        <li><code>Autoplay</code>: 자동 재생 기능.</li>
+                        <li><code>ClassNames</code>: 특정 상태에 따라 클래스 추가.</li>
+                        <li><code>WheelGestures</code>: 마우스 휠 제스처 지원.</li>
+                        <li>사용자 정의 플러그인도 생성 가능.</li>
+                    </ul>
+                </div>
+            </section>
+
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 기본적인 이미지 캐러셀 예제입니다. (shadcn/ui 공식 문서 예제 기반)</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+"use client"
+
+import * as React from "react"
+import Autoplay from "embla-carousel-autoplay" // 자동 재생 플러그인 예시
+
+import { Card, CardContent } from "@/components/ui/card" // 슬라이드 내용 예시
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi, // API 타입
+} from "@/components/ui/carousel"
+import { Button } from "@/components/ui/button" // 네비게이션 버튼 스타일링용
+
+export function ImageCarousel() {
+  const [api, setApi] = React.useState&lt;CarouselApi&gt;()
+  const [current, setCurrent] = React.useState(0)
+  const [count, setCount] = React.useState(0)
+
+  React.useEffect(() => {
+    if (!api) {
+      return
+    }
+    setCount(api.scrollSnapList().length)
+    setCurrent(api.selectedScrollSnap() + 1)
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap() + 1)
+    })
+  }, [api])
+
+  const plugin = React.useRef( // 자동 재생 플러그인 설정
+    Autoplay({ delay: 2000, stopOnInteraction: true })
+  )
+
+  return (
+    &lt;div className="w-full max-w-xs mx-auto"&gt; {/* 캐러셀 전체 크기 제어 */}
+      &lt;Carousel
+        opts={{
+          align: "start",
+          loop: true,
+        }}
+        plugins={[plugin.current]} // 플러그인 적용
+        setApi={setApi} // API 인스턴스 받기
+        className="w-full"
+        onMouseEnter={plugin.current.stop} // 마우스 올리면 자동 재생 멈춤
+        onMouseLeave={plugin.current.reset} // 마우스 벗어나면 자동 재생 다시 시작
+      &gt;
+        &lt;CarouselContent&gt;
+          {Array.from({ length: 5 }).map((_, index) => (
+            &lt;CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3"&gt; {/* 반응형 슬라이드 크기 */}
+              &lt;div className="p-1"&gt;
+                &lt;Card&gt;
+                  &lt;CardContent className="flex aspect-square items-center justify-center p-6 bg-muted"&gt;
+                    &lt;span className="text-3xl font-semibold"&gt;{index + 1}&lt;/span&gt;
+                  &lt;/CardContent&gt;
+                &lt;/Card&gt;
+              &lt;/div&gt;
+            &lt;/CarouselItem&gt;
+          ))}
+        &lt;/CarouselContent&gt;
+        &lt;CarouselPrevious className="absolute left-[-50px] top-1/2 -translate-y-1/2" /&gt; {/* 버튼 위치 커스텀 */}
+        &lt;CarouselNext className="absolute right-[-50px] top-1/2 -translate-y-1/2" /&gt;
+      &lt;/Carousel&gt;
+      &lt;div className="py-2 text-center text-sm text-muted-foreground"&gt;
+        슬라이드 {current} / {count}
+      &lt;/div&gt;
+      &lt;div className="flex justify-center space-x-2 mt-2"&gt;
+        {/* 커스텀 도트 인디케이터 예시 */}
+        {Array.from({ length: count }).map((_, index) => (
+          &lt;Button
+            key={index}
+            variant={index + 1 === current ? "default" : "outline"}
+            size="icon"
+            className="h-2 w-2 rounded-full p-0" // 작은 원형 버튼
+            onClick={() => api?.scrollTo(index)}
+          /&gt;
+        ))}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
+}
+
+export default ImageCarousel;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> <code>CarouselItem</code>의 <code>className</code>에 Tailwind CSS의 basis 유틸리티(예: <code>md:basis-1/2</code>)를 사용하면 화면 크기에 따라 한 번에 보이는 슬라이드 개수를 조절할 수 있습니다. <code>setApi</code> 콜백으로 받은 API 인스턴스(<code>api</code>)를 사용하면 <code>api.scrollTo(index)</code>, <code>api.scrollPrev()</code>, <code>api.scrollNext()</code> 등으로 캐러셀을 프로그래매틱하게 제어할 수 있어 커스텀 네비게이션(예: 도트 인디케이터) 구현이 용이합니다.
+                </div>
+            </section>
+            
+        </div>
+        <!-- Carousel 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>🎉 Carousel까지 마스터! 이제 동적인 콘텐츠 슬라이더도 자유자재로 만들 수 있습니다! 🎉</p>
+            <p>정말 많은 컴포넌트들을 함께 살펴보았네요. 이 지식들이 프로젝트에 큰 도움이 되기를 바랍니다! 🌟</p>
+            <p>&copy; <span id="current-year-carousel"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-carousel').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-carousel').textContent = new Date().getFullYear();
+
+        // Carousel 시각화 예제 스크립트
+        let currentVisualSlide = 0;
+        const carouselVisual = document.getElementById('carouselVisual');
+        if (carouselVisual) {
+            const viewportVisual = carouselVisual.querySelector('.carousel-viewport-visual');
+            const slidesVisual = carouselVisual.querySelectorAll('.carousel-slide-visual');
+            const dotsContainerVisual = document.getElementById('carouselDotsVisual');
+            const totalSlidesVisual = slidesVisual.length;
+
+            // 도트 생성
+            if (dotsContainerVisual) {
+                for (let i = 0; i < totalSlidesVisual; i++) {
+                    const dot = document.createElement('div');
+                    dot.classList.add('carousel-dot-visual');
+                    if (i === 0) dot.classList.add('active');
+                    dot.addEventListener('click', () => {
+                        currentVisualSlide = i;
+                        updateCarouselVisual();
+                    });
+                    dotsContainerVisual.appendChild(dot);
+                }
+            }
+            
+            function updateCarouselVisual() {
+                if (viewportVisual) {
+                     viewportVisual.style.transform = `translateX(-${currentVisualSlide * 100}%)`;
+                }
+                const dots = dotsContainerVisual?.querySelectorAll('.carousel-dot-visual');
+                dots?.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentVisualSlide);
+                });
+            }
+
+            window.navigateCarouselVisual = (direction) => {
+                currentVisualSlide = (currentVisualSlide + direction + totalSlidesVisual) % totalSlidesVisual;
+                updateCarouselVisual();
+            };
+        }
+    </script>
+</body>
+</html>

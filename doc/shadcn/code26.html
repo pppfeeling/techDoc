@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Tooltip</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+
+        .subcomponent-card {
+            border: 2px solid var(--color-fashion-2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            background-color: rgba(242, 230, 61, 0.08);
+            position: relative;
+        }
+        .subcomponent-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .subcomponent-title .icon {
+            margin-right: 8px;
+            font-size: 20px;
+            color: var(--color-fashion-4);
+        }
+        .subcomponent-card::before {
+            content: '🧩';
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            font-size: 20px;
+            transform: rotate(10deg);
+        }
+
+        .parent-child-relation {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-fashion-5);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .component-box {
+            background-color: var(--color-fashion-5);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin: 5px;
+        }
+        .arrow {
+            font-size: 28px;
+            color: var(--color-fashion-1);
+            margin: 0 10px;
+            font-family: 'Nanum Pen Script', cursive;
+        }
+        
+        /* Tooltip 시각화 예시 */
+        .tooltip-visual-example {
+            display: flex;
+            gap: 20px; /* 버튼 간 간격 */
+            align-items: center;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: rgba(242, 230, 61, 0.1); /* 패션-2의 연한 배경 */
+            border-radius: 8px;
+            justify-content: center; /* 중앙 정렬 */
+        }
+        .tooltip-trigger-visual {
+            padding: 8px 12px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 6px;
+            background-color: var(--color-fashion-4);
+            color: white;
+            cursor: help; /* 도움말 커서 */
+            font-size: 14px;
+            position: relative; /* 툴팁 내용 위치 기준 */
+        }
+        .tooltip-content-visual-mock { /* JS로 동적 생성/제거 대신, CSS로 숨김/표시 */
+            position: absolute;
+            bottom: 100%; /* 트리거 위에 표시 */
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px); /* 중앙 정렬 및 간격 */
+            background-color: var(--color-fashion-1);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            white-space: nowrap; /* 줄바꿈 방지 */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            opacity: 0; /* 기본 숨김 */
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+        }
+        .tooltip-trigger-visual:hover .tooltip-content-visual-mock {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-tooltip"></span><br>
+                정보 출처: <strong>Shadcn UI & Radix UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Tooltip 컴포넌트 카드 시작 -->
+        <div class="component-card" id="tooltip-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">💬</span>
+                <h1 class="component-main-title">Tooltip (툴팁)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Tooltip은 사용자가 특정 UI 요소(트리거) 위에 <span class="highlight-keyword">마우스 커서를 올렸을 때</span> (또는 키보드 포커스를 받았을 때) 해당 요소에 대한 <span class="highlight-keyword">간단한 설명이나 추가 정보</span>를 작은 말풍선 형태로 보여주는 컴포넌트입니다. 💡</p>
+                <p>주요 사용 사례:</p>
+                <ul>
+                    <li>아이콘 버튼의 기능 설명 (예: ⚙️ 아이콘 위에 "설정")</li>
+                    <li>축약된 텍스트나 데이터의 전체 내용 또는 의미 표시</li>
+                    <li>입력 필드나 컨트롤에 대한 간단한 도움말 제공</li>
+                    <li>표의 특정 셀 값에 대한 추가 정보</li>
+                </ul>
+                <p>Shadcn UI의 Tooltip은 Radix UI의 Tooltip Primitive를 기반으로 하며, Hover Card와 유사하지만 주로 짧은 텍스트 정보를 제공하는 데 초점을 맞춥니다. 접근성을 위해 키보드 사용자도 툴팁 내용을 확인할 수 있도록 지원합니다.</p>
+                <div class="tooltip-visual-example">
+                    <div class="tooltip-trigger-visual">
+                        버튼 1
+                        <div class="tooltip-content-visual-mock">이것은 버튼 1에 대한 설명입니다.</div>
+                    </div>
+                    <div class="tooltip-trigger-visual">
+                        버튼 2
+                        <div class="tooltip-content-visual-mock">버튼 2는 다른 기능을 합니다.</div>
+                    </div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ Tooltip은 UI를 간결하게 유지하면서도, 사용자에게 필요한 부가 정보를 효과적으로 전달하는 데 아주 유용해요!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>TooltipProvider (루트 컨테이너) Props</h2>
+                <div class="text-content">
+                    <p>개별 <code>&lt;Tooltip&gt;</code> 컴포넌트들을 사용하기 전에, 애플리케이션의 루트 레벨(또는 툴팁을 사용하는 컴포넌트들의 공통 상위)에 <code>&lt;TooltipProvider&gt;</code>를 한 번 렌더링해야 합니다. 이 Provider는 여러 툴팁들의 전역적인 설정을 관리합니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">delayDuration</td>
+                                <td><span class="highlight-value">number</span></td>
+                                <td><span class="highlight-value">700</span> (ms, Radix 기본)</td>
+                                <td>마우스가 트리거 위에 올라간 후 툴팁이 나타나기까지의 지연 시간(밀리초)입니다. 너무 짧으면 의도치 않게 자주 나타날 수 있습니다. ⏱️</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">skipDelayDuration</td>
+                                <td><span class="highlight-value">number</span></td>
+                                <td><span class="highlight-value">300</span> (ms, Radix 기본)</td>
+                                <td>하나의 툴팁이 열려 있는 상태에서 다른 툴팁 트리거로 빠르게 마우스를 옮겼을 때, <code>delayDuration</code>을 무시하고 즉시 다음 툴팁을 열기 위한 시간입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">disableHoverableContent</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span> (Radix 기본)</td>
+                                <td><span class="highlight-value">true</span>로 설정하면, 툴팁 내용(<code>TooltipContent</code>) 위로 마우스를 옮겨도 툴팁이 계속 열려있지 않고 닫힙니다. 기본적으로는 내용 위로 마우스를 옮기면 툴팁이 유지됩니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+             <section class="main-component-props" style="margin-top:25px;">
+                <h2 class="section-heading"><span class="icon">🔧</span>Tooltip (개별 툴팁 루트) Props</h2>
+                <div class="text-content">
+                    <p><code>&lt;Tooltip&gt;</code> 컴포넌트는 각 개별 툴팁의 열림/닫힘 상태를 관리합니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">open</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td>-</td>
+                                <td>툴팁의 열림 상태를 제어합니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">onOpenChange</td>
+                                <td><span class="highlight-value">(open: boolean) =&gt; void</span></td>
+                                <td>-</td>
+                                <td>열림 상태가 변경될 때 호출되는 콜백입니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">defaultOpen</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>초기 열림 상태입니다. (비제어 컴포넌트)</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">delayDuration</td>
+                                <td><span class="highlight-value">number</span></td>
+                                <td><code>TooltipProvider</code>의 값</td>
+                                <td>이 특정 툴팁에 대해서만 <code>TooltipProvider</code>의 <code>delayDuration</code>을 덮어씁니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>서브 컴포넌트들</h2>
+                <div class="text-content">
+                    <p>개별 Tooltip은 세 가지 주요 서브 컴포넌트로 구성됩니다: <code>TooltipTrigger</code>, <code>TooltipContent</code>. 그리고 <code>TooltipPortal</code>과 <code>TooltipArrow</code>도 사용될 수 있습니다.</p>
+                </div>
+
+                <div class="parent-child-relation">
+                    <span class="component-box">TooltipProvider</span> <span class="arrow">➡️</span> <span class="component-box">Tooltip</span> <span class="arrow">➡️</span>
+                    ( <span class="component-box">TooltipTrigger</span> &amp; <span class="component-box">TooltipPortal</span> <span class="arrow">➡️</span> <span class="component-box">TooltipContent</span> (내부에 <span class="component-box">TooltipArrow</span> 가능) )
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">👆</span>TooltipTrigger</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 툴팁을 활성화시키는 UI 요소(예: 버튼, 아이콘, 텍스트)를 감싸는 컴포넌트입니다. 이 컴포넌트의 자식 요소에 마우스를 올리거나 키보드 포커스를 주면 <code>TooltipContent</code>가 나타납니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;Tooltip&gt;</code>의 직접적인 자식입니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;TooltipTrigger asChild&gt;&lt;Button variant="outline"&gt;Hover me&lt;/Button&gt;&lt;/TooltipTrigger&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>asChild</code> (기본 <code>button</code> 대신 자식 요소를 트리거로 사용)</p>
+                    </div>
+                </div>
+                
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">🚪</span>TooltipPortal (선택적)</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> <code>TooltipContent</code>를 DOM 트리의 다른 위치(기본적으로 <code>document.body</code>)로 렌더링(포탈링)합니다. z-index 문제나 상위 요소의 스타일(예: <code>overflow: hidden</code>)로 인해 툴팁이 잘리는 현상을 방지합니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;Tooltip&gt;</code>의 자식이며, <code>TooltipContent</code>를 감쌀 수 있습니다. (shadcn/ui에서는 <code>TooltipContent</code>가 내부적으로 이를 처리할 수 있음)</p>
+                         <p><span class="highlight-keyword">주요 Props:</span> <code>container</code>, <code>forceMount</code></p>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">📄</span>TooltipContent</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 실제 툴팁으로 나타나는 내용 부분입니다. 주로 짧은 텍스트를 포함합니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;TooltipPortal&gt;</code>의 자식 (또는 <code>&lt;Tooltip&gt;</code>의 자식으로 직접 사용)입니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;TooltipContent&gt;&lt;p&gt;툴팁 내용입니다.&lt;/p&gt;&lt;/TooltipContent&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props (PopoverContent/HoverCardContent와 유사):</span></p>
+                        <div class="prop-table-wrapper">
+                            <table class="prop-table">
+                                <thead><tr><th>Prop</th><th>타입</th><th>기본값</th><th>설명</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="prop-name">side</td><td><span class="highlight-value">"top" | "right" | "bottom" | "left"</span></td><td>"top"</td><td>트리거 기준 툴팁 표시 방향</td></tr>
+                                    <tr><td class="prop-name">align</td><td><span class="highlight-value">"start" | "center" | "end"</span></td><td>"center"</td><td>트리거 기준 툴팁 정렬</td></tr>
+                                    <tr><td class="prop-name">sideOffset</td><td><span class="highlight-value">number</span></td><td>0 (shadcn: 4)</td><td><code>side</code> 방향으로의 거리</td></tr>
+                                    <tr><td class="prop-name">alignOffset</td><td><span class="highlight-value">number</span></td><td>0</td><td><code>align</code> 방향으로의 거리</td></tr>
+                                    <tr><td class="prop-name">... (기타 유사 Props)</td><td></td><td></td><td><code>avoidCollisions</code>, <code>collisionPadding</code>, <code>sticky</code>, <code>hideWhenDetached</code>, <code>asChild</code>, <code>forceMount</code> 등</td></tr>
+                                     <tr><td class="prop-name">onEscapeKeyDown</td><td><span class="highlight-value">(event: KeyboardEvent) =&gt; void</span></td><td>-</td><td>ESC 키를 눌렀을 때의 동작 제어</td></tr>
+                                    <tr><td class="prop-name">onPointerDownOutside</td><td><span class="highlight-value">(event: Event) =&gt; void</span></td><td>-</td><td>툴팁 외부를 클릭했을 때의 동작 제어 (주로 포커스된 툴팁에 해당)</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">◤</span>TooltipArrow (선택적)</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 툴팁 내용(<code>TooltipContent</code>)에 작은 화살표(꼬리)를 추가하여 시각적으로 트리거를 가리키는 것처럼 보이게 합니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;TooltipContent&gt;</code> 내부에 위치합니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;TooltipContent&gt;... &lt;TooltipArrow className="fill-primary" /&gt;&lt;/TooltipContent&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props:</span> <code>width</code> (기본 10), <code>height</code> (기본 5), <code>asChild</code>, <code>className</code></p>
+                        <p class="text-content">shadcn/ui에서는 기본적으로 툴팁에 화살표가 포함되어 있지 않을 수 있으며, 필요시 직접 추가하거나 스타일로 유사하게 구현할 수 있습니다.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 버튼에 마우스를 올리면 간단한 설명을 보여주는 Tooltip 예시입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+// 1. app/layout.tsx 또는 공통 상위 컴포넌트에 TooltipProvider 추가
+import { TooltipProvider } from "@/components/ui/tooltip"
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    &lt;html lang="ko"&gt;
+      &lt;body&gt;
+        &lt;TooltipProvider delayDuration={300}&gt; {/* 전역 딜레이 설정 */}
+          {children}
+        &lt;/TooltipProvider&gt;
+      &lt;/body&gt;
+    &lt;/html&gt;
+  )
+}
+
+// 2. 실제 Tooltip을 사용하는 컴포넌트
+import { Button } from "@/components/ui/button"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  // TooltipArrow, // 필요시 사용
+} from "@/components/ui/tooltip"
+import { PlusCircle, MessageSquare, Heart } from "lucide-react" // 아이콘 예시
+
+function ActionButtonsWithTooltips() {
+  return (
+    &lt;div className="flex space-x-2"&gt;
+      &lt;Tooltip&gt;
+        &lt;TooltipTrigger asChild&gt;
+          &lt;Button variant="outline" size="icon" aria-label="Add item"&gt;
+            &lt;PlusCircle className="h-4 w-4" /&gt;
+          &lt;/Button&gt;
+        &lt;/TooltipTrigger&gt;
+        &lt;TooltipContent&gt;
+          &lt;p&gt;새 항목 추가하기&lt;/p&gt;
+          {/* &lt;TooltipArrow /&gt; */}
+        &lt;/TooltipContent&gt;
+      &lt;/Tooltip&gt;
+
+      &lt;Tooltip defaultOpen={false} delayDuration={0}&gt; {/* 개별 딜레이 0으로 설정 */}
+        &lt;TooltipTrigger asChild&gt;
+          &lt;Button variant="ghost" size="icon" aria-label="Comments"&gt;
+            &lt;MessageSquare className="h-4 w-4" /&gt;
+          &lt;/Button&gt;
+        &lt;/TooltipTrigger&gt;
+        &lt;TooltipContent side="right" align="center" sideOffset={5}&gt;
+          &lt;p&gt;댓글 보기 (3개)&lt;/p&gt;
+        &lt;/TooltipContent&gt;
+      &lt;/Tooltip&gt;
+      
+      &lt;TooltipProvider skipDelayDuration={500}&gt; {/* 이 그룹 내에서는 skipDelayDuration 변경 */}
+        &lt;Tooltip&gt;
+            &lt;TooltipTrigger asChild&gt;
+            &lt;Button variant="destructive" size="icon" aria-label="Like"&gt;
+                &lt;Heart className="h-4 w-4" /&gt;
+            &lt;/Button&gt;
+            &lt;/TooltipTrigger&gt;
+            &lt;TooltipContent&gt;
+            &lt;p&gt;좋아요 누르기&lt;/p&gt;
+            &lt;/TooltipContent&gt;
+        &lt;/Tooltip&gt;
+      &lt;/TooltipProvider&gt;
+    &lt;/div&gt;
+  )
+}
+
+export default ActionButtonsWithTooltips;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> <code>TooltipProvider</code>의 <code>delayDuration</code>을 조절하여 툴팁이 나타나는 반응성을 조절할 수 있습니다. 아이콘 버튼과 같이 의미가 명확하지 않은 UI 요소에 Tooltip을 사용하면 사용자가 기능을 쉽게 이해하는 데 큰 도움이 됩니다. <code>TooltipContent</code>의 <code>side</code>, <code>align</code>, <code>sideOffset</code> props로 툴팁의 위치를 세밀하게 조정하세요!
+                </div>
+            </section>
+            
+        </div>
+        <!-- Tooltip 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>🎉 축하합니다! 요청하신 모든 shadcn UI 컴포넌트 학습을 완료했습니다! 🎉</p>
+            <p>이 문서를 통해 shadcn UI의 강력함과 유연성을 경험하셨기를 바랍니다. 😊</p>
+            <p>&copy; <span id="current-year-tooltip"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-tooltip').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-tooltip').textContent = new Date().getFullYear();
+
+        // 시각화 예제 Tooltip 호버 (간단 버전)
+        // 실제 Radix UI Tooltip은 더 복잡한 로직으로 동작합니다.
+        // 이 예제는 단순히 CSS로 hover 시 보이도록 처리했습니다.
+    </script>
+</body>
+</html>

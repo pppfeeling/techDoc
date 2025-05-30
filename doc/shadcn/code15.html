@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Radio Group</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+
+        .subcomponent-card {
+            border: 2px solid var(--color-fashion-2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            background-color: rgba(242, 230, 61, 0.08);
+            position: relative;
+        }
+        .subcomponent-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .subcomponent-title .icon {
+            margin-right: 8px;
+            font-size: 20px;
+            color: var(--color-fashion-4);
+        }
+        .subcomponent-card::before {
+            content: '🧩';
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            font-size: 20px;
+            transform: rotate(10deg);
+        }
+
+        .parent-child-relation {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-fashion-5);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .component-box {
+            background-color: var(--color-fashion-5);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin: 5px;
+        }
+        .arrow {
+            font-size: 28px;
+            color: var(--color-fashion-1);
+            margin: 0 10px;
+            font-family: 'Nanum Pen Script', cursive;
+        }
+        
+        /* Radio Group 시각화 예시 */
+        .radiogroup-visual-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(242, 230, 61, 0.1); /* 패션-2의 연한 배경 */
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .radio-item-visual {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        .radio-button-visual {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%; /* 원형 */
+            border: 2px solid var(--color-fashion-1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .radio-button-visual.checked {
+            border-color: var(--color-fashion-4);
+        }
+        .radio-button-visual.checked::before { /* 내부 원 */
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: var(--color-fashion-4);
+        }
+        .radio-label-visual {
+            font-size: 15px;
+            color: var(--color-text-default);
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-radiogroup"></span><br>
+                정보 출처: <strong>Shadcn UI & Radix UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Radio Group 컴포넌트 카드 시작 -->
+        <div class="component-card" id="radio-group-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">🔘</span>
+                <h1 class="component-main-title">Radio Group (라디오 그룹)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Radio Group은 여러 옵션 중에서 <span class="highlight-keyword">단 하나만 선택</span>할 수 있도록 하는 폼 컨트롤 그룹입니다. ☝️ 각 옵션은 동그란 라디오 버튼으로 표시되며, 사용자가 하나의 버튼을 선택하면 이전에 선택된 다른 버튼은 자동으로 해제됩니다.</p>
+                <p>주요 사용 사례:</p>
+                <ul>
+                    <li>객관식 질문의 답변 선택 (예: "예 / 아니오", "매우 만족 / 만족 / 보통 / 불만족")</li>
+                    <li>배송 방법 선택 (예: "일반 배송 / 빠른 배송 / 직접 수령")</li>
+                    <li>테마 또는 보기 모드 선택 (예: "라이트 모드 / 다크 모드")</li>
+                </ul>
+                <p>Shadcn UI의 Radio Group은 Radix UI의 Radio Group Primitive를 기반으로 하며, 키보드 네비게이션(방향키로 선택 변경)과 접근성을 완벽하게 지원합니다.</p>
+                <div class="radiogroup-visual-container">
+                    <div class="radio-item-visual">
+                        <div class="radio-button-visual checked"></div>
+                        <span class="radio-label-visual">옵션 A (선택됨)</span>
+                    </div>
+                    <div class="radio-item-visual">
+                        <div class="radio-button-visual"></div>
+                        <span class="radio-label-visual">옵션 B</span>
+                    </div>
+                    <div class="radio-item-visual">
+                        <div class="radio-button-visual"></div>
+                        <span class="radio-label-visual">옵션 C</span>
+                    </div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ Radio Group은 상호 배타적인 선택지를 명확하게 제시하여 사용자의 혼란을 줄여줍니다!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>RadioGroup (루트 컴포넌트) Props</h2>
+                <div class="text-content">
+                    <p><code>&lt;RadioGroup&gt;</code> 루트 컴포넌트는 여러 <code>RadioGroupItem</code>들을 그룹화하고, 현재 선택된 값을 관리합니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">value</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>현재 선택된 <code>RadioGroupItem</code>의 <code>value</code>를 제어합니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">onValueChange</td>
+                                <td><span class="highlight-value">(value: string) =&gt; void</span></td>
+                                <td>-</td>
+                                <td>선택된 값이 변경될 때 호출되는 콜백 함수입니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name required-prop">defaultValue</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>초기 마운트 시 기본적으로 선택될 아이템의 <code>value</code>입니다. (비제어 컴포넌트 시 필수)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">disabled</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>Radio Group 전체를 비활성화합니다. 모든 아이템이 선택 불가능 상태가 됩니다. 🚫</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">required</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>폼 제출 시 이 그룹에서 반드시 하나의 항목이 선택되어야 함을 나타냅니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">name</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>폼 제출 시 사용될 라디오 그룹의 이름입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">orientation</td>
+                                <td><span class="highlight-value">"horizontal" | "vertical"</span></td>
+                                <td><span class="highlight-value">"vertical"</span> (Radix 기본)</td>
+                                <td>라디오 버튼들의 정렬 방향입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">loop</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">true</span> (Radix 기본)</td>
+                                <td>방향키로 아이템 탐색 시 처음/마지막 아이템에서 순환할지 여부입니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">dir</td>
+                                <td><span class="highlight-value">"ltr" | "rtl"</span></td>
+                                <td>-</td>
+                                <td>텍스트 및 레이아웃 방향입니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">asChild</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>기본 렌더링 요소(<code>&lt;div role="radiogroup"&gt;</code>) 대신 자식으로 전달된 컴포넌트를 렌더링합니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>서브 컴포넌트들</h2>
+                <div class="text-content">
+                    <p>Radio Group은 두 가지 주요 서브 컴포넌트로 구성됩니다: <code>RadioGroupItem</code>. 각 아이템은 종종 <code>Label</code> 컴포넌트와 함께 사용됩니다.</p>
+                </div>
+
+                <div class="parent-child-relation">
+                    <span class="component-box">RadioGroup</span> <span class="arrow">➡️</span>
+                    ( 여러개의 <span class="component-box">RadioGroupItem</span> + <span class="component-box">Label</span> )
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">🔘</span>RadioGroupItem</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 라디오 그룹 내의 개별 선택 옵션(라디오 버튼)입니다. 각 아이템은 고유한 <code>value</code>를 가져야 합니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;RadioGroup&gt;</code>의 직접적인 자식으로 사용됩니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;RadioGroupItem value="option-a" id="r1" /&gt; &lt;Label htmlFor="r1"&gt;옵션 A&lt;/Label&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props:</span></p>
+                         <div class="prop-table-wrapper">
+                            <table class="prop-table">
+                                <thead><tr><th>Prop</th><th>타입</th><th>필수</th><th>설명</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="prop-name required-prop">value</td><td><span class="highlight-value">string</span></td><td>✔️</td><td>해당 라디오 버튼의 고유 값입니다. <code>RadioGroup</code>의 <code>value</code>와 비교하여 선택 상태가 결정됩니다.</td></tr>
+                                    <tr><td class="prop-name">id</td><td><span class="highlight-value">string</span></td><td>✔️</td><td><code>Label</code>과 연결하기 위한 DOM ID입니다. 접근성을 위해 필수입니다.</td></tr>
+                                    <tr><td class="prop-name">disabled</td><td><span class="highlight-value">boolean</span></td><td></td><td>해당 라디오 버튼만 비활성화합니다.</td></tr>
+                                    <tr><td class="prop-name">required</td><td><span class="highlight-value">boolean</span></td><td></td><td>이 아이템이 <code>RadioGroup</code>의 <code>required</code> 상태에 영향을 줍니다. (일반적으로 <code>RadioGroup</code>에 <code>required</code>를 설정합니다.)</td></tr>
+                                    <tr><td class="prop-name">checked</td><td><span class="highlight-value">boolean</span></td><td></td><td>(Radix 내부용 또는 매우 특수한 제어) 일반적으로 <code>RadioGroup</code>의 <code>value</code>로 제어됩니다.</td></tr>
+                                    <tr><td class="prop-name">asChild</td><td><span class="highlight-value">boolean</span></td><td></td><td>기본 <code>&lt;button role="radio"&gt;</code> 대신 자식으로 렌더링합니다.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-content">shadcn/ui의 <code>RadioGroupItem</code> 내부에는 선택 시 나타나는 원형 표시기(<code>RadioGroupPrimitive.Indicator</code>)가 포함되어 스타일링됩니다.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 알림 설정을 위한 Radio Group 예시입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+"use client" // 상태 관리를 위해 클라이언트 컴포넌트로 사용
+
+import * as React from "react"
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+
+function NotificationSettings() {
+  const [notificationType, setNotificationType] = React.useState("all"); // 제어 컴포넌트 예시
+
+  return (
+    &lt;div&gt;
+      &lt;h3 className="mb-4 text-lg font-medium"&gt;알림 설정&lt;/h3&gt;
+      &lt;RadioGroup 
+        defaultValue="mentions" // 비제어 컴포넌트의 기본값
+        className="space-y-2"
+        // value={notificationType} // 제어 컴포넌트로 사용 시
+        // onValueChange={setNotificationType} // 제어 컴포넌트로 사용 시
+      &gt;
+        &lt;div className="flex items-center space-x-2"&gt;
+          &lt;RadioGroupItem value="all" id="r1" /&gt;
+          &lt;Label htmlFor="r1"&gt;모든 새 메시지&lt;/Label&gt;
+        &lt;/div&gt;
+        &lt;div className="flex items-center space-x-2"&gt;
+          &lt;RadioGroupItem value="mentions" id="r2" /&gt;
+          &lt;Label htmlFor="r2"&gt;직접적인 언급 및 메시지만&lt;/Label&gt;
+        &lt;/div&gt;
+        &lt;div className="flex items-center space-x-2"&gt;
+          &lt;RadioGroupItem value="none" id="r3" /&gt;
+          &lt;Label htmlFor="r3"&gt;알림 받지 않음&lt;/Label&gt;
+        &lt;/div&gt;
+         &lt;div className="flex items-center space-x-2"&gt;
+          &lt;RadioGroupItem value="custom" id="r4" disabled /&gt;
+          &lt;Label htmlFor="r4" className="text-muted-foreground"&gt;사용자 정의 (비활성화)&lt;/Label&gt;
+        &lt;/div&gt;
+      &lt;/RadioGroup&gt;
+      {/* 제어 컴포넌트 사용 시 현재 값 확인 예시 */}
+      {/* &lt;p className="mt-4 text-sm"&gt;선택된 값: {notificationType}&lt;/p&gt; */}
+    &lt;/div&gt;
+  )
+}
+
+export default NotificationSettings;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> 각 <code>RadioGroupItem</code>에는 고유한 <code>id</code>를 부여하고, 이를 <code>Label</code>의 <code>htmlFor</code> prop과 연결하여 사용성과 접근성을 높이는 것이 매우 중요합니다. 이렇게 하면 Label 텍스트를 클릭해도 해당 라디오 버튼이 선택됩니다. <code>RadioGroup</code>의 <code>orientation="horizontal"</code> prop을 사용하면 라디오 버튼들을 가로로 정렬할 수 있습니다.
+                </div>
+            </section>
+            
+        </div>
+        <!-- Radio Group 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>다음은 긴 콘텐츠를 스크롤 가능하게 만드는 Scroll Area입니다! 📜💨</p>
+            <p>이 문서를 통해 shadcn UI로 <strong>명확한 선택지</strong>를 제공하는 방법을 익히시길 바랍니다. ✅</p>
+            <p>&copy; <span id="current-year-radiogroup"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-radiogroup').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-radiogroup').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

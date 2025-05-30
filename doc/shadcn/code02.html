@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Aspect Ratio</title>
+    <style>
+
+        body {
+            font-family: 'NotoSansKR', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+        
+        /* Aspect Ratio 시각화 예시 */
+        .aspect-ratio-visual-example {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(242, 230, 61, 0.1); /* 패션-2의 연한 배경 */
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
+        .aspect-ratio-box {
+            background-color: var(--color-fashion-4);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            border-radius: 6px;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .sixteen-nine {
+            width: 160px; /* 비율에 맞게 조절 */
+            height: 90px; /* (160 / 16) * 9 */
+        }
+        .one-one {
+            width: 100px;
+            height: 100px;
+        }
+        .four-three {
+            width: 120px;
+            height: 90px; /* (120 / 4) * 3 */
+        }
+        .aspect-ratio-box p {
+            margin:0;
+            font-size: 14px;
+            color: white !important;
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-ar"></span><br>
+                정보 출처: <strong>Shadcn UI & Radix UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Aspect Ratio 컴포넌트 카드 시작 -->
+        <div class="component-card" id="aspect-ratio-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">🖼️</span>
+                <h1 class="component-main-title">Aspect Ratio (종횡비)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Aspect Ratio 컴포넌트는 컨테이너의 <span class="highlight-keyword">너비에 따라 높이가 자동으로 조절</span>되어, 내부 콘텐츠가 항상 <span class="highlight-keyword">지정된 종횡비를 유지</span>하도록 도와주는 유틸리티 컴포넌트입니다. 📐</p>
+                <p>주로 다음과 같은 상황에서 매우 유용하게 사용됩니다:</p>
+                <ul>
+                    <li>이미지, 비디오, iframe 등의 미디어 요소를 표시할 때</li>
+                    <li>반응형 웹 디자인에서 콘텐츠의 시각적 일관성을 유지하고 싶을 때</li>
+                    <li>카드 UI나 갤러리 레이아웃에서 아이템들의 크기를 일정 비율로 맞출 때</li>
+                </ul>
+                <p>예를 들어, 16:9 비율로 비디오를 삽입하거나, 1:1 비율로 프로필 이미지를 표시할 수 있습니다. 이 컴포넌트는 Radix UI의 Aspect Ratio Primitive를 기반으로 합니다.</p>
+                
+                <div class="aspect-ratio-visual-example">
+                    <div class="aspect-ratio-box sixteen-nine"><p>16:9</p></div>
+                    <div class="aspect-ratio-box four-three"><p>4:3</p></div>
+                    <div class="aspect-ratio-box one-one"><p>1:1</p></div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ 이 컴포넌트를 사용하면 CSS로 종횡비를 직접 계산하고 관리하는 번거로움을 크게 줄일 수 있어요!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>AspectRatio (메인 컴포넌트) Props</h2>
+                <div class="text-content">
+                    <p><code>&lt;AspectRatio&gt;</code> 컴포넌트는 하나의 주요 Prop을 가집니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name required-prop">ratio</td>
+                                <td><span class="highlight-value">number</span></td>
+                                <td>-</td>
+                                <td>컨테이너의 종횡비를 나타내는 숫자입니다. <span class="highlight-value">너비 / 높이</span>의 값입니다. 예를 들어, 16:9 비율은 <span class="highlight-value">16 / 9</span> (약 1.777)로, 1:1 비율은 <span class="highlight-value">1 / 1</span> 즉, <span class="highlight-value">1</span>로 설정합니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">asChild</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>기본 렌더링 요소(<code>&lt;div&gt;</code>) 대신 자식으로 전달된 컴포넌트를 렌더링합니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">children</td>
+                                <td><span class="highlight-value">React.ReactNode</span></td>
+                                <td>-</td>
+                                <td>Aspect Ratio 컨테이너 내부에 표시될 콘텐츠입니다. 보통 이미지나 비디오 태그 등이 위치합니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-content">
+                  <p>💡 <span class="highlight-keyword">ratio</span> prop 계산 예시:</p>
+                  <ul>
+                    <li><strong>16:9</strong> (가로가 넓은 비디오 비율) = <code class="highlight-value">16/9</code></li>
+                    <li><strong>4:3</strong> (전통적인 TV 비율) = <code class="highlight-value">4/3</code></li>
+                    <li><strong>1:1</strong> (정사각형) = <code class="highlight-value">1/1</code> 또는 <code class="highlight-value">1</code></li>
+                    <li><strong>3:4</strong> (세로가 긴 이미지 비율) = <code class="highlight-value">3/4</code></li>
+                  </ul>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>서브 컴포넌트들</h2>
+                <div class="text-content">
+                    <p>AspectRatio 컴포넌트는 단일 컴포넌트로 구성되며, 별도의 서브 컴포넌트를 가지지 않습니다. 그 자체로 완전한 기능을 제공합니다. 🤩</p>
+                    <p>내부에 들어가는 요소들(예: <code>&lt;img&gt;</code>, <code>&lt;iframe&gt;</code>)은 일반적인 HTML/React 요소들이며, 이 요소들이 AspectRatio 컴포넌트에 의해 정의된 비율에 맞춰 크기가 조절됩니다.</p>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 이미지를 16:9 비율로 표시하는 예제와 YouTube 비디오를 삽입하는 예제입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+import { AspectRatio } from "@/components/ui/aspect-ratio"
+import Image from "next/image" // 또는 일반 &lt;img&gt; 태그
+
+function MyMediaComponent() {
+  return (
+    &lt;div className="w-[450px]"&gt; {/* 부모 컨테이너의 너비 설정 */}
+      &lt;h3&gt;16:9 비율 이미지&lt;/h3&gt;
+      &lt;AspectRatio ratio={16 / 9} className="bg-muted rounded-md overflow-hidden"&gt;
+        {/* 
+          Image 컴포넌트 사용 시: layout="fill" objectFit="cover" 
+          또는 일반 img 태그 사용 시: width="100%" height="100%" style={{ objectFit: 'cover' }}
+          등을 사용하여 AspectRatio 컨테이너를 채우도록 스타일링합니다.
+        */}
+        &lt;Image 
+          src="https://images.unsplash.com/photo-1588345921523-c2dcdb7f1dcd?w=800&dpr=2&q=80" 
+          alt="풍경 이미지" 
+          layout="fill" 
+          objectFit="cover" 
+          className="rounded-md" 
+        /&gt;
+        {/* 만약 일반 img 태그를 사용한다면:
+        &lt;img 
+          src="https://..." 
+          alt="풍경 이미지" 
+          className="rounded-md object-cover w-full h-full" 
+        /&gt;
+        */}
+      &lt;/AspectRatio&gt;
+
+      &lt;h3 style={{ marginTop: '20px' }}&gt;1:1 비율 이미지 (프로필)&lt;/h3&gt;
+      &lt;div className="w-[200px]"&gt; {/* 정사각형이므로 너비만 제어 */}
+        &lt;AspectRatio ratio={1} className="bg-slate-50 dark:bg-slate-800 rounded-full overflow-hidden"&gt;
+          &lt;Image
+            src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80"
+            alt="프로필 이미지"
+            layout="fill"
+            objectFit="cover"
+          /&gt;
+        &lt;/AspectRatio&gt;
+      &lt;/div&gt;
+
+      &lt;h3 style={{ marginTop: '20px' }}&gt;16:9 비율 YouTube 비디오&lt;/h3&gt;
+      &lt;AspectRatio ratio={16 / 9} className="rounded-md overflow-hidden"&gt;
+        &lt;iframe 
+          src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+          title="YouTube video player" 
+          frameBorder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowFullScreen
+          className="w-full h-full"
+        &gt;&lt;/iframe&gt;
+      &lt;/AspectRatio&gt;
+    &lt;/div&gt;
+  )
+}
+
+export default MyMediaComponent;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> <code>AspectRatio</code> 컴포넌트 내부에 들어가는 <code>&lt;img&gt;</code>나 <code>&lt;iframe&gt;</code> 태그는 너비와 높이를 100%로 설정하여 부모인 <code>AspectRatio</code> 컨테이너를 꽉 채우도록 하는 것이 일반적입니다. 이미지의 경우 <code>object-fit: cover;</code> (또는 <code>contain</code>) CSS 속성을 함께 사용하여 이미지가 비율에 맞게 잘리거나 여백 없이 채워지도록 조절할 수 있습니다. Next.js의 <code>Image</code> 컴포넌트를 사용할 경우 <code>layout="fill" objectFit="cover"</code> 조합을 활용하면 편리합니다.
+                </div>
+            </section>
+            
+        </div>
+        <!-- Aspect Ratio 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>다음 챕터에서는 어떤 컴포넌트가 기다리고 있을까요? 기대해주세요! 😉</p>
+            <p>이 문서는 shadcn UI 학습을 위해 <strong>꼼꼼하게</strong> 준비되었습니다. 📝</p>
+            <p>&copy; <span id="current-year-ar"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정 (ID 충돌 방지를 위해 다른 ID 사용)
+        document.getElementById('current-date-ar').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-ar').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

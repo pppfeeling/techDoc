@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Avatar</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'NotoSansKR', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+
+        .subcomponent-card {
+            border: 2px solid var(--color-fashion-2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            background-color: rgba(242, 230, 61, 0.08);
+            position: relative;
+        }
+        .subcomponent-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .subcomponent-title .icon {
+            margin-right: 8px;
+            font-size: 20px;
+            color: var(--color-fashion-4);
+        }
+        .subcomponent-card::before {
+            content: '🧩';
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            font-size: 20px;
+            transform: rotate(10deg);
+        }
+
+        .parent-child-relation {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-fashion-5);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .component-box {
+            background-color: var(--color-fashion-5);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin: 5px;
+        }
+        .arrow {
+            font-size: 28px;
+            color: var(--color-fashion-1);
+            margin: 0 10px;
+            font-family: 'Nanum Pen Script', cursive;
+        }
+
+        /* 아바타 시각화 예시 */
+        .avatar-example-container {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-top: 15px;
+            padding: 15px;
+            background-color: rgba(242, 196, 61, 0.1); /* 패션-3의 연한 배경 */
+            border-radius: 8px;
+        }
+        .avatar-example-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        .avatar-example-item .avatar-preview {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%; /* 원형 아바타 */
+            background-color: var(--color-fashion-1);
+            color: var(--color-fashion-2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            overflow: hidden; /* 이미지가 넘치지 않도록 */
+        }
+        .avatar-example-item .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .avatar-example-item p {
+            font-size: 12px;
+            color: var(--color-text-subtle);
+            margin:0;
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-avatar"></span><br>
+                정보 출처: <strong>Shadcn UI & Radix UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Avatar 컴포넌트 카드 시작 -->
+        <div class="component-card" id="avatar-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">🧑‍🎨</span>
+                <h1 class="component-main-title">Avatar (아바타)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Avatar 컴포넌트는 사용자의 프로필 이미지나 아이콘을 표시하는 데 사용됩니다. 👤 이미지를 불러오는 데 실패하거나 이미지가 제공되지 않은 경우, 대체 텍스트(Fallback)를 보여줄 수 있는 기능을 제공하여 사용자 경험을 향상시킵니다.</p>
+                <p>주요 특징은 다음과 같습니다:</p>
+                <ul>
+                    <li>사용자 이미지 표시</li>
+                    <li>이미지 로딩 실패 시 <span class="highlight-keyword">대체 콘텐츠(Fallback)</span> 표시 (예: 사용자 이름의 이니셜)</li>
+                    <li>접근성을 고려한 설계 (Radix UI Avatar Primitive 기반)</li>
+                    <li>간단한 스타일링 및 커스터마이징 가능</li>
+                </ul>
+                <div class="avatar-example-container">
+                    <div class="avatar-example-item">
+                        <div class="avatar-preview">
+                            <img src="https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?&w=128&h=128&dpr=2&q=80" alt="User Image">
+                        </div>
+                        <p>이미지 있음</p>
+                    </div>
+                    <div class="avatar-example-item">
+                        <div class="avatar-preview">CN</div>
+                        <p>Fallback (이니셜)</p>
+                    </div>
+                     <div class="avatar-example-item">
+                        <div class="avatar-preview">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                        </div>
+                        <p>Fallback (아이콘)</p>
+                    </div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ 아바타는 사용자 인터페이스에서 개인화와 식별성을 높이는 중요한 요소예요!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>Avatar (루트 컴포넌트) Props</h2>
+                <div class="text-content">
+                    <p><code>&lt;Avatar&gt;</code> 컴포넌트는 아바타의 컨테이너 역할을 하며, 직접적인 props는 많지 않습니다. 주로 스타일링을 위한 <code>className</code>이나 <code>asChild</code> prop을 가집니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                             <tr>
+                                <td class="prop-name">asChild</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>기본 렌더링 요소(<code>&lt;span&gt;</code>) 대신 자식으로 전달된 컴포넌트를 렌더링합니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">className</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>컴포넌트에 적용할 CSS 클래스입니다. (Tailwind CSS 등)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>서브 컴포넌트들</h2>
+                <div class="text-content">
+                    <p>Avatar는 두 가지 주요 서브 컴포넌트로 구성됩니다: <code>AvatarImage</code>와 <code>AvatarFallback</code>.</p>
+                </div>
+
+                <div class="parent-child-relation">
+                    <span class="component-box">Avatar</span> <span class="arrow">➡️</span>
+                    <span class="component-box">AvatarImage</span> &amp; <span class="component-box">AvatarFallback</span>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">🖼️</span>AvatarImage</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 실제 사용자 이미지를 표시하는 컴포넌트입니다. <code>src</code> prop을 통해 이미지 URL을 전달받습니다. 이미지가 성공적으로 로드되면 이 컴포넌트가 보여지고, <code>AvatarFallback</code>은 숨겨집니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;Avatar&gt;</code>의 직접적인 자식으로 사용됩니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;AvatarImage src="https://example.com/user.jpg" alt="User Name" /&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props:</span></p>
+                         <div class="prop-table-wrapper">
+                            <table class="prop-table">
+                                <thead><tr><th>Prop</th><th>타입</th><th>필수</th><th>설명</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="prop-name">src</td><td><span class="highlight-value">string</span></td><td>✔️</td><td>표시할 이미지의 URL입니다.</td></tr>
+                                    <tr><td class="prop-name">alt</td><td><span class="highlight-value">string</span></td><td>△</td><td>이미지의 대체 텍스트입니다. 접근성을 위해 제공하는 것이 좋습니다.</td></tr>
+                                    <tr><td class="prop-name">onLoadingStatusChange</td><td><span class="highlight-value">(status: 'idle' | 'loading' | 'loaded' | 'error') =&gt; void</span></td><td></td><td>이미지 로딩 상태가 변경될 때 호출되는 콜백 함수입니다.</td></tr>
+                                    <tr><td class="prop-name">asChild</td><td><span class="highlight-value">boolean</span></td><td></td><td>기본 <code>&lt;img&gt;</code> 대신 자식으로 렌더링합니다.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">👤</span>AvatarFallback</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> <code>AvatarImage</code>가 로드되기 전, 로드에 실패했을 때, 또는 <code>src</code>가 제공되지 않았을 때 표시되는 대체 콘텐츠입니다. 주로 사용자 이름의 이니셜이나 기본 아이콘을 넣습니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;Avatar&gt;</code>의 직접적인 자식으로 사용되며, <code>AvatarImage</code>와 함께 위치합니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;AvatarFallback&gt;CN&lt;/AvatarFallback&gt;</code> 또는 <code>&lt;AvatarFallback&gt;&lt;UserIcon /&gt;&lt;/AvatarFallback&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props:</span></p>
+                        <div class="prop-table-wrapper">
+                            <table class="prop-table">
+                                <thead><tr><th>Prop</th><th>타입</th><th>설명</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="prop-name">delayMs</td><td><span class="highlight-value">number</span></td><td>Fallback을 표시하기 전의 지연 시간(밀리초)입니다. 이미지 로딩이 매우 빠를 경우 Fallback이 잠깐 보였다 사라지는 것을 방지할 수 있습니다.</td></tr>
+                                    <tr><td class="prop-name">asChild</td><td><span class="highlight-value">boolean</span></td><td>기본 <code>&lt;span&gt;</code> 대신 자식으로 렌더링합니다.</td></tr>
+                                    <tr><td class="prop-name">children</td><td><span class="highlight-value">React.ReactNode</span></td><td>Fallback으로 표시될 내용입니다. 텍스트나 아이콘 컴포넌트 등을 넣을 수 있습니다.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 Avatar 컴포넌트를 사용하여 이미지가 있는 경우와 없는 경우(Fallback)를 모두 처리하는 예시입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+// UserIcon은 예시 아이콘입니다. lucide-react 등에서 가져올 수 있습니다.
+// import { User as UserIcon } from "lucide-react" 
+
+function UserProfile() {
+  const userWithImage = {
+    name: "Code Navigator",
+    imageUrl: "https://github.com/shadcn.png", // shadcn님의 GitHub 프로필 이미지
+  };
+
+  const userWithoutImage = {
+    name: "John Doe",
+    // imageUrl: undefined, // 이미지가 없는 경우
+  };
+
+  const getInitials = (name: string) => {
+    const names = name.split(' ');
+    if (names.length > 1) {
+      return names[0][0] + names[names.length - 1][0];
+    }
+    return name.substring(0, 2);
+  };
+
+  return (
+    &lt;div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}&gt;
+      &lt;div&gt;
+        &lt;p&gt;이미지가 있는 사용자:&lt;/p&gt;
+        &lt;Avatar className="h-12 w-12"&gt; {/* Tailwind CSS로 크기 조절 */}
+          &lt;AvatarImage src={userWithImage.imageUrl} alt={userWithImage.name} /&gt;
+          &lt;AvatarFallback&gt;{getInitials(userWithImage.name)}&lt;/AvatarFallback&gt;
+        &lt;/Avatar&gt;
+        &lt;p&gt;{userWithImage.name}&lt;/p&gt;
+      &lt;/div&gt;
+
+      &lt;div&gt;
+        &lt;p&gt;이미지가 없는 사용자 (이니셜 Fallback):&lt;/p&gt;
+        &lt;Avatar className="h-10 w-10"&gt;
+          &lt;AvatarImage src={undefined} alt={userWithoutImage.name} /&gt; {/* src가 없거나 로드 실패 시 */}
+          &lt;AvatarFallback&gt;{getInitials(userWithoutImage.name)}&lt;/AvatarFallback&gt;
+        &lt;/Avatar&gt;
+        &lt;p&gt;{userWithoutImage.name}&lt;/p&gt;
+      &lt;/div&gt;
+
+      &lt;div&gt;
+        &lt;p&gt;아이콘 Fallback (delayMs 적용):&lt;/p&gt;
+        &lt;Avatar&gt;
+          &lt;AvatarImage src="https://non-existent-image.jpg" alt="아이콘 사용자" /&gt; {/* 존재하지 않는 이미지 */}
+          &lt;AvatarFallback delayMs={600}&gt;
+            {/* &lt;UserIcon className="h-5 w-5" /&gt; */}
+            <span>ICON</span> {/* 실제로는 아이콘 컴포넌트 사용 */}
+          &lt;/AvatarFallback&gt;
+        &lt;/Avatar&gt;
+        &lt;p&gt;아이콘 사용자&lt;/p&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
+}
+
+export default UserProfile;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> <code>AvatarFallback</code>에 들어가는 이니셜은 사용자의 이름을 기반으로 동적으로 생성하는 함수를 만들어 사용하면 편리합니다. <code>delayMs</code> prop은 네트워크 상태가 좋지 않아 이미지 로딩이 느릴 때, Fallback이 너무 빨리 나타나 깜빡이는 현상을 줄이는 데 도움이 됩니다.
+                </div>
+            </section>
+            
+        </div>
+        <!-- Avatar 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>계속해서 다음 컴포넌트를 탐험해봅시다! 🚀</p>
+            <p>이 문서는 shadcn UI 학습 여정을 위해 <strong>세심하게</strong> 디자인되었습니다. 💖</p>
+            <p>&copy; <span id="current-year-avatar"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정 (ID 충돌 방지를 위해 다른 ID 사용)
+        document.getElementById('current-date-avatar').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-avatar').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

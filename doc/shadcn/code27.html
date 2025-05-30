@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 가이드 - react-hook-form 연동</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+            --color-error-text: var(--color-fashion-5);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+        .text-content li > code { /* li 내부 코드 스타일 */
+             font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+
+        /* 폼 필드 및 에러 메시지 스타일 */
+        .form-field-container {
+            margin-bottom: 20px;
+        }
+        .form-field-container label { /* Label 컴포넌트 스타일과 충돌 피하기 위해 좀 더 구체적으로 */
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            color: var(--color-text-default);
+        }
+        .error-message {
+            color: var(--color-error-text);
+            font-size: 0.875rem; /* 14px */
+            margin-top: 4px;
+        }
+        .form-input-visual { /* shadcn Input 시각화 */
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .form-input-visual.error {
+            border-color: var(--color-error-text);
+        }
+        .form-button-visual { /* shadcn Button 시각화 */
+            background-color: var(--color-fashion-4);
+            color: white;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Sunflower', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .form-button-visual:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-rhf"></span><br>
+                정보 출처: <strong>react-hook-form & Shadcn UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- react-hook-form 연동 카드 시작 -->
+        <div class="component-card" id="react-hook-form-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">📝</span>
+                <h1 class="component-main-title">react-hook-form과 shadcn UI 연동</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p><code>react-hook-form</code>은 React에서 폼 상태 관리, 유효성 검사(validation), 폼 제출 처리를 위한 <span class="highlight-keyword">성능 좋고 간편한 라이브러리</span>입니다. 🎣 Shadcn UI 컴포넌트들은 대부분 제어 컴포넌트(controlled components)로 동작하므로, <code>react-hook-form</code>과 함께 사용하면 강력하고 효율적인 폼을 쉽게 구축할 수 있습니다.</p>
+                <p>주요 연동 포인트:</p>
+                <ul>
+                    <li><code>useForm</code> 훅을 사용한 폼 상태 초기화 및 관리</li>
+                    <li><code>Controller</code> 컴포넌트 또는 <code>register</code> 함수를 사용한 shadcn UI 컴포넌트 연동</li>
+                    <li>유효성 검사 스키마 (예: <code>Zod</code>) 연동</li>
+                    <li>에러 메시지 표시 및 폼 제출 처리</li>
+                </ul>
+                <p>Shadcn UI 공식 문서에서도 <code>react-hook-form</code>과 <code>Zod</code>를 사용한 폼 예제를 제공하고 있으며, 이는 매우 권장되는 조합입니다.</p>
+                <div class="speech-bubble">
+                    ✨ <code>react-hook-form</code>의 Controller를 사용하면 shadcn UI의 제어 컴포넌트들을 쉽게 통합하고, 유효성 검사까지 깔끔하게 처리할 수 있어요!
+                </div>
+            </section>
+
+            <section class="setup-section">
+                <h2 class="section-heading"><span class="icon">⚙️</span>기본 설정 및 설치</h2>
+                <div class="text-content">
+                    <p>먼저 필요한 라이브러리들을 설치해야 합니다:</p>
+                    <div class="code-block-wrapper">
+                        <pre><code>
+npm install react-hook-form zod @hookform/resolvers
+# 또는
+yarn add react-hook-form zod @hookform/resolvers
+                        </code></pre>
+                    </div>
+                    <ul>
+                        <li><code>react-hook-form</code>: 핵심 라이브러리</li>
+                        <li><code>zod</code>: 스키마 기반 유효성 검사 라이브러리 (선택 사항이지만 강력 추천)</li>
+                        <li><code>@hookform/resolvers</code>: <code>zod</code>와 같은 외부 유효성 검사 라이브러리를 <code>react-hook-form</code>과 연결해주는 리졸버</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section class="integration-steps">
+                <h2 class="section-heading"><span class="icon">🔗</span>연동 단계 및 핵심 개념</h2>
+                <div class="text-content">
+                    <p><strong>1. 폼 스키마 정의 (Zod 사용 시)</strong></p>
+                    <p><code>zod</code>를 사용하여 폼 데이터의 타입과 유효성 규칙을 정의합니다. 이는 TypeScript와 함께 사용할 때 타입 안정성을 크게 높여줍니다.</p>
+                    <pre><code>
+import * as z from "zod"
+
+const profileFormSchema = z.object({
+  username: z.string().min(2, { message: "사용자명은 2글자 이상이어야 합니다." }),
+  email: z.string().email({ message: "올바른 이메일 주소를 입력해주세요." }),
+  bio: z.string().max(160).optional(),
+  notifications: z.boolean().default(false),
+  framework: z.enum(["nextjs", "sveltekit", "astro", "nuxt"]),
+})
+
+type ProfileFormValues = z.infer&lt;typeof profileFormSchema&gt;
+                    </code></pre>
+                    
+                    <p style="margin-top:15px;"><strong>2. <code>useForm</code> 훅 사용</strong></p>
+                    <p><code>useForm</code> 훅을 사용하여 폼 인스턴스를 생성합니다. 이때 <code>resolver</code> 옵션으로 <code>zodResolver</code>를 전달하여 스키마 기반 유효성 검사를 활성화할 수 있습니다.</p>
+                    <pre><code>
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+
+// ... 스키마 정의 ...
+
+function MyProfileForm() {
+  const form = useForm&lt;ProfileFormValues&gt;({
+    resolver: zodResolver(profileFormSchema),
+    defaultValues: { // 폼 필드의 기본값 설정
+      username: "",
+      email: "",
+      notifications: false,
+      framework: "nextjs",
+    },
+    mode: "onChange", // 값 변경 시 유효성 검사 실행 (선택적)
+  })
+
+  // ... 폼 제출 핸들러 ...
+  function onSubmit(data: ProfileFormValues) {
+    console.log("제출된 데이터:", data)
+    // API 호출 등 실제 제출 로직
+  }
+  
+  // ... JSX ...
+}
+                    </code></pre>
+
+                    <p style="margin-top:15px;"><strong>3. Shadcn UI 컴포넌트와 <code>Controller</code> 연동</strong></p>
+                    <p>Shadcn UI의 제어 컴포넌트(<code>Input</code>, <code>Checkbox</code>, <code>Select</code>, <code>Switch</code>, <code>RadioGroup</code> 등)는 <code>react-hook-form</code>의 <code>Controller</code> 컴포넌트를 사용하여 연동합니다. <code>Controller</code>는 필드 상태(<code>value</code>, <code>onChange</code>, <code>onBlur</code>)를 shadcn UI 컴포넌트에 전달합니다.</p>
+                    <p>Shadcn UI는 이를 더 쉽게 사용할 수 있도록 <code>&lt;Form&gt;</code>, <code>&lt;FormField&gt;</code>, <code>&lt;FormItem&gt;</code>, <code>&lt;FormLabel&gt;</code>, <code>&lt;FormControl&gt;</code>, <code>&lt;FormDescription&gt;</code>, <code>&lt;FormMessage&gt;</code>와 같은 헬퍼 컴포넌트들을 제공합니다. 이들을 사용하는 것이 권장됩니다.</p>
+
+                     <pre><code>
+// ... useForm 및 onSubmit 정의 ...
+
+// Shadcn UI Form 컴포넌트들 import
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+// ... 기타 필요한 shadcn UI 컴포넌트 ...
+
+// JSX 내부
+&lt;Form {...form}&gt; {/* useForm에서 반환된 form 객체를 spread */}
+  &lt;form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8"&gt;
+    &lt;FormField
+      control={form.control} {/* Controller에 control 전달 */}
+      name="username" {/* 스키마에 정의된 필드 이름 */}
+      render={({ field }) => (
+        &lt;FormItem&gt;
+          &lt;FormLabel&gt;사용자명&lt;/FormLabel&gt;
+          &lt;FormControl&gt;
+            &lt;Input placeholder="예: shadcn" {...field} /&gt;
+          &lt;/FormControl&gt;
+          &lt;FormDescription&gt;
+            공개적으로 표시될 이름입니다.
+          &lt;/FormDescription&gt;
+          &lt;FormMessage /&gt; {/* 유효성 검사 에러 메시지 표시 */}
+        &lt;/FormItem&gt;
+      )}
+    /&gt;
+    
+    {/* 다른 필드들 (Email, Checkbox, Select 등)도 유사한 방식으로 추가 */}
+    {/* 예: Select */}
+    &lt;FormField
+      control={form.control}
+      name="framework"
+      render={({ field }) => (
+        &lt;FormItem&gt;
+          &lt;FormLabel&gt;선호하는 프레임워크&lt;/FormLabel&gt;
+          &lt;Select onValueChange={field.onChange} defaultValue={field.value}&gt;
+            &lt;FormControl&gt;
+              &lt;SelectTrigger&gt;
+                &lt;SelectValue placeholder="프레임워크 선택" /&gt;
+              &lt;/SelectTrigger&gt;
+            &lt;/FormControl&gt;
+            &lt;SelectContent&gt;
+              &lt;SelectItem value="nextjs"&gt;Next.js&lt;/SelectItem&gt;
+              &lt;SelectItem value="sveltekit"&gt;SvelteKit&lt;/SelectItem&gt;
+              &lt;SelectItem value="astro"&gt;Astro&lt;/SelectItem&gt;
+              &lt;SelectItem value="nuxt"&gt;Nuxt.js&lt;/SelectItem&gt;
+            &lt;/SelectContent&gt;
+          &lt;/Select&gt;
+          &lt;FormMessage /&gt;
+        &lt;/FormItem&gt;
+      )}
+    /&gt;
+    
+    &lt;Button type="submit" disabled={form.formState.isSubmitting}&gt;
+      {form.formState.isSubmitting ? "저장 중..." : "프로필 저장"}
+    &lt;/Button&gt;
+  &lt;/form&gt;
+&lt;/Form&gt;
+                     </code></pre>
+                    <p><strong>주요 포인트:</strong></p>
+                    <ul>
+                        <li><code>&lt;Form {...form}&gt;</code>: <code>useForm</code>의 반환값을 <code>Form</code> 컨텍스트 프로바이더에 전달합니다.</li>
+                        <li><code>&lt;FormField control={form.control} name="fieldName" render={({ field }) => (...)} /&gt;</code>: 각 폼 필드를 감쌉니다.
+                            <ul>
+                                <li><code>control</code>: <code>form.control</code>을 전달하여 필드를 <code>react-hook-form</code>에 등록합니다.</li>
+                                <li><code>name</code>: 스키마에 정의된 필드 이름과 일치해야 합니다.</li>
+                                <li><code>render</code> 함수의 <code>field</code> 객체에는 <code>value</code>, <code>onChange</code>, <code>onBlur</code>, <code>ref</code>, <code>name</code> 등이 포함되어 있어 shadcn UI 컴포넌트에 바인딩합니다. (예: <code>&lt;Input {...field} /&gt;</code>)</li>
+                            </ul>
+                        </li>
+                        <li><code>&lt;FormItem&gt;</code>, <code>&lt;FormLabel&gt;</code>, <code>&lt;FormControl&gt;</code>, <code>&lt;FormDescription&gt;</code>, <code>&lt;FormMessage&gt;</code>: 필드 레이아웃, 레이블, 입력 컨트롤, 설명, 에러 메시지를 구조화하고 접근성(ARIA 속성)을 자동으로 처리해줍니다.</li>
+                        <li><code>Select</code>, <code>Checkbox</code>, <code>RadioGroup</code>, <code>Switch</code> 등과 같이 <code>value</code>/<code>onValueChange</code> 또는 <code>checked</code>/<code>onCheckedChange</code> prop을 사용하는 컴포넌트들은 <code>field.onChange</code>를 해당 prop에 연결하고, <code>field.value</code> (또는 <code>field.value</code>를 기반으로 한 <code>checked</code> 상태)를 사용합니다.</li>
+                    </ul>
+
+                    <p style="margin-top:15px;"><strong>4. 폼 제출 및 상태 관리</strong></p>
+                     <p><code>&lt;form&gt;</code> 태그의 <code>onSubmit</code>에는 <code>form.handleSubmit(yourSubmitFunction)</code>을 전달합니다. <code>form.handleSubmit</code>은 유효성 검사를 통과한 경우에만 <code>yourSubmitFunction</code>을 호출합니다. <code>form.formState</code> (예: <code>form.formState.errors</code>, <code>form.formState.isSubmitting</code>, <code>form.formState.isValid</code>)를 통해 폼의 다양한 상태를 확인할 수 있습니다.</p>
+                </div>
+            </section>
+
+            <section class="example-section">
+                <h2 class="section-heading"><span class="icon">💡</span>전체 예제 코드 (간략화)</h2>
+                <div class="text-content">
+                    <p>위에서 설명한 내용을 종합한 간략한 프로필 폼 예제입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+"use client"
+
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import * as z from "zod"
+
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { toast } from "sonner" // Toaster가 설정되어 있다고 가정
+
+const profileFormSchema = z.object({
+  username: z.string().min(2, { message: "2글자 이상 입력해주세요." }),
+  email: z.string().email({ message: "올바른 이메일을 입력해주세요." }),
+  framework: z.enum(["nextjs", "sveltekit", "astro", "nuxt"], {
+    required_error: "선호하는 프레임워크를 선택해주세요.",
+  }),
+  marketing_emails: z.boolean().default(false).optional(),
+})
+
+type ProfileFormValues = z.infer&lt;typeof profileFormSchema&gt;
+
+const defaultValues: Partial&lt;ProfileFormValues&gt; = {
+  username: "",
+  email: "",
+  marketing_emails: true,
+}
+
+export function ProfileForm() {
+  const form = useForm&lt;ProfileFormValues&gt;({
+    resolver: zodResolver(profileFormSchema),
+    defaultValues,
+    mode: "onChange",
+  })
+
+  function onSubmit(data: ProfileFormValues) {
+    toast.success("프로필이 성공적으로 업데이트되었습니다!", {
+      description: (
+        &lt;pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4"&gt;
+          &lt;code className="text-white"&gt;{JSON.stringify(data, null, 2)}&lt;/code&gt;
+        &lt;/pre&gt;
+      ),
+    })
+    console.log(data)
+  }
+
+  return (
+    &lt;Form {...form}&gt;
+      &lt;form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full max-w-md"&gt;
+        &lt;FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            &lt;FormItem&gt;
+              &lt;FormLabel&gt;사용자명&lt;/FormLabel&gt;
+              &lt;FormControl&gt;
+                &lt;Input placeholder="Your username" {...field} /&gt;
+              &lt;/FormControl&gt;
+              &lt;FormDescription&gt;공개적으로 보여질 이름입니다.&lt;/FormDescription&gt;
+              &lt;FormMessage /&gt;
+            &lt;/FormItem&gt;
+          )}
+        /&gt;
+        &lt;FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            // ... 이메일 필드 (위 사용자명 필드와 유사하게 구성) ...
+            &lt;FormItem&gt;
+              &lt;FormLabel&gt;이메일&lt;/FormLabel&gt;
+              &lt;FormControl&gt;
+                &lt;Input type="email" placeholder="your@email.com" {...field} /&gt;
+              &lt;/FormControl&gt;
+              &lt;FormMessage /&gt;
+            &lt;/FormItem&gt;
+          )}
+        /&gt;
+        &lt;FormField
+          control={form.control}
+          name="framework"
+          render={({ field }) => (
+            &lt;FormItem&gt;
+              &lt;FormLabel&gt;선호 프레임워크&lt;/FormLabel&gt;
+              &lt;Select onValueChange={field.onChange} defaultValue={field.value}&gt;
+                &lt;FormControl&gt;
+                  &lt;SelectTrigger&gt;
+                    &lt;SelectValue placeholder="프레임워크를 선택하세요" /&gt;
+                  &lt;/SelectTrigger&gt;
+                &lt;/FormControl&gt;
+                &lt;SelectContent&gt;
+                  &lt;SelectItem value="nextjs"&gt;Next.js&lt;/SelectItem&gt;
+                  &lt;SelectItem value="sveltekit"&gt;SvelteKit&lt;/SelectItem&gt;
+                  &lt;SelectItem value="astro"&gt;Astro&lt;/SelectItem&gt;
+                  &lt;SelectItem value="nuxt"&gt;Nuxt.js&lt;/SelectItem&gt;
+                &lt;/SelectContent&gt;
+              &lt;/Select&gt;
+              &lt;FormDescription&gt;가장 자주 사용하는 프레임워크를 선택해주세요.&lt;/FormDescription&gt;
+              &lt;FormMessage /&gt;
+            &lt;/FormItem&gt;
+          )}
+        /&gt;
+        &lt;FormField
+          control={form.control}
+          name="marketing_emails"
+          render={({ field }) => (
+            &lt;FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4"&gt;
+              &lt;FormControl&gt;
+                &lt;Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                /&gt;
+              &lt;/FormControl&gt;
+              &lt;div className="space-y-1 leading-none"&gt;
+                &lt;FormLabel&gt;마케팅 이메일 수신 동의&lt;/FormLabel&gt;
+                &lt;FormDescription&gt;
+                  새로운 제품, 기능 업데이트, 특별 할인에 대한 정보를 받습니다.
+                &lt;/FormDescription&gt;
+              &lt;/div&gt;
+            &lt;/FormItem&gt;
+          )}
+        /&gt;
+        &lt;Button type="submit"&gt;프로필 업데이트&lt;/Button&gt;
+      &lt;/form&gt;
+    &lt;/Form&gt;
+  )
+}
+
+export default ProfileForm;
+
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>핵심 정리:</strong> <code>react-hook-form</code>의 <code>useForm</code>으로 폼 상태를 초기화하고, shadcn UI의 <code>&lt;Form&gt;</code>과 <code>&lt;FormField&gt;</code>를 사용하여 각 필드를 연결합니다. <code>field</code> 객체를 shadcn UI 컴포넌트의 props에 적절히 바인딩하는 것이 중요합니다 (예: <code>&lt;Input {...field} /&gt;</code> 또는 <code>&lt;Checkbox checked={field.value} onCheckedChange={field.onChange} /&gt;</code>).
+                </div>
+            </section>
+            
+        </div>
+        <!-- react-hook-form 연동 카드 끝 -->
+
+        <footer class="footer">
+            <p>🎉 react-hook-form 연동까지 마스터! 이제 더욱 강력한 웹 애플리케이션을 만들 준비가 되셨습니다! 🎉</p>
+            <p>궁금한 점이 있다면 언제든지 다시 질문해주세요. 즐거운 코딩 되세요! 💻✨</p>
+            <p>&copy; <span id="current-year-rhf"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-rhf').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-rhf').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

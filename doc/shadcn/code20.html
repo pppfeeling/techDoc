@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Slider</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+        
+        /* Slider 시각화 예시 */
+        .slider-visual-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(242, 230, 61, 0.1); /* 패션-2의 연한 배경 */
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px; /* 슬라이더 간 간격 */
+        }
+        .slider-track-visual {
+            width: 100%;
+            height: 8px; /* shadcn 기본 높이 h-2 */
+            background-color: var(--color-fashion-1); /* 트랙 배경색 */
+            opacity: 0.2;
+            border-radius: 9999px;
+            position: relative; /* 썸, 레인지 표시용 */
+            cursor: pointer;
+        }
+        .slider-range-visual { /* 선택된 범위 표시 */
+            position: absolute;
+            height: 100%;
+            background-color: var(--color-fashion-4); /* 선택 범위 색상 */
+            border-radius: 9999px;
+        }
+        .slider-thumb-visual { /* 조절 핸들 */
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px; /* shadcn 기본 너비 h-4 w-4 */
+            height: 16px;
+            background-color: var(--color-fashion-4); /* 썸 색상 */
+            border: 2px solid white; /* 테두리 */
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px var(--color-fashion-3); /* 포커스 링 효과 흉내 */
+            cursor: grab;
+        }
+        .slider-thumb-visual:active {
+            cursor: grabbing;
+        }
+        .slider-label-visual {
+            font-size: 14px;
+            color: var(--color-text-default);
+            margin-bottom: 8px;
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-slider"></span><br>
+                정보 출처: <strong>Shadcn UI & Radix UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Slider 컴포넌트 카드 시작 -->
+        <div class="component-card" id="slider-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">🎚️</span>
+                <h1 class="component-main-title">Slider (슬라이더)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Slider 컴포넌트는 사용자가 정해진 범위 내에서 <span class="highlight-keyword">하나의 값 또는 값의 범위</span>를 선택하거나 조절할 수 있도록 하는 UI 컨트롤입니다. ↔️ 사용자는 슬라이더의 핸들(썸, thumb)을 드래그하거나 트랙을 클릭하여 값을 변경할 수 있습니다. 키보드를 사용한 값 조절도 지원됩니다.</p>
+                <p>주요 사용 사례:</p>
+                <ul>
+                    <li>볼륨, 밝기, 투명도 등 설정 값 조절</li>
+                    <li>가격 범위, 거리 범위 등 필터링 옵션 설정</li>
+                    <li>미디어 플레이어의 재생 위치 탐색</li>
+                    <li>수치 입력 필드의 보조적인 입력 수단</li>
+                </ul>
+                <p>Shadcn UI의 Slider는 Radix UI의 Slider Primitive를 기반으로 하며, 단일 값 슬라이더와 범위(range) 슬라이더(두 개의 핸들)를 모두 지원합니다. 접근성을 위해 ARIA 속성들을 올바르게 사용합니다.</p>
+                <div class="slider-visual-container">
+                    <div>
+                        <p class="slider-label-visual">단일 값 슬라이더 (예: 50)</p>
+                        <div class="slider-track-visual">
+                            <div class="slider-range-visual" style="width: 50%;"></div>
+                            <div class="slider-thumb-visual" style="left: calc(50% - 8px);"></div> {/* 8px는 썸 너비의 절반 */}
+                        </div>
+                    </div>
+                    <div>
+                        <p class="slider-label-visual">범위 슬라이더 (예: 20-70)</p>
+                        <div class="slider-track-visual">
+                            <div class="slider-range-visual" style="left: 20%; width: 50%;"></div> {/* 70 - 20 = 50 */}
+                            <div class="slider-thumb-visual" style="left: calc(20% - 8px);"></div>
+                            <div class="slider-thumb-visual" style="left: calc(70% - 8px);"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ Slider는 수치 데이터를 직관적이고 시각적으로 조작할 수 있게 해줘서 사용자 경험을 향상시켜요!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>Slider (메인 컴포넌트) Props</h2>
+                <div class="text-content">
+                    <p><code>&lt;Slider&gt;</code> 컴포넌트는 슬라이더의 핵심적인 동작과 관련된 Props를 가집니다. Radix UI에서는 <code>Slider.Root</code>, <code>Slider.Track</code>, <code>Slider.Range</code>, <code>Slider.Thumb</code>으로 구성되지만, shadcn/ui에서는 이를 <code>&lt;Slider /&gt;</code>로 통합하여 사용합니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">value</td>
+                                <td><span class="highlight-value">number[]</span></td>
+                                <td>-</td>
+                                <td>슬라이더의 현재 값(들)입니다. 배열 형태로 전달하며, 단일 값 슬라이더는 <code class="highlight-value">[value]</code>, 범위 슬라이더는 <code class="highlight-value">[minVal, maxVal]</code> 형태로 전달합니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">onValueChange</td>
+                                <td><span class="highlight-value">(value: number[]) =&gt; void</span></td>
+                                <td>-</td>
+                                <td>슬라이더 값이 변경될 때 호출되는 콜백 함수입니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">defaultValue</td>
+                                <td><span class="highlight-value">number[]</span></td>
+                                <td><span class="highlight-value">[0]</span> (Radix) <br/>shadcn: <span class="highlight-value">[50]</span></td>
+                                <td>초기 마운트 시 슬라이더의 기본 값(들)입니다. (비제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">min</td>
+                                <td><span class="highlight-value">number</span></td>
+                                <td><span class="highlight-value">0</span></td>
+                                <td>슬라이더의 최소값입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">max</td>
+                                <td><span class="highlight-value">number</span></td>
+                                <td><span class="highlight-value">100</span></td>
+                                <td>슬라이더의 최대값입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">step</td>
+                                <td><span class="highlight-value">number</span></td>
+                                <td><span class="highlight-value">1</span></td>
+                                <td>슬라이더 값의 증가/감소 단위(단계)입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">disabled</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>슬라이더 전체를 비활성화합니다. 🚫</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">orientation</td>
+                                <td><span class="highlight-value">"horizontal" | "vertical"</span></td>
+                                <td><span class="highlight-value">"horizontal"</span></td>
+                                <td>슬라이더의 방향입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">dir</td>
+                                <td><span class="highlight-value">"ltr" | "rtl"</span></td>
+                                <td>-</td>
+                                <td>텍스트 및 레이아웃 방향입니다. 수평 슬라이더의 최소/최대값 위치에 영향을 줍니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">inverted</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>슬라이더의 방향을 반전시킵니다. (예: 수평 슬라이더에서 오른쪽이 최소값)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">minStepsBetweenThumbs</td>
+                                <td><span class="highlight-value">number</span></td>
+                                <td><span class="highlight-value">0</span> (Radix)</td>
+                                <td>범위 슬라이더(핸들이 여러 개일 때)에서 핸들 사이의 최소 간격(<code>step</code> 단위)입니다. 핸들이 서로 겹치거나 너무 가까워지는 것을 방지합니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">asChild</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>(Radix <code>Slider.Root</code>에 해당) 기본 렌더링 요소 대신 자식 사용. shadcn/ui에서는 직접 사용되지 않을 수 있습니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">name</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>폼 제출 시 사용될 슬라이더의 이름입니다. (범위 슬라이더는 여러 input으로 제출될 수 있음)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">className</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>슬라이더 루트 요소에 적용할 CSS 클래스입니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-content">
+                    <p>💡 shadcn/ui의 <code>&lt;Slider /&gt;</code>는 <code>value</code> prop에 전달되는 배열의 길이에 따라 자동으로 단일 값 슬라이더 또는 범위 슬라이더로 동작합니다. 예를 들어 <code>value={[50]}</code>은 단일 값, <code>value={[20, 80]}</code>은 범위 슬라이더입니다.</p>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>서브 컴포넌트들 (Radix UI 기준)</h2>
+                <div class="text-content">
+                    <p>Shadcn UI에서는 <code>&lt;Slider {...props} /&gt;</code> 형태로 단일 컴포넌트처럼 사용하지만, 내부적으로는 Radix UI의 여러 서브 컴포넌트들을 활용하여 구성됩니다. 이 구조를 이해하면 커스터마이징에 도움이 될 수 있습니다:</p>
+                    <ul>
+                        <li><strong><code>Slider.Root</code></strong>: 슬라이더 전체의 컨테이너입니다. (shadcn/ui의 <code>&lt;Slider&gt;</code>)</li>
+                        <li><strong><code>Slider.Track</code></strong>: 슬라이더의 배경이 되는 트랙(경로)입니다.</li>
+                        <li><strong><code>Slider.Range</code></strong>: 선택된 값의 범위를 시각적으로 표시하는 부분입니다. (단일 값 슬라이더에서는 최소값부터 현재 값까지)</li>
+                        <li><strong><code>Slider.Thumb</code></strong>: 사용자가 드래그하여 값을 조절하는 핸들(손잡이)입니다. <code>value</code> 배열의 각 요소마다 하나의 썸이 생성됩니다.</li>
+                    </ul>
+                    <p>Shadcn UI 컴포넌트는 이러한 요소들을 포함하여 스타일링된 형태로 제공합니다.</p>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 단일 값 슬라이더와 범위 슬라이더를 사용한 예시입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+"use client" // 상태 관리를 위해 클라이언트 컴포넌트로 사용
+
+import * as React from "react"
+import { Slider } from "@/components/ui/slider"
+import { Label } from "@/components/ui/label"
+
+function VolumeControl() {
+  const [volume, setVolume] = React.useState([50]) // 단일 값 슬라이더, 초기값 50
+  const [priceRange, setPriceRange] = React.useState([20000, 80000]) // 범위 슬라이더
+
+  return (
+    &lt;div className="w-full max-w-md space-y-8"&gt;
+      &lt;div&gt;
+        &lt;Label htmlFor="volume-slider" className="mb-2 block"&gt;볼륨: {volume[0]}%&lt;/Label&gt;
+        &lt;Slider
+          id="volume-slider"
+          defaultValue={[50]} // 비제어 방식일 때 사용
+          value={volume}
+          onValueChange={setVolume}
+          max={100}
+          step={1}
+          className="w-[60%]" // 너비 조절 예시
+        /&gt;
+      &lt;/div&gt;
+
+      &lt;div&gt;
+        &lt;Label htmlFor="price-range-slider" className="mb-2 block"&gt;
+          가격 범위: {priceRange[0].toLocaleString()}원 - {priceRange[1].toLocaleString()}원
+        &lt;/Label&gt;
+        &lt;Slider
+          id="price-range-slider"
+          defaultValue={[20000, 80000]}
+          value={priceRange}
+          onValueChange={setPriceRange}
+          min={0}
+          max={100000}
+          step={1000}
+          minStepsBetweenThumbs={5} // 최소 5단계(5000원) 간격 유지
+          className="w-full"
+        /&gt;
+      &lt;/div&gt;
+      
+      &lt;div&gt;
+        &lt;Label htmlFor="disabled-slider" className="mb-2 block text-muted-foreground"&gt;비활성화된 슬라이더&lt;/Label&gt;
+        &lt;Slider defaultValue={[30]} disabled className="w-[80%]" /&gt;
+      &lt;/div&gt;
+
+      &lt;div&gt;
+        &lt;Label htmlFor="vertical-slider" className="mb-2 block"&gt;수직 슬라이더 (스타일링 필요)&lt;/Label&gt;
+        &lt;Slider 
+            defaultValue={[25]} 
+            orientation="vertical" 
+            className="h-32" /* 높이 지정 필수 */
+        /&gt; 
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
+}
+
+export default VolumeControl;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> 슬라이더의 현재 값을 사용자에게 텍스트로 함께 보여주면 사용 편의성이 크게 향상됩니다. 범위 슬라이더의 경우 <code>minStepsBetweenThumbs</code> prop을 사용하여 두 핸들이 너무 가까워지거나 겹치는 것을 방지할 수 있습니다. 수직 슬라이더(<code>orientation="vertical"</code>)를 사용할 때는 <code>className</code>으로 적절한 높이(<code>h-*</code>)를 지정해야 합니다.
+                </div>
+            </section>
+            
+        </div>
+        <!-- Slider 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>다음은 켜고 끄는 스위치(토글) 컴포넌트입니다! 💡🔛</p>
+            <p>이 문서를 통해 shadcn UI로 <strong>직관적인 값 선택 인터페이스</strong>를 만드시길 바랍니다. 🎯</p>
+            <p>&copy; <span id="current-year-slider"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-slider').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-slider').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

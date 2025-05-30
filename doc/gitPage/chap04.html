@@ -1,0 +1,111 @@
+  <div class="container">
+    <header class="header">
+      <h1 class="title">챕터 4: GitHub Pages에서 404 에러 막기 위한 처리 절차</h1>
+      <div class="date">2025.05.29 | GitHub Pages 사용</div>
+    </header>
+
+    <div class="content-grid">
+        <div class="card">
+            <p>React Router를 사용하는 SPA(Single Page Application)는 클라이언트 사이드에서 라우팅을 처리합니다. 사용자가 <code class="keyword">/about</code>이나 <code class="keyword">/contact</code> 같은 경로로 직접 접속하거나 페이지를 새로고침하면, GitHub Pages 서버는 해당 경로에 실제 파일(<code class="keyword">about.html</code>, <code class="keyword">contact.html</code>)이 없다고 판단하여 404 에러 페이지를 보여줍니다. 😱</p>
+            <p>이 문제를 해결하기 위해선, <span class="keyword hand-drawn">모든 경로 요청을 일단 <code class="keyword">index.html</code>로 보낸 뒤 React Router가 올바른 내용을 보여주도록</span> 해야 합니다. 처리 방법을 살펴봅시다!</p>
+        </div>
+    </div>
+    
+    <div class="content-grid">
+        <div class="card">
+            <h3 class="card-title">📜 <code style="font-family: 'Courier New', monospace; color: #F24405;">404.html</code> 트릭 사용하기</h3>
+            <p>가장 널리 알려진 간단한 방법 중 하나입니다. GitHub Pages는 커스텀 404 페이지를 지원하는데, 이 점을 활용하는 것입니다.</p>
+            <ul>
+                <li><strong>원리:</strong> 어떤 경로로 요청이 오든, 만약 해당 경로에 파일이 없다면 GitHub Pages는 루트 디렉토리의 <code class="keyword">404.html</code> 파일을 보여줍니다. 우리는 이 <code class="keyword">404.html</code> 파일이 실제로는 우리 앱의 <code class="keyword">index.html</code>로 이동하도록 하는  역할을 한는 것입니다.</li>
+                <li><strong>처리 절차:</strong>
+                    <div style="padding-left: 20px; margin-top:10px;">
+                        <div style="margin-bottom:8px;">1. public 폴더에  <code class="keyword hand-drawn">404.html</code> 이라는 이름으로 파일을 생성합니다.</div>
+                        <div style="margin-bottom:8px;">2. 이 <code class="keyword">404.html</code> 파일 안에 약간의 스크립트를 추가하여, 현재 URL 경로를 분석하고 React Router가 올바르게 해당 경로를 처리하도록 리디렉션 비슷한 효과를 줍니다.</div>
+                    </div>
+                </li>
+            </ul>
+            <p><strong><code class="keyword">404.html</code> 파일에 추가할 스크립트 </strong></p>
+            <div class="code-block"> &lt;script type="text/javascript"&gt;
+  // 현재 URL에서 경로 세그먼트를 가져옵니다.
+  var pathSegmentsToKeep = 1;
+  var l = window.location;
+  l.replace(
+    l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+    l.pathname.split('/').slice(0, 1 + pathSegmentsToKeep).join('/') + '/?/' +
+    l.pathname.slice(1).split('/').slice(pathSegmentsToKeep).join('/').replace(/&/g, '~and~') +
+    (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+    l.hash
+  );
+&lt;/script&gt;
+            </div>
+            <div style="padding-left: 50px; margin-top:10px; margin-bottom: 10px;">3. SPA의 시작점인 <code class="keyword">index.html</code>에서 <code class="keyword">404.html</code>에서 location에 대해 바뀐 사항에 대해 원래의 방식으로 변환 합니다.</div>
+            <p><strong><code class="keyword">index.html</code> 파일에 추가할 스크립트 </strong></p>            
+            <div class="code-block">&lt;script type="text/javascript"&gt;
+  // Single Page Apps for GitHub Pages
+  (function (l) {
+    if (l.search[1] === "/") {
+      var decoded = l.search
+        .slice(1)
+        .split("&")
+        .map(function (s) {
+          return s.replace(/~and~/g, "&");
+        })
+        .join("?");
+      window.history.replaceState(
+        null,
+        null,
+        l.pathname.slice(0, -1) + decoded + l.hash
+      );
+    }
+  })(window.location);
+&lt;/script&gt;    
+            </div>
+             <div class="highlight-box">
+                <p><strong>장점:</strong> 설정이 비교적 간단하고, 대부분의 경우 잘 동작합니다.</p>
+                <p><strong>단점:</strong> 엄밀히 말하면 '리디렉션'은 아니며, URL이 잠깐 변경되었다가 (또는 변경되지 않고) index.html로 변경되서 처리됩니다. 검색 엔진 최적화(SEO)에는 약간 불리할 수 있습니다. </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-grid">
+        <div class="card">
+            <h3 class="card-title"><span class="icon">💡</span>처리절차 </h3>
+            <p>위 스크립트의 처리과정을 살펴봅시다.</p>
+            <p>전달된 URL: <code style="color: #F24405;">https://your-github-name.github.io/your-repository-name/vite/chap01?name=aa&id=1</code></p>
+            <div class="process-flow flex-col">
+                <div class="process-step w-full">
+                    <strong><span class="step-number">1</span>원본 URL 분석</strong>
+                    <p>프로토콜: `https://`</p>
+                    <p>도메인: `your-github-name.github.io`</p>
+                    <p>경로: `/your-repository-name/vite/chap01`</p>
+                    <p>쿼리 파라미터: `?name=aa&id=1`</p>
+                </div>
+                <div class="process-arrow">⬇️</div>
+                <div class="process-step w-full">
+                    <strong><span class="step-number">2</span>404.html 스크립트의 URL 변환 과정</strong>
+                    <p>1단계: baseUrl 추출 (/your-repository-name)</p>
+                    <p style="padding-left: 10px;">pathSegmentsToKeep = 1 이므로 첫 번째 세그먼트만 유지</p>
+                    <p>2단계: 나머지 경로 추출 (vite/chap01)</p>
+                    <p>3단계: 쿼리 파라미터 변환</p>
+                    <p style="padding-left: 10px;">?name=aa&id=1 → &name=aa~and~id=1</p>
+                    <p style="margin-top:10px;">변환 된 주소: <code style="color: #F24405;">https://your-github-name.github.io/your-repository-name/?/vite/chap01&name=aa~and~id=1</code></p>
+                    <p><code class="keyword">window.location</code>에 변환된 주소를 전달해 index.html로 전달 하도록 한다.</p>
+                </div>
+                <div class="process-arrow">⬇️</div>
+                <div class="process-step w-full">
+                    <strong><span class="step-number">3</span>index.html에서의 처리</strong>
+                    <p>URL에서 `?/` 이후의 경로를 감지</p>
+                    <p>`~and~`를 다시 `&`로 복원</p>
+                    <p>실제 라우팅 경로로 변환하여 React Router에 전달</p>
+                    <p><code class="keyword">window.history</code>에 변환된 url을 넣어 SPA에 원하는 페이지가 동작하도록 한다.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+    <footer class="footer">
+      출처: React, TypeScript, Vite, React Router 엔지니어를 위한 GitHub Pages 배포 가이드 
+    </footer>
+  </div>

@@ -1,0 +1,208 @@
+<div class="container">
+        <header class="header">
+            <h1 class="title">Vite + TypeScript 개발 가이드</h1>
+            <div class="date">📅 2025년 5월</div>
+        </header>
+
+        <div class="highlight-box">
+            <h2 style="color: #593c47; margin-bottom: 10px;">🎯 왜 Vite + TypeScript인가?</h2>
+            <p><span class="keyword">Vite</span>는 TypeScript를 기본으로 지원하며, 복잡한 설정 없이도 타입 안전성과 빠른 개발 경험을 제공합니다!</p>
+        </div>
+
+        <div class="content-grid">
+            <div class="card">
+                <h3 class="card-title">🚀 프로젝트 시작하기</h3>
+                <p>TypeScript 템플릿으로 Vite 프로젝트를 생성해보세요:</p>
+                <div class="code-block">npm create vite@latest my-react-ts-app -- --template react-ts
+cd my-react-ts-app
+npm install
+npm run dev</div>
+                <p style="margin-top: 15px; color: #64748b; font-size: 14px;">
+                    🎉 이 명령어로 React + TypeScript + Vite 프로젝트가 바로 생성됩니다!
+                </p>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">📁 프로젝트 구조</h3>
+                <p>생성된 프로젝트의 주요 TypeScript 관련 파일들:</p>
+                <div class="code-block">my-react-ts-app/
+├── tsconfig.json          # TS 설정
+├── tsconfig.node.json     # Node용 TS 설정
+├── vite.config.ts         # Vite 설정 (TS)
+├── src/
+│   ├── App.tsx           # 메인 컴포넌트
+│   ├── main.tsx          # 진입점
+│   └── vite-env.d.ts     # Vite 타입 정의</div>
+            </div>
+        </div>
+
+        <div class="full-width">
+            <div class="card">
+                <h3 class="card-title">⚙️ TypeScript 설정 최적화</h3>
+                
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <strong>tsconfig.json</strong><br>
+                        컴파일러 옵션 설정
+                    </div>
+                    <div class="process-arrow">→</div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <strong>vite.config.ts</strong><br>
+                        Vite 설정 파일
+                    </div>
+                    <div class="process-arrow">→</div>
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <strong>개발 서버</strong><br>
+                        실시간 타입 체크
+                    </div>
+                </div>
+
+                <h4 style="color: #593c47; margin: 20px 0 10px 0;">📋 권장 tsconfig.json 설정:</h4>
+                <div class="code-block">{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    
+    /* Linting */
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}</div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="card">
+                <h3 class="card-title">🔧 실제 개발 예제</h3>
+                <p>타입 안전한 React 컴포넌트 작성하기:</p>
+                <div class="code-block">// src/components/UserCard.tsx
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  isActive?: boolean;
+}
+
+interface UserCardProps {
+  user: User;
+  onEdit: (id: number) => void;
+}
+
+export const UserCard: React.FC&lt;UserCardProps&gt; = ({ 
+  user, 
+  onEdit 
+}) => {
+  return (
+    &lt;div className="user-card"&gt;
+      &lt;h3&gt;{user.name}&lt;/h3&gt;
+      &lt;p&gt;{user.email}&lt;/p&gt;
+      {user.isActive && (
+        &lt;span className="active-badge"&gt;활성&lt;/span&gt;
+      )}
+      &lt;button onClick={() => onEdit(user.id)}&gt;
+        편집
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+};</div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">🎯 타입 체크 vs 빌드</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>구분</th>
+                            <th>개발 모드</th>
+                            <th>프로덕션 빌드</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>타입 체크</strong></td>
+                            <td>IDE에서 실시간</td>
+                            <td>별도 명령어 필요</td>
+                        </tr>
+                        <tr>
+                            <td><strong>속도</strong></td>
+                            <td>매우 빠름 ⚡</td>
+                            <td>보통</td>
+                        </tr>
+                        <tr>
+                            <td><strong>에러 처리</strong></td>
+                            <td>즉시 피드백</td>
+                            <td>빌드 시점에 검증</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="margin-top: 15px;">
+                    <strong>💡 개발 시 타입 체크:</strong>
+                    <div class="code-block">npm run dev  # 타입 에러가 있어도 실행됨
+tsc --noEmit  # 타입만 체크 (빌드 안함)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="full-width">
+            <div class="card">
+                <h3 class="card-title">🔥 Vite의 TypeScript 특별한 기능들</h3>
+                
+                <ul style="margin: 15px 0;">
+                    <li><strong>즉시 타입 체크:</strong> 파일 저장 시 IDE에서 바로 타입 에러 확인</li>
+                    <li><strong>빠른 Hot Reload:</strong> TypeScript 파일 변경 시 즉시 브라우저 업데이트</li>
+                    <li><strong>자동 타입 생성:</strong> CSS 모듈, 이미지 등의 타입 자동 생성</li>
+                    <li><strong>Path Mapping:</strong> tsconfig의 paths 설정 자동 인식</li>
+                </ul>
+
+                <h4 style="color: #593c47; margin: 20px 0 10px 0;">📝 Path Mapping 예제:</h4>
+                <div class="code-block">// tsconfig.json
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@/components/*": ["src/components/*"],
+      "@/utils/*": ["src/utils/*"]
+    }
+  }
+}
+
+// 사용 예시
+import { UserCard } from '@/components/UserCard';
+import { formatDate } from '@/utils/dateUtils';</div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <h3 style="color: #593c47; margin-bottom: 15px;">🚨 주의사항 & 팁</h3>
+            <ul>
+                <li><strong>Vite는 타입 체크를 하지 않고 빌드합니다</strong> - 별도로 <span class="keyword">tsc --noEmit</span> 실행 필요</li>
+                <li><strong>isolatedModules: true</strong> 설정으로 각 파일을 독립적으로 변환</li>
+                <li><strong>ESM import/export</strong>만 사용하세요 (CommonJS 사용 금지)</li>
+                <li><strong>vite-env.d.ts</strong> 파일로 Vite 관련 타입 정의 제공</li>
+            </ul>
+        </div>
+
+        <footer class="footer">
+            <p>📚 출처: Vite 공식 문서 및 TypeScript 개발 경험 | 그래픽 레코딩 스타일 학습 자료</p>
+        </footer>
+    </div>

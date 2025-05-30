@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Switch</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+        
+        /* Switch 시각화 예시 */
+        .switch-visual-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(242, 230, 61, 0.1); /* 패션-2의 연한 배경 */
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 20px; /* 스위치 간 간격 */
+        }
+        .switch-track-visual {
+            width: 44px; /* shadcn 기본 너비 w-11 */
+            height: 24px; /* shadcn 기본 높이 h-6 */
+            background-color: var(--color-fashion-1); /* 꺼진 상태 배경 */
+            opacity: 0.3;
+            border-radius: 9999px;
+            padding: 2px; /* 썸 이동 공간 */
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+            position: relative;
+        }
+        .switch-thumb-visual {
+            width: 20px; /* shadcn 기본 너비 h-5 w-5 */
+            height: 20px;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease-in-out;
+            display: block; /* transform 적용 위해 */
+        }
+        .switch-track-visual.on {
+            background-color: var(--color-fashion-4); /* 켜진 상태 배경 */
+            opacity: 1;
+        }
+        .switch-track-visual.on .switch-thumb-visual {
+            transform: translateX(20px); /* 44px - 24px (썸 너비 + 양쪽 패딩) */
+        }
+        .switch-label-visual {
+            font-size: 15px;
+            color: var(--color-text-default);
+            cursor: pointer;
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-switch"></span><br>
+                정보 출처: <strong>Shadcn UI & Radix UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Switch 컴포넌트 카드 시작 -->
+        <div class="component-card" id="switch-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">💡🔛</span>
+                <h1 class="component-main-title">Switch (스위치)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Switch 컴포넌트는 사용자가 <span class="highlight-keyword">두 가지 상태(예: 켜짐/꺼짐, 활성/비활성)</span> 중 하나를 선택할 수 있도록 하는 토글 컨트롤입니다. 👆 일반적으로 설정 옵션을 켜고 끄는 데 사용되며, 시각적으로 물리적인 스위치와 유사하여 직관적인 사용자 경험을 제공합니다.</p>
+                <p>주요 사용 사례:</p>
+                <ul>
+                    <li>다크 모드 / 라이트 모드 전환</li>
+                    <li>알림 설정 켜기/끄기</li>
+                    <li>특정 기능 활성화/비활성화</li>
+                    <li>이용 약관 동의 (단일 항목일 경우)</li>
+                </ul>
+                <p>Shadcn UI의 Switch는 Radix UI의 Switch Primitive를 기반으로 하며, 키보드(스페이스 바, Enter 키) 및 스크린 리더를 통한 접근성을 완벽하게 지원합니다.</p>
+                <div class="switch-visual-container">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <div class="switch-track-visual" onclick="this.classList.toggle('on')">
+                            <span class="switch-thumb-visual"></span>
+                        </div>
+                        <span class="switch-label-visual">기능 꺼짐</span>
+                    </div>
+                     <div style="display: flex; align-items: center; gap: 8px;">
+                        <div class="switch-track-visual on" onclick="this.classList.toggle('on')">
+                            <span class="switch-thumb-visual"></span>
+                        </div>
+                        <span class="switch-label-visual">기능 켜짐</span>
+                    </div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ Switch는 사용자에게 명확한 ON/OFF 상태를 시각적으로 전달하는 데 매우 효과적이에요!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>Switch (메인 컴포넌트) Props</h2>
+                <div class="text-content">
+                    <p><code>&lt;Switch&gt;</code> 컴포넌트는 스위치의 현재 상태(켜짐/꺼짐)와 관련된 주요 Prop들을 가집니다. Radix UI에서는 <code>Switch.Root</code>와 <code>Switch.Thumb</code>으로 구성되지만, shadcn/ui에서는 <code>&lt;Switch /&gt;</code>로 통합되어 사용됩니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">checked</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td>-</td>
+                                <td>스위치의 현재 켜짐(<code>true</code>) 또는 꺼짐(<code>false</code>) 상태를 나타냅니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">onCheckedChange</td>
+                                <td><span class="highlight-value">(checked: boolean) =&gt; void</span></td>
+                                <td>-</td>
+                                <td>스위치 상태가 변경될 때 호출되는 콜백 함수입니다. 새 상태값을 인자로 받습니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">defaultChecked</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>컴포넌트가 처음 마운트될 때의 기본 켜짐/꺼짐 상태입니다. (비제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">disabled</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>스위치를 비활성화합니다. 비활성화된 스위치는 사용자와 상호작용할 수 없습니다. 🚫</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">required</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>폼 제출 시 이 스위치가 반드시 켜져 있어야 함을 나타냅니다. (일반적으로 스위치보다는 체크박스에 더 많이 사용됨)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">name</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>폼 제출 시 사용될 스위치의 이름입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">value</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td><span class="highlight-value">"on"</span></td>
+                                <td>폼 제출 시 스위치가 켜져 있을 때 전달될 값입니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">asChild</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>(Radix <code>Switch.Root</code>에 해당) 기본 렌더링 요소 대신 자식 사용. shadcn/ui에서는 직접 사용되지 않을 수 있습니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">id</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>스위치의 DOM ID입니다. <code>Label</code>과 연결할 때 유용합니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">className</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>스위치 루트 요소에 적용할 CSS 클래스입니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-content">
+                    <p>💡 shadcn/ui의 <code>&lt;Switch /&gt;</code>는 Radix UI의 <code>Switch.Root</code> (트랙 역할)와 <code>Switch.Thumb</code> (핸들 역할)을 내부적으로 포함하여 스타일링된 형태로 제공합니다. 사용자는 주로 <code>checked</code>와 <code>onCheckedChange</code>를 통해 상태를 관리하게 됩니다.</p>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>서브 컴포넌트들 (Radix UI 기준)</h2>
+                <div class="text-content">
+                    <p>Shadcn UI에서는 <code>&lt;Switch /&gt;</code> 단일 컴포넌트로 사용하지만, Radix UI의 원본 구조는 다음과 같습니다:</p>
+                    <ul>
+                        <li><strong><code>Switch.Root</code></strong>: 스위치의 배경이 되는 트랙(track) 부분입니다. <code>checked</code>, <code>disabled</code> 등의 props를 받습니다.</li>
+                        <li><strong><code>Switch.Thumb</code></strong>: 스위치 트랙 위에서 움직이는 핸들(thumb) 부분입니다.</li>
+                    </ul>
+                    <p>이해를 돕기 위한 정보이며, shadcn/ui 사용 시에는 이 내부 구조를 직접 다룰 필요는 거의 없습니다.</p>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 <code>Label</code> 컴포넌트와 함께 사용하여 다크 모드 설정을 토글하는 Switch 예시입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+"use client" // 상태 관리를 위해 클라이언트 컴포넌트로 사용
+
+import * as React from "react"
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
+
+function DarkModeToggle() {
+  const [isDarkMode, setIsDarkMode] = React.useState(false)
+
+  const handleToggleDarkMode = (checked: boolean) => {
+    setIsDarkMode(checked)
+    // 실제 다크 모드 적용 로직 (예: body 클래스 변경, Context API 사용 등)
+    if (checked) {
+      document.documentElement.classList.add('dark')
+      console.log("다크 모드 활성화 🌙")
+    } else {
+      document.documentElement.classList.remove('dark')
+      console.log("라이트 모드 활성화 ☀️")
+    }
+  }
+
+  return (
+    &lt;div className="flex flex-col space-y-4 items-start"&gt;
+      &lt;div className="flex items-center space-x-2"&gt;
+        &lt;Switch 
+          id="dark-mode-switch" 
+          checked={isDarkMode}
+          onCheckedChange={handleToggleDarkMode}
+        /&gt;
+        &lt;Label htmlFor="dark-mode-switch"&gt;
+          {isDarkMode ? "다크 모드 켜짐" : "다크 모드 꺼짐"}
+        &lt;/Label&gt;
+      &lt;/div&gt;
+
+      &lt;div className="flex items-center space-x-2"&gt;
+        &lt;Switch id="airplane-mode" disabled /&gt;
+        &lt;Label htmlFor="airplane-mode" className="text-muted-foreground"&gt;비행기 모드 (비활성화)&lt;/Label&gt;
+      &lt;/div&gt;
+
+      &lt;div className="flex items-center space-x-2"&gt;
+        &lt;Label htmlFor="marketing-emails" className="pr-2"&gt;마케팅 이메일 수신&lt;/Label&gt;
+        &lt;Switch id="marketing-emails" defaultChecked /&gt; {/* 비제어 컴포넌트 예시 */}
+      &lt;/div&gt;
+    &lt;/div&gt;
+  )
+}
+
+export default DarkModeToggle;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> Switch 컴포넌트는 주로 <code>Label</code>과 함께 사용됩니다. Label의 <code>htmlFor</code> 속성을 Switch의 <code>id</code>와 연결하면, Label을 클릭해도 Switch의 상태가 변경되어 사용성이 향상됩니다. Switch의 크기나 색상은 Tailwind CSS 유틸리티 클래스를 통해 커스터마이징할 수 있습니다.
+                </div>
+            </section>
+            
+        </div>
+        <!-- Switch 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>다음은 여러 탭으로 콘텐츠를 전환하는 Tabs 컴포넌트입니다! 📑</p>
+            <p>이 문서를 통해 shadcn UI로 <strong>간단 명료한 설정 UI</strong>를 만드시길 바랍니다. 👍</p>
+            <p>&copy; <span id="current-year-switch"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-switch').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-switch').textContent = new Date().getFullYear();
+
+        // 시각화 예제 스위치 토글 (간단 버전)
+        document.querySelectorAll('.switch-track-visual').forEach(track => {
+            track.addEventListener('click', function() {
+                this.classList.toggle('on');
+                const label = this.nextElementSibling;
+                if (label && label.classList.contains('switch-label-visual')) {
+                    label.textContent = this.classList.contains('on') ? '기능 켜짐' : '기능 꺼짐';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

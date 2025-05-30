@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Label</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+
+        /* Label 시각화 예시 */
+        .label-example-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: rgba(242, 230, 61, 0.1); /* 패션-2의 연한 배경 */
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .label-example-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .label-example-item .label-visual {
+            font-size: 15px;
+            color: var(--color-fashion-1);
+            padding: 5px 8px;
+            background-color: var(--color-fashion-3);
+            border-radius: 4px;
+            cursor: pointer; /* 레이블 클릭 가능 표시 */
+        }
+        .input-visual {
+            padding: 8px;
+            border: 1px solid var(--color-fashion-1);
+            border-radius: 4px;
+            font-family: 'Sunflower', sans-serif;
+        }
+        .checkbox-visual {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--color-fashion-1);
+            border-radius: 3px;
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-label"></span><br>
+                정보 출처: <strong>Shadcn UI & Radix UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Label 컴포넌트 카드 시작 -->
+        <div class="component-card" id="label-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">🏷️</span>
+                <h1 class="component-main-title">Label (레이블)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Label 컴포넌트는 폼(Form) 내의 입력 필드(예: <code class="highlight-value">&lt;input&gt;</code>, <code class="highlight-value">&lt;textarea&gt;</code>, <code class="highlight-value">&lt;select&gt;</code>, <code class="highlight-value">&lt;checkbox&gt;</code>, <code class="highlight-value">&lt;radio&gt;</code>)에 대한 <span class="highlight-keyword">설명 텍스트를 제공</span>하는 데 사용됩니다. 📝</p>
+                <p>Label의 가장 중요한 역할은 다음과 같습니다:</p>
+                <ul>
+                    <li>사용자에게 각 폼 컨트롤이 <span class="highlight-keyword">어떤 정보를 위한 것인지 명확히</span> 알려줍니다.</li>
+                    <li><span class="highlight-keyword">접근성 향상</span>: Label을 폼 컨트롤과 올바르게 연결(<code>htmlFor</code> prop 사용)하면, 스크린 리더 사용자가 폼을 더 쉽게 이해하고 사용할 수 있습니다.</li>
+                    <li><span class="highlight-keyword">사용성 향상</span>: Label 텍스트를 클릭해도 연결된 폼 컨트롤(특히 체크박스나 라디오 버튼)이 활성화되어 클릭 영역을 넓혀줍니다.</li>
+                </ul>
+                <p>Shadcn UI의 Label은 Radix UI의 Label Primitive를 기반으로 하며, 간단하면서도 강력한 기능을 제공합니다.</p>
+                <div class="label-example-container">
+                    <div class="label-example-item">
+                        <span class="label-visual" onclick="document.getElementById('name-input-visual')?.focus()">이름:</span>
+                        <input type="text" id="name-input-visual" class="input-visual" placeholder="이름을 입력하세요">
+                    </div>
+                    <div class="label-example-item">
+                         <input type="checkbox" id="terms-checkbox-visual" class="checkbox-visual" style="cursor:pointer;">
+                         <span class="label-visual" style="background:none; padding-left:0;" onclick="document.getElementById('terms-checkbox-visual')?.click()">약관 동의</span>
+                    </div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ 폼을 만들 때 Label을 빠뜨리지 않는 것은 좋은 UI/UX와 웹 접근성의 기본이에요!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>Label (메인 컴포넌트) Props</h2>
+                <div class="text-content">
+                    <p><code>&lt;Label&gt;</code> 컴포넌트는 주로 HTML의 <code>&lt;label&gt;</code> 태그와 동일한 역할을 하며, 다음과 같은 주요 Prop을 가집니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name required-prop">htmlFor</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>연결할 폼 컨트롤의 <code class="highlight-value">id</code> 값입니다. 이 Prop을 통해 Label과 폼 컨트롤이 의미론적으로 연결됩니다. 🔗 (React에서는 <code>for</code> 대신 <code>htmlFor</code>를 사용합니다.)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">children</td>
+                                <td><span class="highlight-value">React.ReactNode</span></td>
+                                <td>-</td>
+                                <td>Label 내부에 표시될 텍스트나 다른 요소들입니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">asChild</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>기본 렌더링 요소(<code>&lt;label&gt;</code>) 대신 자식으로 전달된 컴포넌트를 렌더링합니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">className</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>컴포넌트에 적용할 CSS 클래스입니다. (Tailwind CSS 등)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-content">
+                    <p>💡 <strong>핵심은 <code>htmlFor</code>!</strong> 이 prop을 사용하여 Label과 폼 컨트롤(예: <code>&lt;Input id="firstName" /&gt;</code>)을 연결하면, Label을 클릭했을 때 해당 <code>Input</code> 필드로 포커스가 이동합니다. 체크박스나 라디오 버튼의 경우, Label 클릭 시 해당 컨트롤이 선택/해제됩니다.</p>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>서브 컴포넌트들</h2>
+                <div class="text-content">
+                    <p>Label 컴포넌트는 단일 컴포넌트(<code>&lt;Label /&gt;</code>)로 구성되며, 별도의 서브 컴포넌트를 가지지 않습니다. 그 자체로 명확한 역할을 수행합니다. 😊</p>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 <code>Input</code> 및 <code>Checkbox</code> 컴포넌트와 함께 Label을 사용하는 기본적인 예시입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input" // 다른 shadcn UI 컴포넌트
+import { Checkbox } from "@/components/ui/checkbox" // 다른 shadcn UI 컴포넌트
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group" // 다른 shadcn UI 컴포넌트
+
+function MyForm() {
+  return (
+    &lt;div className="grid w-full max-w-sm items-center gap-4"&gt;
+      &lt;div className="flex flex-col space-y-1.5"&gt;
+        &lt;Label htmlFor="firstName"&gt;이름 (First Name)&lt;/Label&gt;
+        &lt;Input id="firstName" placeholder="이름을 입력하세요" /&gt;
+      &lt;/div&gt;
+
+      &lt;div className="flex flex-col space-y-1.5"&gt;
+        &lt;Label htmlFor="email"&gt;이메일 주소&lt;/Label&gt;
+        &lt;Input type="email" id="email" placeholder="example@example.com" /&gt;
+      &lt;/div&gt;
+
+      &lt;div className="flex items-center space-x-2"&gt;
+        &lt;Checkbox id="termsAndConditions" /&gt;
+        &lt;Label
+          htmlFor="termsAndConditions"
+          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        &gt;
+          이용약관 및 개인정보 처리방침에 동의합니다.
+        &lt;/Label&gt;
+      &lt;/div&gt;
+
+      &lt;div&gt;
+        &lt;Label className="text-base font-semibold"&gt;선호하는 연락 방법:&lt;/Label&gt;
+        &lt;RadioGroup defaultValue="email-contact" className="mt-2"&gt;
+          &lt;div className="flex items-center space-x-2"&gt;
+            &lt;RadioGroupItem value="email-contact" id="r1" /&gt;
+            &lt;Label htmlFor="r1"&gt;이메일&lt;/Label&gt;
+          &lt;/div&gt;
+          &lt;div className="flex items-center space-x-2"&gt;
+            &lt;RadioGroupItem value="phone-contact" id="r2" /&gt;
+            &lt;Label htmlFor="r2"&gt;전화&lt;/Label&gt;
+          &lt;/div&gt;
+          &lt;div className="flex items-center space-x-2"&gt;
+            &lt;RadioGroupItem value="none-contact" id="r3" disabled /&gt;
+            &lt;Label htmlFor="r3"&gt;연락 안함 (비활성화)&lt;/Label&gt;
+          &lt;/div&gt;
+        &lt;/RadioGroup&gt;
+      &lt;/div&gt;
+
+      {/* Label로 감싸는 방식 (암묵적 연결, 권장되진 않음) */}
+      &lt;Label className="text-sm font-medium leading-none"&gt;
+        비밀번호:
+        &lt;Input type="password" placeholder="비밀번호" className="mt-1" /&gt;
+        &lt;p className="text-xs text-muted-foreground mt-1"&gt;
+            Label이 Input을 감싸면 htmlFor이 없어도 연결되지만, 명시적인 htmlFor 사용이 더 좋습니다.
+        &lt;/p&gt;
+      &lt;/Label&gt;
+    &lt;/div&gt;
+  )
+}
+
+export default MyForm;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> HTML 표준에서는 Label이 폼 컨트롤을 감싸는 방식(암묵적 연결)도 허용하지만, React와 스크린 리더 호환성을 위해서는 <span class="highlight-keyword"><code>htmlFor</code>와 <code>id</code>를 명시적으로 연결</span>하는 것이 더 안정적이고 권장되는 방법입니다. shadcn UI의 예제에서도 이 방식을 주로 사용합니다.
+                </div>
+            </section>
+            
+        </div>
+        <!-- Label 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>다음은 애플리케이션의 주요 네비게이션을 구성하는 Menubar를 살펴볼게요! 🧭</p>
+            <p>이 문서를 통해 shadcn UI의 <strong>기초를 탄탄히</strong> 다지시길 바랍니다. 🏗️</p>
+            <p>&copy; <span id="current-year-label"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-label').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-label').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

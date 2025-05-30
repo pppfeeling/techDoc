@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 가이드 - Date Picker & Calendar</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+         .text-content li > code { /* li 내부 코드 스타일 */
+             font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+        
+        /* Calendar/Date Picker 시각화 예시 */
+        .calendar-visual-example {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            margin-top: 15px;
+            padding: 20px;
+            background-color: rgba(242, 230, 61, 0.1); /* 패션-2의 연한 배경 */
+            border-radius: 8px;
+        }
+        .datepicker-trigger-visual { /* shadcn Button + CalendarIcon 시각화 */
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 6px;
+            background-color: white;
+            cursor: pointer;
+        }
+        .datepicker-trigger-visual span { font-size: 14px; }
+        .calendar-mockup { /* shadcn Calendar 시각화 */
+            width: 280px; /* 예시 너비 */
+            padding: 15px;
+            background-color: white;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(89, 59, 70, 0.1);
+        }
+        .calendar-header-mockup {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .calendar-header-mockup button {
+            background:none; border:none; font-size:18px; cursor:pointer; color: var(--color-fashion-4);
+        }
+        .calendar-title-mockup { font-weight:bold; font-size: 15px; }
+        .calendar-grid-mockup { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+        .calendar-grid-mockup div { font-size: 13px; padding: 5px; border-radius: 4px; }
+        .calendar-grid-mockup .day-header { font-weight: bold; color: var(--color-text-subtle); }
+        .calendar-grid-mockup .day { cursor:pointer; }
+        .calendar-grid-mockup .day:hover { background-color: rgba(242, 196, 61, 0.2); }
+        .calendar-grid-mockup .day.selected { background-color: var(--color-fashion-4); color: white; }
+        .calendar-grid-mockup .day.other-month { color: var(--color-text-subtle); opacity: 0.6; }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-datepicker"></span><br>
+                정보 출처: <strong>react-day-picker & Shadcn UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Date Picker & Calendar 컴포넌트 카드 시작 -->
+        <div class="component-card" id="datepicker-calendar-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">🗓️</span>
+                <h1 class="component-main-title">Date Picker & Calendar</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Shadcn UI에서 날짜 관련 기능은 주로 <code>react-day-picker</code> 라이브러리를 기반으로 한 <span class="highlight-keyword">Calendar</span> 컴포넌트와, 이를 <span class="highlight-keyword">Popover</span>와 결합하여 만든 <span class="highlight-keyword">Date Picker</span> 형태로 제공됩니다. 📅</p>
+                <ul>
+                    <li><strong>Calendar:</strong> 독립적으로 달력을 표시하고 날짜를 선택할 수 있게 하는 컴포넌트입니다.</li>
+                    <li><strong>Date Picker:</strong> 일반적으로 버튼 형태로 되어 있으며, 클릭 시 Popover 내에 Calendar가 나타나 날짜를 선택하게 하는 복합 컴포넌트입니다.</li>
+                </ul>
+                <p>이 컴포넌트들은 단일 날짜 선택, 날짜 범위 선택, 특정 날짜 비활성화, 월/연도 이동 등 다양한 기능을 지원하며, shadcn UI의 스타일링을 통해 미려한 UI를 제공합니다.</p>
+                <div class="calendar-visual-example">
+                    <div class="datepicker-trigger-visual">
+                        <span class="icon">📅</span>
+                        <span>날짜 선택</span>
+                    </div>
+                    <div class="calendar-mockup">
+                        <div class="calendar-header-mockup">
+                            <button>&lt;</button>
+                            <span class="calendar-title-mockup">2023년 12월</span>
+                            <button>&gt;</button>
+                        </div>
+                        <div class="calendar-grid-mockup">
+                            <div class="day-header">일</div><div class="day-header">월</div><div class="day-header">화</div><div class="day-header">수</div><div class="day-header">목</div><div class="day-header">금</div><div class="day-header">토</div>
+                            <div class="day other-month">26</div><div class="day other-month">27</div><div class="day other-month">28</div><div class="day other-month">29</div><div class="day other-month">30</div><div class="day">1</div><div class="day">2</div>
+                            <div class="day">3</div><div class="day">4</div><div class="day selected">5</div><div class="day">6</div><div class="day">7</div><div class="day">8</div><div class="day">9</div>
+                            {/* ... 나머지 날짜들 ... */}
+                        </div>
+                    </div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ <code>react-day-picker</code>의 강력한 기능과 shadcn UI의 스타일이 만나 사용자 친화적인 날짜 선택 경험을 제공합니다!
+                </div>
+            </section>
+
+             <section class="setup-section">
+                <h2 class="section-heading"><span class="icon">⚙️</span>기본 설정 및 설치</h2>
+                <div class="text-content">
+                    <p><code>react-day-picker</code>와 날짜 포맷팅을 위한 <code>date-fns</code> 라이브러리를 설치해야 합니다:</p>
+                    <div class="code-block-wrapper">
+                        <pre><code>
+npm install react-day-picker date-fns
+# 또는
+yarn add react-day-picker date-fns
+                        </code></pre>
+                    </div>
+                    <p>그리고 shadcn UI에서 제공하는 <code>Calendar</code> 컴포넌트와, Date Picker를 만들기 위해 <code>Button</code>, <code>Popover</code> 관련 컴포넌트들을 프로젝트에 추가합니다 (CLI 사용).</p>
+                </div>
+            </section>
+
+            <section class="calendar-component text-content">
+                <h2 class="section-heading"><span class="icon">📅</span>Calendar 컴포넌트</h2>
+                <p><code>&lt;Calendar /&gt;</code> 컴포넌트는 <code>react-day-picker</code>의 <code>DayPicker</code> 컴포넌트를 shadcn/ui 스타일로 래핑한 것입니다. <code>react-day-picker</code>의 대부분의 props를 그대로 사용할 수 있습니다.</p>
+                <h3 style="font-size:16px; color: var(--color-fashion-4); margin-top:15px;">주요 Props (<code>react-day-picker</code> 기반):</h3>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">mode</td>
+                                <td><span class="highlight-value">"single" | "multiple" | "range" | "default"</span></td>
+                                <td>선택 모드를 지정합니다.
+                                    <ul>
+                                        <li><code>single</code>: 단일 날짜 선택</li>
+                                        <li><code>multiple</code>: 여러 날짜 선택</li>
+                                        <li><code>range</code>: 날짜 범위 선택</li>
+                                        <li><code>default</code>: 날짜 선택 기능 없이 달력만 표시 (기본값)</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">selected</td>
+                                <td><span class="highlight-value">Date | Date[] | { from: Date; to: Date } | undefined</span></td>
+                                <td>현재 선택된 날짜(들)입니다. <code>mode</code>에 따라 타입이 달라집니다. (제어)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">onSelect</td>
+                                <td><span class="highlight-value">(date, selectedDate, activeModifiers, e) =&gt; void</span></td>
+                                <td>날짜가 선택될 때 호출되는 콜백입니다. <code>mode</code>에 따라 인자가 다릅니다. (제어)</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">defaultMonth</td>
+                                <td><span class="highlight-value">Date</span></td>
+                                <td>초기에 표시될 달(month)입니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">month</td>
+                                <td><span class="highlight-value">Date</span></td>
+                                <td>현재 표시된 달을 제어합니다. (제어)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">onMonthChange</td>
+                                <td><span class="highlight-value">(month: Date) =&gt; void</span></td>
+                                <td>표시된 달이 변경될 때 호출됩니다. (제어)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">disabled</td>
+                                <td><span class="highlight-value">Matcher | Matcher[] | (date: Date) =&gt; boolean</span></td>
+                                <td>비활성화할 날짜(들)를 지정합니다. (예: <code>{ before: new Date() }</code>, <code>[{ dayOfWeek: [0, 6] }]</code>)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">fromDate, toDate</td>
+                                <td><span class="highlight-value">Date</span></td>
+                                <td>선택 가능한 최소/최대 날짜를 지정합니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">numberOfMonths</td>
+                                <td><span class="highlight-value">number</span></td>
+                                <td>한 번에 표시할 달의 개수입니다. (기본값 1)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">showOutsideDays</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td>이전/다음 달의 날짜를 현재 달력에 표시할지 여부입니다. (기본값 true)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">locale</td>
+                                <td><span class="highlight-value">Locale (from date-fns)</span></td>
+                                <td>달력의 로케일(언어, 날짜 형식 등)을 지정합니다. (예: <code>import { ko } from 'date-fns/locale'</code>)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">className</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>Calendar 루트 요소에 적용할 CSS 클래스입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">classNames</td>
+                                <td><span class="highlight-value">object</span></td>
+                                <td>(react-day-picker) 달력 내부 요소들에 대한 CSS 클래스맵입니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">...기타 react-day-picker props</td>
+                                <td></td>
+                                <td><code>footer</code>, <code>captionLayout</code>, <code>modifiers</code>, <code>modifiersClassNames</code> 등 매우 다양한 props를 지원합니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="datepicker-component text-content">
+                 <h2 class="section-heading"><span class="icon">🗓️</span>Date Picker (복합 컴포넌트)</h2>
+                 <p>Date Picker는 일반적으로 <code>Button</code>을 트리거로 사용하고, 클릭 시 <code>Popover</code> 내부에 <code>Calendar</code>를 표시하는 형태로 구성됩니다. 사용자가 날짜를 선택하면 Popover가 닫히고 버튼에 선택된 날짜가 표시됩니다.</p>
+                 <p><strong>구성 요소:</strong></p>
+                 <ul>
+                    <li><code>Button</code>: Date Picker를 여는 트리거 버튼. (shadcn/ui)</li>
+                    <li><code>Popover</code>, <code>PopoverTrigger</code>, <code>PopoverContent</code>: Calendar를 담는 팝오버. (shadcn/ui)</li>
+                    <li><code>Calendar</code>: 실제 날짜 선택 UI. (shadcn/ui, react-day-picker 기반)</li>
+                 </ul>
+                 <p>이러한 조합은 shadcn UI 공식 문서의 Date Picker 예제에서 잘 보여주고 있습니다.</p>
+            </section>
+
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p><strong>1. 기본 Calendar 사용 예제</strong></p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+"use client"
+
+import * as React from "react"
+import { Calendar } from "@/components/ui/calendar"
+import { ko } from "date-fns/locale" // 한국어 로케일
+
+export function SimpleCalendar() {
+  const [date, setDate] = React.useState&lt;Date | undefined&gt;(new Date())
+
+  return (
+    &lt;Calendar
+      mode="single"
+      selected={date}
+      onSelect={setDate}
+      locale={ko} // 한국어 설정
+      className="rounded-md border"
+      // disabled={(day) => day.getDay() === 0 || day.getDay() === 6} // 주말 비활성화 예시
+    /&gt;
+  )
+}
+                    </code></pre>
+                </div>
+
+                <div class="text-content" style="margin-top:25px;">
+                    <p><strong>2. Date Picker (Popover와 Calendar 결합) 예제</strong></p>
+                </div>
+                 <div class="code-block-wrapper">
+                    <pre><code>
+"use client"
+
+import * as React from "react"
+import { format } from "date-fns"
+import { ko } from "date-fns/locale"
+import { Calendar as CalendarIcon } from "lucide-react"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+
+export function DatePickerDemo() {
+  const [date, setDate] = React.useState&lt;Date | undefined&gt;()
+
+  return (
+    &lt;Popover&gt;
+      &lt;PopoverTrigger asChild&gt;
+        &lt;Button
+          variant={"outline"}
+          className={cn(
+            "w-[280px] justify-start text-left font-normal",
+            !date && "text-muted-foreground"
+          )}
+        &gt;
+          &lt;CalendarIcon className="mr-2 h-4 w-4" /&gt;
+          {date ? format(date, "PPP", { locale: ko }) : &lt;span&gt;날짜를 선택하세요&lt;/span&gt;}
+        &lt;/Button&gt;
+      &lt;/PopoverTrigger&gt;
+      &lt;PopoverContent className="w-auto p-0"&gt;
+        &lt;Calendar
+          mode="single"
+          selected={date}
+          onSelect={(selectedDate) => {
+            setDate(selectedDate)
+            // Popover를 수동으로 닫고 싶다면 Popover의 open 상태를 관리해야 함
+            // 여기서는 Calendar 선택 시 자동으로 닫히도록 Popover가 동작할 수 있음 (내부 로직)
+          }}
+          initialFocus // Popover가 열릴 때 Calendar에 자동 포커스
+          locale={ko}
+        /&gt;
+      &lt;/PopoverContent&gt;
+    &lt;/Popover&gt;
+  )
+}
+                    </code></pre>
+                </div>
+
+                 <div class="text-content" style="margin-top:25px;">
+                    <p><strong>3. Date Range Picker (날짜 범위 선택) 예제</strong> (<code>mode="range"</code> 사용)</p>
+                </div>
+                 <div class="code-block-wrapper">
+                    <pre><code>
+"use client"
+
+import * as React from "react"
+import { format } from "date-fns"
+import { ko } from "date-fns/locale"
+import { Calendar as CalendarIcon } from "lucide-react"
+import { DateRange } from "react-day-picker" // DateRange 타입 import
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+
+export function DateRangePickerDemo({
+  className,
+}: React.HTMLAttributes&lt;HTMLDivElement&gt;) {
+  const [dateRange, setDateRange] = React.useState&lt;DateRange | undefined&gt;({
+    from: new Date(2023, 11, 20), // 예시: 2023년 12월 20일
+    to: new Date(2023, 11, 24),   // 예시: 2023년 12월 24일
+  })
+
+  return (
+    &lt;div className={cn("grid gap-2", className)}&gt;
+      &lt;Popover&gt;
+        &lt;PopoverTrigger asChild&gt;
+          &lt;Button
+            id="date"
+            variant={"outline"}
+            className={cn(
+              "w-[300px] justify-start text-left font-normal",
+              !dateRange && "text-muted-foreground"
+            )}
+          &gt;
+            &lt;CalendarIcon className="mr-2 h-4 w-4" /&gt;
+            {dateRange?.from ? (
+              dateRange.to ? (
+                &lt;&gt;
+                  {format(dateRange.from, "LLL dd, y", { locale: ko })} -{" "}
+                  {format(dateRange.to, "LLL dd, y", { locale: ko })}
+                &lt;/&gt;
+              ) : (
+                format(dateRange.from, "LLL dd, y", { locale: ko })
+              )
+            ) : (
+              &lt;span&gt;기간을 선택하세요&lt;/span&gt;
+            )}
+          &lt;/Button&gt;
+        &lt;/PopoverTrigger&gt;
+        &lt;PopoverContent className="w-auto p-0" align="start"&gt;
+          &lt;Calendar
+            initialFocus
+            mode="range"
+            defaultMonth={dateRange?.from}
+            selected={dateRange}
+            onSelect={setDateRange}
+            numberOfMonths={2} // 두 개의 달을 함께 표시
+            locale={ko}
+          /&gt;
+        &lt;/PopoverContent&gt;
+      &lt;/Popover&gt;
+    &lt;/div&gt;
+  )
+}
+                    </code></pre>
+                </div>
+
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> <code>date-fns</code> 라이브러리를 사용하여 선택된 날짜를 원하는 형식으로 포맷팅할 수 있습니다 (예: <code>format(date, "yyyy년 MM월 dd일")</code>). <code>react-day-picker</code>는 매우 다양한 props를 제공하므로, 공식 문서를 참고하여 주말 비활성화, 특정 날짜 강조, 커스텀 셀 렌더링 등 고급 기능을 구현할 수 있습니다.
+                </div>
+            </section>
+            
+        </div>
+        <!-- Date Picker & Calendar 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>🎉 모든 추가 요청 주제까지 완료! 이제 shadcn UI 전문가가 되신 것을 축하드립니다! 🎉</p>
+            <p>이 가이드가 실무에 많은 도움이 되기를 바라며, 항상 즐거운 개발 하시길 응원합니다! 🥳</p>
+            <p>&copy; <span id="current-year-datepicker"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-datepicker').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-datepicker').textContent = new Date().getFullYear();
+
+        // 시각화 예제용 간단한 상호작용 (실제 react-day-picker와는 다름)
+        const calendarDays = document.querySelectorAll('.calendar-mockup .day:not(.other-month)');
+        calendarDays.forEach(day => {
+            day.addEventListener('click', function() {
+                calendarDays.forEach(d => d.classList.remove('selected'));
+                this.classList.add('selected');
+                const datePickerTriggerText = document.querySelector('.datepicker-trigger-visual span:last-child');
+                if(datePickerTriggerText) {
+                    const monthTitle = document.querySelector('.calendar-title-mockup').textContent;
+                    datePickerTriggerText.textContent = `${monthTitle} ${this.textContent}일`;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

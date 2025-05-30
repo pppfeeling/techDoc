@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Scroll Area</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+
+        .subcomponent-card {
+            border: 2px solid var(--color-fashion-2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            background-color: rgba(242, 230, 61, 0.08);
+            position: relative;
+        }
+        .subcomponent-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .subcomponent-title .icon {
+            margin-right: 8px;
+            font-size: 20px;
+            color: var(--color-fashion-4);
+        }
+        .subcomponent-card::before {
+            content: '🧩';
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            font-size: 20px;
+            transform: rotate(10deg);
+        }
+
+        .parent-child-relation {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-fashion-5);
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .component-box {
+            background-color: var(--color-fashion-5);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin: 5px;
+        }
+        .arrow {
+            font-size: 28px;
+            color: var(--color-fashion-1);
+            margin: 0 10px;
+            font-family: 'Nanum Pen Script', cursive;
+        }
+        
+        /* Scroll Area 시각화 예시 */
+        .scrollarea-visual-example {
+            width: 300px; /* 예시 너비 */
+            height: 200px; /* 예시 높이 */
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 10px;
+            margin: 20px auto; /* 중앙 정렬 */
+            position: relative; /* 스크롤바 시각화용 */
+            overflow: hidden; /* 실제 스크롤은 컴포넌트가 처리 */
+            background-color: rgba(242, 196, 61, 0.1);
+        }
+        .scrollarea-content-visual {
+            /* 실제로는 내용이 이 영역을 넘쳐야 스크롤바가 보임 */
+            height: 300px; /* 스크롤 유도 */
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .scrollarea-content-visual p { margin: 0; font-size: 14px; }
+        .scrollbar-vertical-visual {
+            position: absolute;
+            right: 2px;
+            top: 2px;
+            bottom: 2px;
+            width: 8px;
+            background-color: rgba(89, 59, 70, 0.2); /* 스크롤바 트랙 */
+            border-radius: 4px;
+        }
+        .scrollbar-thumb-visual {
+            width: 100%;
+            height: 50px; /* 내용 길이에 따라 동적이어야 함 */
+            background-color: var(--color-fashion-1); /* 스크롤바 썸 */
+            border-radius: 4px;
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-scrollarea"></span><br>
+                정보 출처: <strong>Shadcn UI & Radix UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Scroll Area 컴포넌트 카드 시작 -->
+        <div class="component-card" id="scroll-area-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">📜💨</span>
+                <h1 class="component-main-title">Scroll Area (스크롤 영역)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Scroll Area 컴포넌트는 제한된 크기의 컨테이너 내부에 <span class="highlight-keyword">긴 콘텐츠를 표시</span>하고, 사용자가 이를 <span class="highlight-keyword">스크롤</span>하여 볼 수 있도록 하는 데 사용됩니다. 🔄 기본 브라우저 스크롤바 대신 커스텀 스타일의 스크롤바를 제공하여 UI의 일관성과 미려함을 높일 수 있습니다.</p>
+                <p>주요 사용 사례:</p>
+                <ul>
+                    <li>긴 텍스트 목록, 댓글 목록, 채팅 메시지 표시</li>
+                    <li>드롭다운 메뉴나 팝오버 내의 스크롤 가능한 콘텐츠 영역</li>
+                    <li>사이드바 또는 패널 내의 옵션 목록</li>
+                    <li>이미지 갤러리나 카드 목록의 가로 스크롤</li>
+                </ul>
+                <p>Shadcn UI의 Scroll Area는 Radix UI의 Scroll Area Primitive를 기반으로 하며, 수직/수평 스크롤, 스크롤바 표시 정책, 키보드 스크롤 등을 지원합니다.</p>
+                <div class="scrollarea-visual-example">
+                    <div class="scrollarea-content-visual">
+                        <p>아이템 1</p><p>아이템 2</p><p>아이템 3</p><p>아이템 4</p><p>아이템 5</p>
+                        <p>아이템 6</p><p>아이템 7</p><p>아이템 8</p><p>아이템 9</p><p>아이템 10</p>
+                        <p>...</p>
+                        <p>(내용이 더 많으면 스크롤)</p>
+                    </div>
+                    <div class="scrollbar-vertical-visual">
+                        <div class="scrollbar-thumb-visual"></div>
+                    </div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ 커스텀 스크롤바를 통해 애플리케이션의 전체적인 디자인 톤앤매너를 유지할 수 있어요!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>ScrollArea (루트 컴포넌트) Props</h2>
+                <div class="text-content">
+                    <p><code>&lt;ScrollArea&gt;</code> 루트 컴포넌트는 스크롤 가능한 영역 전체를 감싸며, 스크롤 동작과 관련된 주요 설정을 담당합니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">type</td>
+                                <td><span class="highlight-value">"auto" | "always" | "scroll" | "hover"</span></td>
+                                <td><span class="highlight-value">"hover"</span> (Radix)</td>
+                                <td>스크롤바 표시 유형입니다.
+                                    <ul>
+                                        <li><span class="highlight-value">auto</span>: 내용이 넘칠 때만 스크롤바 표시.</li>
+                                        <li><span class="highlight-value">always</span>: 항상 스크롤바 표시.</li>
+                                        <li><span class="highlight-value">scroll</span>: 스크롤 중일 때만 스크롤바 표시.</li>
+                                        <li><span class="highlight-value">hover</span>: 마우스가 영역 위에 있을 때 스크롤바 표시 (내용이 넘치는 경우).</li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">scrollHideDelay</td>
+                                <td><span class="highlight-value">number</span></td>
+                                <td><span class="highlight-value">600</span> (ms, Radix)</td>
+                                <td><span class="highlight-value">type="scroll"</span> 또는 <span class="highlight-value">type="hover"</span> (스크롤 후)일 때 스크롤바가 사라지기까지의 지연 시간입니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">dir</td>
+                                <td><span class="highlight-value">"ltr" | "rtl"</span></td>
+                                <td>-</td>
+                                <td>텍스트 및 레이아웃 방향입니다. 스크롤바 위치에 영향을 줍니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">asChild</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>기본 렌더링 요소(<code>&lt;div&gt;</code>) 대신 자식으로 전달된 컴포넌트를 렌더링합니다.</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">className</td>
+                                <td><span class="highlight-value">string</span></td>
+                                <td>-</td>
+                                <td>루트 컴포넌트에 적용할 CSS 클래스입니다.</td>
+                            </tr>
+                             <tr>
+                                <td class="prop-name">children</td>
+                                <td><span class="highlight-value">React.ReactNode</span></td>
+                                <td>-</td>
+                                <td>스크롤될 실제 콘텐츠와 <code>ScrollBar</code> 컴포넌트를 포함합니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>서브 컴포넌트들 (Radix UI 기준)</h2>
+                <div class="text-content">
+                    <p>Shadcn UI의 <code>&lt;ScrollArea&gt;</code>는 Radix UI의 여러 서브 컴포넌트를 내부적으로 조합하여 사용합니다. 주로 <code>ScrollBar</code>를 직접 사용하게 됩니다.</p>
+                    <p>Radix UI의 주요 서브 컴포넌트 구성은 다음과 같습니다 (이해를 돕기 위함):</p>
+                    <ul>
+                        <li><code>ScrollArea.Root</code>: (shadcn/ui의 <code>ScrollArea</code>에 해당) 전체 컨테이너.</li>
+                        <li><code>ScrollArea.Viewport</code>: 실제 스크롤되는 콘텐츠를 담는 영역. <code>overflow: scroll</code> (또는 hidden) 처리가 됩니다. shadcn/ui에서는 <code>ScrollArea</code> 내부에 암묵적으로 생성됩니다.</li>
+                        <li><code>ScrollArea.Scrollbar</code>: (shadcn/ui의 <code>ScrollBar</code>에 해당) 스크롤바 자체(트랙과 썸 포함).</li>
+                        <li><code>ScrollArea.Thumb</code>: 스크롤바 내에서 움직이는 핸들(손잡이).</li>
+                        <li><code>ScrollArea.Corner</code>: 수직 및 수평 스크롤바가 모두 있을 때 모서리에 생기는 공간.</li>
+                    </ul>
+                </div>
+                
+                <div class="parent-child-relation">
+                    <span class="component-box">ScrollArea</span> <span class="arrow">➡️</span>
+                    (내부적으로 Viewport 생성) &amp; <span class="component-box">ScrollBar</span>
+                </div>
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">↔️</span>ScrollBar</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 스크롤바를 표시하는 컴포넌트입니다. 수직 또는 수평 스크롤바를 나타내며, 내부에 스크롤 썸(thumb)을 포함합니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;ScrollArea&gt;</code>의 직접적인 자식으로 사용됩니다.</p>
+                        <p><span class="highlight-keyword">사용법:</span> <code>&lt;ScrollBar orientation="vertical" /&gt;</code></p>
+                        <p><span class="highlight-keyword">주요 Props:</span></p>
+                         <div class="prop-table-wrapper">
+                            <table class="prop-table">
+                                <thead><tr><th>Prop</th><th>타입</th><th>기본값</th><th>설명</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="prop-name required-prop">orientation</td><td><span class="highlight-value">"vertical" | "horizontal"</span></td><td>"vertical"</td><td>스크롤바의 방향을 지정합니다.</td></tr>
+                                    <tr><td class="prop-name">forceMount</td><td><span class="highlight-value">boolean</span></td><td>-</td><td>스크롤바가 필요 없을 때도 DOM에 강제로 마운트합니다.</td></tr>
+                                    <tr><td class="prop-name">asChild</td><td><span class="highlight-value">boolean</span></td><td></td><td>기본 렌더링 요소 대신 자식으로 렌더링합니다.</td></tr>
+                                    <tr><td class="prop-name">className</td><td><span class="highlight-value">string</span></td><td>-</td><td>스크롤바에 적용할 CSS 클래스입니다.</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-content">shadcn/ui의 <code>ScrollBar</code> 컴포넌트는 Radix UI의 <code>ScrollArea.Scrollbar</code>와 <code>ScrollArea.Thumb</code>을 합쳐놓은 형태로, 내부적으로 썸 스타일까지 포함하고 있습니다.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 긴 태그 목록을 스크롤하여 볼 수 있는 Scroll Area 예시입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+import * as React from "react"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area" // ScrollBar도 함께 import
+import { Separator } from "@/components/ui/separator" // 예시용 구분선
+
+const tags = Array.from({ length: 50 }).map(
+  (_, i, a) => `태그 ${a.length - i}`
+)
+
+export function ScrollableTagList() {
+  return (
+    &lt;ScrollArea className="h-72 w-48 rounded-md border"&gt; {/* 높이와 너비 제한 */}
+      &lt;div className="p-4"&gt;
+        &lt;h4 className="mb-4 text-sm font-medium leading-none"&gt;태그 목록&lt;/h4&gt;
+        {tags.map((tag) => (
+          &lt;React.Fragment key={tag}&gt;
+            &lt;div className="text-sm"&gt;
+              {tag}
+            &lt;/div&gt;
+            &lt;Separator className="my-2" /&gt;
+          &lt;/React.Fragment&gt;
+        ))}
+      &lt;/div&gt;
+      &lt;ScrollBar orientation="vertical" /&gt; {/* 수직 스크롤바 */}
+      {/* &lt;ScrollBar orientation="horizontal" /&gt; */}{/* 가로 스크롤이 필요하다면 추가 */}
+    &lt;/ScrollArea&gt;
+  )
+}
+
+// 가로 스크롤 예시
+interface Artwork {
+  artist: string
+  art: string
+}
+
+const works: Artwork[] = [
+  // ... (이미지 데이터 생략)
+  { artist: "작가1", art: "작품1_URL" },
+  { artist: "작가2", art: "작품2_URL" },
+  // ... 20개 정도의 데이터
+]
+
+export function HorizontalArtworkScroll() {
+  return (
+    &lt;ScrollArea className="w-96 whitespace-nowrap rounded-md border"&gt;
+      &lt;div className="flex w-max space-x-4 p-4"&gt;
+        {works.map((artwork) => (
+          &lt;figure key={artwork.artist} className="shrink-0"&gt;
+            &lt;div className="overflow-hidden rounded-md"&gt;
+              &lt;img
+                // src={artwork.art} // 실제 이미지 URL
+                src={`https://via.placeholder.com/150/F2C53D/593C47?text=${artwork.artist}`} // Placeholder
+                alt={`Photo by ${artwork.artist}`}
+                className="aspect-[3/4] h-fit w-fit object-cover"
+                width={150} // 예시 너비
+                height={200} // 예시 높이
+              /&gt;
+            &lt;/div&gt;
+            &lt;figcaption className="pt-2 text-xs text-muted-foreground"&gt;
+              Photo by &lt;span className="font-semibold text-foreground"&gt;{artwork.artist}&lt;/span&gt;
+            &lt;/figcaption&gt;
+          &lt;/figure&gt;
+        ))}
+      &lt;/div&gt;
+      &lt;ScrollBar orientation="horizontal" /&gt;
+    &lt;/ScrollArea&gt;
+  )
+}
+
+export default function ScrollAreaDemo() {
+    return (
+        &lt;div className="flex flex-col gap-8 items-center"&gt;
+            &lt;ScrollableTagList /&gt;
+            &lt;HorizontalArtworkScroll /&gt;
+        &lt;/div>
+    )
+}
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> <code>ScrollArea</code> 컴포넌트에 <code>className</code>으로 <span class="highlight-keyword">고정된 높이(height)나 너비(width)</span>를 설정해야 스크롤 기능이 제대로 동작합니다. 내부 콘텐츠가 이 크기를 초과할 때 스크롤바가 나타납니다. 가로 스크롤을 위해서는 내부 콘텐츠의 컨테이너(예제에서 <code>&lt;div className="flex w-max space-x-4 p-4"&gt;</code>)에 <code>display: flex</code>와 <code>w-max</code> (또는 충분한 너비)를 지정하고, 각 아이템들이 줄바꿈되지 않도록(<code>whitespace-nowrap</code> 또는 <code>shrink-0</code>) 설정하는 것이 일반적입니다.
+                </div>
+            </section>
+            
+        </div>
+        <!-- Scroll Area 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>다음은 드롭다운 형태로 옵션을 선택하는 Select 컴포넌트입니다! 👇</p>
+            <p>이 문서를 통해 shadcn UI로 <strong>콘텐츠를 효과적으로 관리</strong>하는 방법을 익히시길 바랍니다. 📚</p>
+            <p>&copy; <span id="current-year-scrollarea"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-scrollarea').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-scrollarea').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

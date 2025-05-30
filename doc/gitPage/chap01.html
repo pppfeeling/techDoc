@@ -1,0 +1,66 @@
+ <div class="container">
+    <header class="header">
+      <h1 class="title">챕터 1: GitHub Pages 사용을 위한 기본 설정</h1>
+      <div class="date">2025.05.29 | GitHub Pages 사용</div>
+    </header>
+
+    <div class="content-grid">
+        <div class="card">
+            <h2 class="card-title"><span class="icon">⚙️</span>Github Pages란?</h2>
+            <p>GitHub Pages는 <span class="keyword hand-drawn">정적 사이트</span>를 호스팅해주는 서비스입니다. 여러분의 React 프로젝트를 빌드하면 정적 파일(HTML, CSS, JS)들이 생성되는데, 이 파일들을 GitHub 저장소에 올려두면 GitHub Pages가 멋지게 웹사이트로 보여줍니다. 마치 여러분의 코드가 온라인에서 살아 숨쉬게 되는 마법과 같죠! ✨</p>
+            
+            <div class="highlight-box">
+                <p><span class="keyword">GitHub Pages</span>의 유형:</p>
+                <ul>
+                    <li><strong>프로젝트 페이지:</strong> 각 프로젝트별로 <code  style="display: inline-block; padding: 2px 5px;  margin:0;">&lt;username&gt;.github.io/&lt;repository-name&gt;</code> 형태로 생성됩니다. </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="triple-grid">
+        <div class="card">
+            <h3 class="card-title"><span class="icon">🛠️</span>준비사항 확인하기</h3>
+            <p>GitHub Pages 배포를 시작하기 전에 다음 사항들이 준비되었는지 확인해주세요:</p>
+            <ul>
+                <li>GitHub 계정 (없다면 지금 바로 만드세요!)</li>
+                <li>Git 설치 (버전 관리의 기본이죠!)</li>
+                <li>배포할 React 프로젝트 (Vite로 만든 프로젝트라면 더욱 좋아요!)</li>
+            </ul>
+            <div class="image-placeholder">
+                <p>🔧 계정과 Git이 준비되었다면, 이제 저장소를 만들 차례입니다!</p>
+            </div>
+        </div>
+
+        <div class="card gap-4 grid">
+            <h3 class="card-title"><span class="icon">📦</span>새로운 GitHub 저장소 만들기</h3>
+            <p><span class="step-number">1</span><span class="step-description hand-drawn">저장소 생성:</span> GitHub에서 <span class="keyword">+</span> 버튼을 눌러 'New repository'를 선택하세요.</p>
+            <p><span class="step-number">2</span><span class="step-description hand-drawn">이름 설정:</span> 프로젝트와 관련된 멋진 이름을 지어주세요. (예: <code style="color: #F24405;">my-react-gh-pages-app</code>)</p>
+            <p><span class="step-number">3</span><span class="step-description hand-drawn">공개 설정:</span> GitHub Pages는 <span class="keyword">Public</span> 저장소에서 무료로 제공됩니다. (Private 저장소는 GitHub Pro 필요)</p>
+            <p><span class="step-number">4</span><span class="step-description hand-drawn">README 추가 (선택):</span> 프로젝트 설명을 위한 README 파일을 추가하면 좋습니다.</p>
+            <p><span class="step-number">5</span><span class="step-description hand-drawn">생성 완료:</span> 'Create repository' 버튼을 클릭! 🎉</p>
+            
+        </div>
+
+        <div class="card gap-4 grid">
+            <h3 class="card-title"><span class="icon">📜</span>GitHub Pages 설정하기</h3>
+            <p>저장소가 준비되었다면, 이제 GitHub Pages를 활성화할 차례입니다.</p>
+            <p><span class="step-number">1</span><span class="step-description hand-drawn">설정 이동:</span> 방금 만든 저장소의 <span class="keyword">Settings</span> 탭으로 이동하세요.</p>
+            <p><span class="step-number">2</span><span class="step-description hand-drawn">Pages 메뉴 선택:</span> 왼쪽 사이드바에서 <span class="keyword">Pages</span> 메뉴를 클릭합니다.</p>
+            <p><span class="step-number">3</span><span class="step-description hand-drawn">Source 선택:</span> 'Build and deployment' 섹션에서 <span class="keyword">Source</span>를 <span class="keyword hand-drawn">GitHub Actions</span>로 선택하는 것을 권장합니다. (또는 <span class="keyword">Deploy from a branch</span>)</p>
+            <p>만약 <span class="keyword">Deploy from a branch</span>를 선택한다면:</p>
+            <ul>
+                <li><strong>Branch:</strong> 배포할 브랜치 (예: <code style="color: #F24405;">main</code> 또는 <code style="color: #F24405;">gh-pages</code>)와 폴더 (예: <code style="color: #F24405;">/(root)</code> 또는 <code style="color: #F24405;">/docs</code>)를 선택합니다. Vite 프로젝트의 빌드 결과물은 보통 <code style="color: #F24405;">dist</code> 폴더에 생성되므로, 이 폴더를 GitHub Pages가 바라보도록 설정해야 합니다.</li>
+            </ul>
+            <p><span class="step-number">4</span><span class="step-description hand-drawn">저장:</span> 설정을 마치고 <span class="keyword">Save</span> 버튼을 누르면, 잠시 후 <code style="color: #F24405;">&lt;username&gt;.github.io/<repository-name></code> 주소로 사이트가 활성화됩니다!</p>
+            <div class="highlight-box">
+                <p><strong>팁 🔍:</strong> 처음에는 GitHub Actions를 사용하는 것이 조금 복잡해 보일 수 있지만, CI/CD 파이프라인을 구축하는 데 매우 유용하며 자동 배포를 쉽게 설정할 수 있습니다. 다음 챕터에서 자세히 다룰게요!</p>
+            </div>
+        </div>
+    </div>
+
+
+    <footer class="footer">
+      출처: React, TypeScript, Vite, React Router 엔지니어를 위한 GitHub Pages 배포 가이드 
+    </footer>
+  </div>

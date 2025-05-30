@@ -1,0 +1,266 @@
+<div class="container">
+        <header class="header">
+            <h1 class="title">Vite 프로덕션 빌드 마스터</h1>
+            <div class="date">📅 2025년 5월</div>
+        </header>
+
+        <div class="highlight-box">
+            <h2 style="color: #593c47; margin-bottom: 10px;">🎯 프로덕션 빌드의 목표</h2>
+            <p><span class="keyword">최적화</span>, <span class="keyword">압축</span>, <span class="keyword">성능</span>! Vite로 사용자에게 최고의 경험을 제공하는 번들을 만들어보세요!</p>
+        </div>
+
+        <div class="content-grid">
+            <div class="card">
+                <h3 class="card-title">🚀 기본 빌드 명령어</h3>
+                <p>프로덕션 빌드를 위한 기본 명령어들:</p>
+                <div class="code-block"># 프로덕션 빌드
+npm run build
+
+# 빌드된 파일을 로컬에서 미리보기
+npm run preview
+
+# 타입체크 + 빌드 (권장)
+npm run build && tsc --noEmit</div>
+                <p style="margin-top: 15px; color: #64748b; font-size: 14px;">
+                    🎉 dist/ 폴더에 최적화된 파일들이 생성됩니다!
+                </p>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">📁 빌드 결과물 구조</h3>
+                <p>빌드 후 생성되는 dist 폴더 구조:</p>
+                <div class="code-block">dist/
+├── index.html              # 메인 HTML
+├── assets/
+│   ├── index-a1b2c3.js    # 메인 JS 번들
+│   ├── index-d4e5f6.css   # CSS 번들
+│   ├── vendor-g7h8i9.js   # 라이브러리 번들
+│   └── logo-j0k1l2.png    # 최적화된 이미지
+└── favicon.ico</div>
+            </div>
+        </div>
+
+        <div class="full-width">
+            <div class="card">
+                <h3 class="card-title">⚙️ 빌드 최적화 과정</h3>
+                
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <strong>Tree Shaking</strong><br>
+                        사용하지 않는 코드 제거
+                    </div>
+                    <div class="process-arrow">→</div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <strong>Code Splitting</strong><br>
+                        청크 단위로 분할
+                    </div>
+                    <div class="process-arrow">→</div>
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <strong>Minification</strong><br>
+                        코드 압축 및 난독화
+                    </div>
+                    <div class="process-arrow">→</div>
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <strong>Asset Optimization</strong><br>
+                        이미지/폰트 최적화
+                    </div>
+                </div>
+
+                <h4 style="color: #593c47; margin: 20px 0 10px 0;">🔧 vite.config.ts 빌드 설정:</h4>
+                <div class="code-block">import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  build: {
+    // 타겟 브라우저 설정
+    target: 'es2015',
+    
+    // gzip 압축 후 500KB 이상이면 경고
+    chunkSizeWarningLimit: 500,
+    
+    // 소스맵 생성 (디버깅용)
+    sourcemap: true,
+    
+    // 청크 분할 설정
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          lodash: ['lodash']
+        }
+      }
+    }
+  }
+})</div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="card">
+                <h3 class="card-title">📊 번들 분석하기</h3>
+                <p>번들 크기와 구성을 시각적으로 분석해보세요:</p>
+                <div class="code-block"># 번들 분석 도구 설치
+npm install --save-dev rollup-plugin-visualizer
+
+# vite.config.ts에 추가
+import { visualizer } from 'rollup-plugin-visualizer'
+
+export default defineConfig({
+  plugins: [
+    react(),
+    visualizer({
+      filename: 'dist/stats.html',
+      open: true,
+      gzipSize: true
+    })
+  ]
+})</div>
+                <p style="margin-top: 15px; color: #10b981; font-size: 14px;">
+                    📈 빌드 후 stats.html에서 번들 구성을 확인할 수 있습니다!
+                </p>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">🎯 성능 최적화 전략</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>최적화 기법</th>
+                            <th>효과</th>
+                            <th>적용 방법</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Code Splitting</strong></td>
+                            <td>초기 로딩 속도 ⬆️</td>
+                            <td>Dynamic Import</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tree Shaking</strong></td>
+                            <td>번들 크기 ⬇️</td>
+                            <td>ESM + 명명된 내보내기</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Asset Optimization</strong></td>
+                            <td>리소스 크기 ⬇️</td>
+                            <td>이미지 압축, 폰트 최적화</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="full-width">
+            <div class="card">
+                <h3 class="card-title">🔄 Code Splitting 실전 예제</h3>
+                
+                <h4 style="color: #593c47; margin: 15px 0 10px 0;">🎨 Route-based Splitting (React Router):</h4>
+                <div class="code-block">import { lazy, Suspense } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+
+// 페이지별로 코드 분할
+const Home = lazy(() => import('./pages/Home'))
+const About = lazy(() => import('./pages/About'))
+const Dashboard = lazy(() => import('./pages/Dashboard'))
+
+function App() {
+  return (
+    &lt;BrowserRouter&gt;
+      &lt;Suspense fallback={&lt;div&gt;로딩중...&lt;/div&gt;}&gt;
+        &lt;Routes&gt;
+          &lt;Route path="/" element={&lt;Home /&gt;} /&gt;
+          &lt;Route path="/about" element={&lt;About /&gt;} /&gt;
+          &lt;Route path="/dashboard" element={&lt;Dashboard /&gt;} /&gt;
+        &lt;/Routes&gt;
+      &lt;/Suspense&gt;
+    &lt;/BrowserRouter&gt;
+  )
+}</div>
+
+                <h4 style="color: #593c47; margin: 15px 0 10px 0;">📦 Component-based Splitting:</h4>
+                <div class="code-block">// 무거운 컴포넌트 지연 로딩
+const HeavyChart = lazy(() => import('./components/HeavyChart'))
+const DataTable = lazy(() => import('./components/DataTable'))
+
+function Dashboard() {
+  const [showChart, setShowChart] = useState(false)
+  
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;대시보드&lt;/h1&gt;
+      &lt;button onClick={() => setShowChart(true)}&gt;
+        차트 보기
+      &lt;/button&gt;
+      
+      {showChart && (
+        &lt;Suspense fallback={&lt;div&gt;차트 로딩중...&lt;/div&gt;}&gt;
+          &lt;HeavyChart /&gt;
+        &lt;/Suspense&gt;
+      )}
+    &lt;/div&gt;
+  )
+}</div>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <div class="card">
+                <h3 class="card-title">🌍 환경별 빌드 설정</h3>
+                <div class="code-block"># .env.production
+VITE_API_URL=https://api.myapp.com
+VITE_APP_TITLE=My Production App
+VITE_ANALYTICS_ID=prod-123
+
+# .env.staging  
+VITE_API_URL=https://staging-api.myapp.com
+VITE_APP_TITLE=My Staging App
+VITE_ANALYTICS_ID=staging-456
+
+# 빌드 명령어
+npm run build -- --mode production
+npm run build -- --mode staging</div>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title">🗂️ 정적 자산 최적화</h3>
+                <div class="code-block"># public/ 폴더 (복사만 됨)
+public/
+├── favicon.ico
+├── robots.txt
+└── manifest.json
+
+# src/assets/ 폴더 (최적화됨)
+src/assets/
+├── images/
+│   ├── logo.svg      # 최적화되어 해시 추가
+│   └── hero.jpg      # 압축되어 해시 추가
+└── fonts/
+    └── custom.woff2  # 해시 추가</div>
+                <p style="margin-top: 15px; color: #f25c05; font-size: 14px;">
+                    💡 src/assets의 파일들은 자동으로 최적화되고 캐싱을 위한 해시가 추가됩니다!
+                </p>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <h3 style="color: #593c47; margin-bottom: 15px;">🚨 프로덕션 빌드 체크리스트</h3>
+            <ul>
+                <li><strong>타입 체크 통과:</strong> <span class="keyword">tsc --noEmit</span>으로 타입 에러 없는지 확인</li>
+                <li><strong>번들 크기 확인:</strong> 각 청크가 적절한 크기인지 검토</li>
+                <li><strong>소스맵 생성:</strong> 프로덕션 디버깅을 위해 sourcemap 활성화</li>
+                <li><strong>환경변수 설정:</strong> 프로덕션용 API URL, 키 등 확인</li>
+                <li><strong>미리보기 테스트:</strong> <span class="keyword">npm run preview</span>로 실제 환경과 유사하게 테스트</li>
+                <li><strong>성능 측정:</strong> Lighthouse나 웹 성능 도구로 점수 확인</li>
+            </ul>
+        </div>
+
+        <footer class="footer">
+            <p>📚 출처: Vite 공식 문서 및 TypeScript 개발 경험 | 그래픽 레코딩 스타일 학습 자료</p>
+        </footer>
+    </div>

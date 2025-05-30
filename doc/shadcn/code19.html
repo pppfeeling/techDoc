@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadcn UI 컴포넌트 가이드 - Sheet</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Sunflower', sans-serif;
+            background-color: #FFF8E1;
+            margin: 0;
+            padding: 0;
+            color: #593C47;
+            line-height: 1.6;
+        }
+
+        :root {
+            --color-fashion-1: #593C47; /* R:89 G:59 B:70 */
+            --color-fashion-2: #F2E63D; /* R:242 G:230 B:60 */
+            --color-fashion-3: #F2C53D; /* R:242 G:196 B:60 */
+            --color-fashion-4: #F25C05; /* R:242 G:91 B:4 */
+            --color-fashion-5: #F24405; /* R:242 G:68 B:4 */
+
+            --color-text-default: #593C47;
+            --color-text-subtle: #8C6F79; 
+            --color-section-title-icon: var(--color-fashion-4);
+        }
+
+        .infographic-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(89, 59, 70, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-family: 'Nanum Pen Script', cursive;
+            font-size: 42px;
+            font-weight: bold;
+            background: linear-gradient(45deg, var(--color-fashion-4), var(--color-fashion-5));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 1px 1px 2px rgba(89, 59, 70, 0.2);
+        }
+
+        .header-meta {
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            text-align: right;
+        }
+        .header-meta .date {
+            font-weight: 500;
+            color: var(--color-fashion-1);
+        }
+
+        .component-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(89, 59, 70, 0.15);
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--color-fashion-3);
+            position: relative;
+        }
+        
+        .component-card::before {
+            content: '📌';
+            font-size: 24px;
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            transform: rotate(-15deg);
+        }
+
+        .component-title-box {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .component-title-icon {
+            font-size: 40px;
+            margin-right: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-8px);}
+            60% {transform: translateY(-4px);}
+        }
+
+        .component-main-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            padding-bottom: 10px;
+            border-bottom: 3px dashed var(--color-fashion-2);
+            display: inline-block;
+        }
+        
+        .section-heading {
+            font-size: 20px;
+            color: var(--color-fashion-5);
+            font-weight: 700;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            border-left: 5px solid var(--color-fashion-4);
+            padding-left: 10px;
+            background-color: rgba(242, 92, 5, 0.05);
+            border-radius: 0 5px 5px 0;
+        }
+
+        .section-heading .icon {
+            margin-right: 10px;
+            font-size: 24px;
+            color: var(--color-section-title-icon);
+        }
+        
+        .text-content p, .text-content ul {
+            font-size: 15px;
+            color: var(--color-text-default);
+            margin-bottom: 10px;
+        }
+        .text-content ul {
+            list-style: '✏️ ';
+            padding-left: 25px;
+        }
+
+        .highlight-keyword {
+            background-color: var(--color-fashion-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-weight: 700;
+            color: var(--color-fashion-1);
+            box-shadow: 2px 2px 0px var(--color-fashion-3);
+            display: inline-block;
+        }
+        .highlight-value {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--color-fashion-5);
+        }
+
+        .prop-table-wrapper {
+            overflow-x: auto;
+        }
+        .prop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 15px;
+            border: 1px solid var(--color-fashion-3);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .prop-table th, .prop-table td {
+            border-bottom: 1px solid var(--color-fashion-3);
+            padding: 12px 15px;
+            text-align: left;
+            font-size: 14px;
+        }
+        .prop-table th {
+            background-color: var(--color-fashion-2);
+            color: var(--color-fashion-1);
+            font-weight: 700;
+            font-family: 'Poor Story', cursive;
+            font-size: 16px;
+        }
+        .prop-table tr:last-child td {
+            border-bottom: none;
+        }
+        .prop-table tr:hover {
+            background-color: rgba(242, 197, 61, 0.1);
+        }
+        .prop-name {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: rgba(89, 59, 70, 0.08);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: var(--color-fashion-4);
+        }
+        .required-prop::after {
+            content: '*';
+            color: var(--color-fashion-5);
+            font-weight: bold;
+            margin-left: 4px;
+        }
+
+        .code-block-wrapper {
+            margin-top: 15px;
+            border: 2px dashed var(--color-fashion-4);
+            border-radius: 8px;
+            padding: 5px;
+            background-color: #FFF8E1;
+        }
+        pre {
+            background-color: var(--color-fashion-1);
+            color: #F8F8F2;
+            padding: 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre;
+        }
+        code {
+            font-family: inherit;
+        }
+
+        .subcomponent-card {
+            border: 2px solid var(--color-fashion-2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            background-color: rgba(242, 230, 61, 0.08);
+            position: relative;
+        }
+        .subcomponent-title {
+            font-family: 'Poor Story', cursive;
+            font-size: 22px;
+            font-weight: bold;
+            color: var(--color-fashion-1);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .subcomponent-title .icon {
+            margin-right: 8px;
+            font-size: 20px;
+            color: var(--color-fashion-4);
+        }
+        .subcomponent-card::before {
+            content: '🧩';
+            position: absolute;
+            top: -10px;
+            right: 15px;
+            font-size: 20px;
+            transform: rotate(10deg);
+        }
+
+        .parent-child-relation {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            border-left: 4px solid var(--color-fashion-5);
+            display: flex;
+            flex-direction: column; 
+            align-items: flex-start; 
+        }
+        .parent-child-relation .component-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+        .component-box {
+            background-color: var(--color-fashion-5);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin: 5px;
+        }
+        .arrow {
+            font-size: 28px;
+            color: var(--color-fashion-1);
+            margin: 0 8px;
+            font-family: 'Nanum Pen Script', cursive;
+        }
+        .indent {
+            margin-left: 30px;
+        }
+        
+        /* Sheet 시각화 예시 */
+        .sheet-trigger-button-visual {
+            background-color: var(--color-fashion-4);
+            color: white;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Sunflower', sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: background-color 0.2s;
+        }
+        .sheet-trigger-button-visual:hover {
+            background-color: var(--color-fashion-5);
+        }
+        .sheet-mockup-container { /* 화면 전체를 덮는 오버레이 역할 */
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background-color: rgba(0,0,0,0.3); /* 반투명 배경 */
+            display: none; /* JS로 제어 */
+            justify-content: flex-end; /* 오른쪽에서 나오도록 */
+            align-items: stretch; /* 높이 꽉 채우기 */
+            z-index: 1000;
+        }
+        .sheet-mockup-content {
+            width: 300px; /* 시트 너비 */
+            background-color: white;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.2);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+         .sheet-mockup-content h3 {
+            font-family: 'Poor Story', cursive;
+            font-size: 22px;
+            color: var(--color-fashion-1);
+            margin-top:0; margin-bottom:15px;
+        }
+        .sheet-mockup-content .close-button-visual {
+            background-color: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            padding: 8px 15px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            align-self: flex-end; /* 오른쪽 정렬 */
+            margin-top: auto; /* 아래로 밀기 */
+        }
+
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: var(--color-text-subtle);
+            border-top: 2px dashed var(--color-fashion-3);
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+        }
+        .footer p {
+            margin: 5px 0;
+        }
+        .footer strong {
+            color: var(--color-fashion-1);
+            font-weight: 700;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: var(--color-fashion-3);
+            color: var(--color-fashion-1);
+            border-radius: .4em;
+            padding: 10px 15px;
+            font-size: 14px;
+            margin-top: 10px;
+            box-shadow: 2px 2px 5px rgba(89, 59, 70, 0.1);
+        }
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border: 12px solid transparent;
+            border-top-color: var(--color-fashion-3);
+            border-bottom: 0;
+            border-left: 0;
+            margin-left: -6px;
+            margin-bottom: -12px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="infographic-container">
+        <header class="header">
+            <div class="header-title">🚀 Shadcn UI 컴포넌트 탐험 🎨</div>
+            <div class="header-meta">
+                <span class="date" id="current-date-sheet"></span><br>
+                정보 출처: <strong>Shadcn UI & Radix UI 공식 문서</strong>
+            </div>
+        </header>
+
+        <!-- Sheet 컴포넌트 카드 시작 -->
+        <div class="component-card" id="sheet-section">
+            <div class="component-title-box">
+                <span class="component-title-icon">📄➡️</span>
+                <h1 class="component-main-title">Sheet (시트)</h1>
+            </div>
+
+            <section class="component-overview text-content">
+                <h2 class="section-heading"><span class="icon">📜</span>개요</h2>
+                <p>Sheet 컴포넌트는 화면의 가장자리(상, 하, 좌, 우)에서 <span class="highlight-keyword">슬라이드되어 나오는 패널</span>입니다. ↔️↕️ 이는 Dialog와 유사하게 추가적인 콘텐츠나 상호작용 요소를 보여주지만, 화면 중앙에 뜨는 모달이 아닌, 화면 가장자리에 붙어서 나타나는 형태를 가집니다.</p>
+                <p>주요 사용 사례:</p>
+                <ul>
+                    <li>모바일 화면에서의 내비게이션 메뉴 (드로어, Drawer)</li>
+                    <li>필터 옵션 패널</li>
+                    <li>간단한 정보 입력 폼 (예: 장바구니 담기 전 옵션 선택)</li>
+                    <li>알림 목록 또는 상세 정보 표시</li>
+                </ul>
+                <p>Shadcn UI의 Sheet는 Dialog 컴포넌트를 기반으로 하며, 스타일과 애니메이션을 통해 "시트"처럼 보이도록 구현되었습니다. 따라서 Dialog의 접근성 기능과 많은 부분을 공유합니다.</p>
+                <div style="margin-top: 15px; text-align: center;">
+                     <button class="sheet-trigger-button-visual" onclick="showSheetMockup('right')">오른쪽 Sheet 열기 (예시)</button>
+                     <button class="sheet-trigger-button-visual" onclick="showSheetMockup('left')" style="margin-left:10px;">왼쪽 Sheet 열기 (예시)</button>
+                </div>
+                <div class="sheet-mockup-container" id="sheetMockupRight">
+                    <div class="sheet-mockup-content">
+                        <h3>🛒 장바구니</h3>
+                        <p>장바구니에 담긴 상품 목록이 여기에 표시됩니다.</p>
+                        <button class="sheet-mockup-content close-button-visual" onclick="hideSheetMockup('right')">닫기</button>
+                    </div>
+                </div>
+                 <div class="sheet-mockup-container" id="sheetMockupLeft" style="justify-content: flex-start;">
+                    <div class="sheet-mockup-content" style="box-shadow: 5px 0 15px rgba(0,0,0,0.2);">
+                        <h3>☰ 메뉴</h3>
+                        <p>내비게이션 링크들이 여기에 들어갈 수 있습니다.</p>
+                        <button class="sheet-mockup-content close-button-visual" onclick="hideSheetMockup('left')">닫기</button>
+                    </div>
+                </div>
+                <div class="speech-bubble">
+                    ✨ Sheet는 화면 공간을 효율적으로 사용하면서, 사용자에게 익숙한 인터랙션을 제공할 수 있어요!
+                </div>
+            </section>
+
+            <section class="main-component-props">
+                <h2 class="section-heading"><span class="icon">🔧</span>Sheet (루트 컴포넌트) Props</h2>
+                <div class="text-content">
+                    <p><code>&lt;Sheet&gt;</code> 루트 컴포넌트는 Sheet의 열림/닫힘 상태를 관리합니다. Dialog의 props와 거의 동일합니다.</p>
+                </div>
+                <div class="prop-table-wrapper">
+                    <table class="prop-table">
+                        <thead>
+                            <tr>
+                                <th>Prop 이름</th>
+                                <th>타입</th>
+                                <th>기본값</th>
+                                <th>설명</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="prop-name">open</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td>-</td>
+                                <td>Sheet의 열림 상태를 제어합니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">onOpenChange</td>
+                                <td><span class="highlight-value">(open: boolean) =&gt; void</span></td>
+                                <td>-</td>
+                                <td>열림 상태가 변경될 때 호출되는 콜백 함수입니다. (제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">defaultOpen</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">false</span></td>
+                                <td>초기 마운트 시 Sheet의 열림 상태를 설정합니다. (비제어 컴포넌트)</td>
+                            </tr>
+                            <tr>
+                                <td class="prop-name">modal</td>
+                                <td><span class="highlight-value">boolean</span></td>
+                                <td><span class="highlight-value">true</span> (Dialog 기본값)</td>
+                                <td>Sheet가 모달 형식으로 동작할지 여부입니다. <span class="highlight-value">true</span>이면 외부 상호작용을 막습니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="subcomponents-section">
+                <h2 class="section-heading"><span class="icon">🧩</span>서브 컴포넌트들</h2>
+                <div class="text-content">
+                    <p>Sheet 컴포넌트는 Dialog 컴포넌트의 서브 컴포넌트들을 대부분 그대로 사용합니다. 이름만 <code>Dialog...</code>에서 <code>Sheet...</code>로 변경되었습니다. 핵심적인 차이는 <code>SheetContent</code>의 <code>side</code> prop입니다.</p>
+                </div>
+
+                <div class="parent-child-relation">
+                    <div class="component-group">
+                        <span class="component-box">Sheet</span>
+                    </div>
+                    <div class="component-group indent">
+                         <span class="arrow"> L </span> <span class="component-box">SheetTrigger</span>
+                    </div>
+                    <div class="component-group indent">
+                         <span class="arrow"> L </span> <span class="component-box">SheetPortal</span> <span style="font-size:12px;">(선택적)</span>
+                    </div>
+                    <div class="component-group indent indent">
+                         <span class="arrow"> L </span> <span class="component-box">SheetOverlay</span>
+                    </div>
+                    <div class="component-group indent indent">
+                        <span class="arrow"> L </span> <span class="component-box">SheetContent</span>
+                         <span style="font-size:12px; margin-left:5px;">(가장자리에서 나오는 패널)</span>
+                    </div>
+                    <div class="component-group indent indent indent">
+                        <span class="arrow"> L </span> <span class="component-box">SheetHeader</span>
+                    </div>
+                    <div class="component-group indent indent indent indent">
+                        <span class="arrow"> L </span> <span class="component-box">SheetTitle</span>
+                    </div>
+                    <div class="component-group indent indent indent indent">
+                        <span class="arrow"> L </span> <span class="component-box">SheetDescription</span>
+                    </div>
+                     <div class="component-group indent indent indent">
+                        <span class="arrow"> L </span> <span class="component-box">SheetFooter</span>
+                    </div>
+                    <div class="component-group indent indent indent">
+                         <span class="arrow"> L </span> <span class="component-box">SheetClose</span>
+                    </div>
+                </div>
+                <p class="text-content">각 서브 컴포넌트 (<code>SheetTrigger</code>, <code>SheetOverlay</code>, <code>SheetHeader</code>, <code>SheetTitle</code>, <code>SheetDescription</code>, <code>SheetFooter</code>, <code>SheetClose</code>)는 Dialog의 해당 서브 컴포넌트와 동일한 역할 및 Props를 가집니다.</p>
+
+
+                <div class="subcomponent-card">
+                    <h3 class="subcomponent-title"><span class="icon">↔️</span>SheetContent</h3>
+                    <div class="text-content">
+                        <p><span class="highlight-keyword">설명:</span> 화면 가장자리에서 슬라이드되어 나오는 실제 패널 내용입니다. DialogContent와 유사하지만, <code>side</code> prop을 통해 나타나는 위치를 지정합니다.</p>
+                        <p><span class="highlight-keyword">부모 컴포넌트와의 관계:</span> <code>&lt;SheetPortal&gt;</code> (또는 <code>&lt;Sheet&gt;</code>)의 자식입니다.</p>
+                        <p><span class="highlight-keyword">주요 Props:</span></p>
+                        <div class="prop-table-wrapper">
+                            <table class="prop-table">
+                                <thead><tr><th>Prop</th><th>타입</th><th>기본값</th><th>설명</th></tr></thead>
+                                <tbody>
+                                    <tr><td class="prop-name required-prop">side</td><td><span class="highlight-value">"top" | "bottom" | "left" | "right"</span></td><td>"right"</td><td>Sheet가 나타날 화면 가장자리를 지정합니다.</td></tr>
+                                    <tr><td class="prop-name">... (DialogContent와 동일한 Props)</td><td></td><td></td><td><code>onEscapeKeyDown</code>, <code>onPointerDownOutside</code>, <code>onOpenAutoFocus</code>, <code>onCloseAutoFocus</code>, <code>asChild</code>, <code>forceMount</code> 등</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p class="text-content"><code>className</code>을 통해 각 <code>side</code>에 따른 너비/높이, 애니메이션 등을 Tailwind CSS로 커스터마이징할 수 있습니다. (shadcn/ui는 이를 위한 variant들을 제공합니다)</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="component-usage-example">
+                <h2 class="section-heading"><span class="icon">💡</span>사용 예제 (핵심 코드)</h2>
+                <div class="text-content">
+                    <p>다음은 화면 오른쪽에 나타나는 장바구니 Sheet 예시입니다.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre><code>
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import { ShoppingCart } from "lucide-react" // 아이콘 예시
+
+function CartSheet() {
+  return (
+    &lt;Sheet&gt;
+      &lt;SheetTrigger asChild&gt;
+        &lt;Button variant="outline"&gt;
+          &lt;ShoppingCart className="mr-2 h-4 w-4" /&gt; 장바구니 보기
+        &lt;/Button&gt;
+      &lt;/SheetTrigger&gt;
+      &lt;SheetContent side="right" className="w-[400px] sm:w-[540px]"&gt; {/* 오른쪽에서, 너비 지정 */}
+        &lt;SheetHeader&gt;
+          &lt;SheetTitle&gt;내 장바구니 🛍️&lt;/SheetTitle&gt;
+          &lt;SheetDescription&gt;
+            선택하신 상품들을 확인하고 결제를 진행하세요. 변경사항은 자동으로 저장되지 않습니다.
+          &lt;/SheetDescription&gt;
+        &lt;/SheetHeader&gt;
+        &lt;div className="grid gap-4 py-4"&gt;
+          {/* 장바구니 아이템 목록이 여기에 들어갈 수 있습니다. */}
+          &lt;div className="p-4 border rounded-md"&gt;
+            &lt;p&gt;상품 A - ₩10,000 x 1&lt;/p&gt;
+          &lt;/div&gt;
+          &lt;div className="p-4 border rounded-md"&gt;
+            &lt;p&gt;상품 B - ₩25,000 x 2&lt;/p&gt;
+          &lt;/div&gt;
+           &lt;div className="mt-4"&gt;
+            &lt;Label htmlFor="coupon"&gt;쿠폰 코드&lt;/Label&gt;
+            &lt;Input id="coupon" placeholder="쿠폰 코드를 입력하세요" className="mt-1"/&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;SheetFooter className="mt-auto"&gt; {/* mt-auto로 푸터를 아래에 고정 */}
+          &lt;SheetClose asChild&gt;
+            &lt;Button type="button" variant="outline"&gt;계속 쇼핑하기&lt;/Button&gt;
+          &lt;/SheetClose&gt;
+          &lt;Button type="submit"&gt;결제하기 (₩60,000)&lt;/Button&gt;
+        &lt;/SheetFooter&gt;
+      &lt;/SheetContent&gt;
+    &lt;/Sheet&gt;
+  )
+}
+
+// 다른 방향 Sheet 예시
+const SHEET_SIDES = ["top", "right", "bottom", "left"] as const
+type SheetSide = (typeof SHEET_SIDES)[number]
+
+export function SheetSideExample() {
+  return (
+    &lt;div className="grid grid-cols-2 gap-2"&gt;
+      {SHEET_SIDES.map((side) => (
+        &lt;Sheet key={side}&gt;
+          &lt;SheetTrigger asChild&gt;
+            &lt;Button variant="outline"&gt;{side}에서 열기&lt;/Button&gt;
+          &lt;/SheetTrigger&gt;
+          &lt;SheetContent side={side}&gt;
+            &lt;SheetHeader&gt;
+              &lt;SheetTitle&gt;{side} 방향 시트&lt;/SheetTitle&gt;
+              &lt;SheetDescription&gt;
+                이 시트는 화면의 {side} 가장자리에서 나타납니다.
+              &lt;/SheetDescription&gt;
+            &lt;/SheetHeader&gt;
+            &lt;div className="grid gap-4 py-4"&gt;
+              &lt;p&gt;여기에 내용을 채워주세요.&lt;/p&gt;
+            &lt;/div&gt;
+            &lt;SheetFooter&gt;
+              &lt;SheetClose asChild&gt;
+                &lt;Button type="submit"&gt;확인&lt;/Button&gt;
+              &lt;/SheetClose&gt;
+            &lt;/SheetFooter&gt;
+          &lt;/SheetContent&gt;
+        &lt;/Sheet&gt;
+      ))}
+    &lt;/div&gt;
+  )
+}
+
+
+export default CartSheet;
+                    </code></pre>
+                </div>
+                <div class="speech-bubble" style="margin-top: 20px; background: var(--color-fashion-2); color: var(--color-fashion-1);">
+                    💡 <strong>팁:</strong> <code>SheetContent</code>의 <code>side</code> prop을 변경하여 (<code>"top"</code>, <code>"bottom"</code>, <code>"left"</code>, <code>"right"</code>) 시트가 나타나는 위치를 쉽게 조절할 수 있습니다. 각 <code>side</code>에 따라 적절한 너비(width)나 높이(height)를 <code>className</code>을 통해 지정해주는 것이 좋습니다. shadcn/ui는 이를 위한 기본 스타일과 variant를 제공합니다.
+                </div>
+            </section>
+            
+        </div>
+        <!-- Sheet 컴포넌트 카드 끝 -->
+
+        <footer class="footer">
+            <p>다음은 값을 선택하는 데 사용되는 Slider 컴포넌트입니다! 🎚️</p>
+            <p>이 문서를 통해 shadcn UI로 <strong>다양한 오버레이 UI</strong>를 구현하는 방법을 익히시길 바랍니다. 🖼️</p>
+            <p>&copy; <span id="current-year-sheet"></span> All rights reserved for your learning journey!</p>
+        </footer>
+    </div>
+
+    <script>
+        // 날짜 및 연도 설정
+        document.getElementById('current-date-sheet').textContent = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('current-year-sheet').textContent = new Date().getFullYear();
+
+        // Sheet 시각화 예제용 스크립트
+        function showSheetMockup(side) {
+            const sheetMockupRight = document.getElementById('sheetMockupRight');
+            const sheetMockupLeft = document.getElementById('sheetMockupLeft');
+            if (side === 'right' && sheetMockupRight) {
+                sheetMockupRight.style.display = 'flex';
+            } else if (side === 'left' && sheetMockupLeft) {
+                 sheetMockupLeft.style.display = 'flex';
+            }
+        }
+        function hideSheetMockup(side) {
+            const sheetMockupRight = document.getElementById('sheetMockupRight');
+            const sheetMockupLeft = document.getElementById('sheetMockupLeft');
+             if (side === 'right' && sheetMockupRight) {
+                sheetMockupRight.style.display = 'none';
+            } else if (side === 'left' && sheetMockupLeft) {
+                 sheetMockupLeft.style.display = 'none';
+            }
+        }
+        // 외부 클릭 시 닫기 (간단 버전) - 오른쪽 시트만 예시
+        const sheetMockupRightElem = document.getElementById('sheetMockupRight');
+        if(sheetMockupRightElem) {
+            sheetMockupRightElem.addEventListener('click', function(event) {
+                if (event.target === sheetMockupRightElem) { // 오버레이 클릭 시
+                    hideSheetMockup('right');
+                }
+            });
+        }
+         const sheetMockupLeftElem = document.getElementById('sheetMockupLeft');
+        if(sheetMockupLeftElem) {
+            sheetMockupLeftElem.addEventListener('click', function(event) {
+                if (event.target === sheetMockupLeftElem) { // 오버레이 클릭 시
+                    hideSheetMockup('left');
+                }
+            });
+        }
+    </script>
+</body>
+</html>
